@@ -1,8 +1,46 @@
 from typing import List, Union, Optional
 from pydantic import BaseModel, Field
 from datetime import date, time
+from enum import Enum
+from typing import Dict
 
 
+# 定义乘客类型枚举
+class TravellerType(str, Enum):
+    ADULT = "成人"
+    CHILD = "儿童"
+    SENIOR = "老人"
+    STUDENT = "学生"
+
+# 定义人数数据结构
+class TravellerCount(BaseModel):
+    # 使用字典来存储乘客类型和数量
+    # 键是 TravellerType 枚举，值是人数（整数）
+    travellers: Dict[TravellerType, int] = Field(..., description="出行人员数量，键为类型，值为人数")
+
+#输入数据结构
+class Budget:
+    min:int
+    max:int
+
+
+class CreateItineraryRequest(BaseModel):
+    user_id: str
+    departure_city:str
+    destination_city:str
+    budget:Budget
+    departure_date: date
+    return_date: date
+    travellers_count:TravellerCount
+    transportation_preference:str #交通工具偏好，例如: "飞机", "火车", "自驾"
+    budget_preference:str #预算更倾向花在哪里，吃饭，住宿，玩乐，可多选可全选
+    trip_style:str #文艺，美食，自然，人文，小众等
+    other_requirement:str #文本框输入
+
+
+
+
+#输出数据结构
 class Coordinates(BaseModel):
     """经纬度坐标"""
     latitude: float
