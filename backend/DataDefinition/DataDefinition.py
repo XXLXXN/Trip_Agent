@@ -1,4 +1,6 @@
 from typing import List, Union, Optional
+
+from mypy.stubgen import CLASS
 from pydantic import BaseModel, Field
 from datetime import date, time
 from enum import Enum
@@ -24,18 +26,7 @@ class Budget:
     max:int
 
 
-class CreateItineraryRequest(BaseModel):
-    user_id: str
-    departure_city:str
-    destination_city:str
-    budget:Budget
-    departure_date: date
-    return_date: date
-    travellers_count:TravellerCount
-    transportation_preference:str #交通工具偏好，例如: "飞机", "火车", "自驾"
-    budget_preference:str #预算更倾向花在哪里，吃饭，住宿，玩乐，可多选可全选
-    trip_style:str #文艺，美食，自然，人文，小众等
-    other_requirement:str #文本框输入
+
 
 
 
@@ -121,9 +112,43 @@ class Day(BaseModel):
 
 class Trip(BaseModel):
     """整个行程模型"""
+    user_id: str
     trip_id: str
     trip_name: str
     destination: str
     start_date: date
     end_date: date
     days: List[Day] = []
+
+#输入结构
+class CreateSpotsRequest(BaseModel):
+    """
+    创建景点推荐请求的基础信息模型。
+    departure_city: 出发城市
+    destination_city: 目的地城市
+    departure_date: 出发日期
+    return_date: 返回日期
+    trip_style: 旅行风格 (如：文艺, 美食, 自然, 人文, 小众)
+    other_requirement: 其他文本输入要求
+    """
+    departure_city: str
+    destination_city: str
+    departure_date: date
+    return_date: date
+    trip_style: str
+    other_requirement: str
+
+class HotelSpotsData(BaseModel):
+    Hotel:Location
+    Spots:List[Location]
+
+
+class CreateItineraryRequest(BaseModel):
+    user_id: str
+    departure_city:str
+    destination_city:str
+    budget:Budget
+    departure_date: date
+    return_date: date
+    travellers_count:TravellerCount
+    HotelSpotsData:HotelSpotsData
