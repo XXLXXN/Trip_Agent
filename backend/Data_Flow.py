@@ -6,7 +6,8 @@ import uuid
 
 from services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt
 from services.send_prompt import send_prompt
-from services.validate_data import validate_data,validate_create_spot_data,validate_create_hotel_data
+from services.data_validater import validate_data,validate_create_spot_data,validate_create_hotel_data
+from services.connect_location import connect_location
 from services.save_to_db import save_to_db
 
 import json
@@ -32,16 +33,14 @@ async def create_spot_recommended(request: CreateSpotsRequest):
     recommended_spots_data=validate_create_spot_data(llm_response)
     return recommended_spots_data
 
-@app.post("/create/hotelRecommended", response_model=HotelSpotsData)
+@app.post("/create/hotelRecommended", response_model=List[Location])
 async def create_hotel_recommended(request: List[Location]):
     prompt = build_create_hotel_prompt(request)
     llm_response = await send_prompt(prompt)
     recommended_hotel_data = validate_create_hotel_data(llm_response)
-    hotel_and_spots_data=HotelSpotsData(
-        Hotel=recommended_hotel_data,
-        Spots=request
-    )
-    return hotel_and_spots_data
+    #返回酒店
+    return recommended_hotel_data
+
 
 @app.post("/create/itinerary")
 async def create_itinerary(request:CreateItineraryRequest):
@@ -66,6 +65,7 @@ async def create_itinerary(request:CreateItineraryRequest):
         # 5. 错误处理
         # #格式不正确的校验与错误抛出流程
         raise e
+    connect_location(validated_data)
     # 给另一个大模型检查结果是否符合要求（可选）
     # model_to_verify()
     # --- 缓存数据 ---
@@ -122,4 +122,10 @@ async def confirm_itinerary(itinerary_id: str):
 
     return {"message": "Itinerary saved successfully!"}
 
+@app.get("get/itinerary")
+async def get_itinerary_by_id(itinerary_id: str):
+    """<UNK>"""
 
+@app.post("/delete/itinerary")
+async def delete_itinerary(itinerary_id: str):
+    """<UNK>"""

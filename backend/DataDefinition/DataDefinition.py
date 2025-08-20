@@ -1,6 +1,5 @@
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Literal
 
-from mypy.stubgen import CLASS
 from pydantic import BaseModel, Field
 from datetime import date, time
 from enum import Enum
@@ -43,12 +42,26 @@ class Location(BaseModel):
     address: str
     coordinates: Optional[Coordinates] = None  # 坐标是可选的
 
-class RecommendedProduct(BaseModel):
-    """推荐产品信息"""
+class ItemType(str, Enum):
+    food = "food"
+    shopping = "shopping"
+
+class Food(BaseModel):
+    type: Literal[ItemType.food] = ItemType.food
     name: str
     price: float
     description: str
     url: Optional[str] = None
+
+class Shopping(BaseModel):
+    type: Literal[ItemType.shopping] = ItemType.shopping
+    name:str
+    price: float
+    description: str
+    url: Optional[str] = None
+
+RecommendedProduct = Union[Food, Shopping]
+
 
 class TicketInfo(BaseModel):
     """票务信息"""
@@ -135,6 +148,7 @@ class CreateSpotsRequest(BaseModel):
     destination_city: str
     departure_date: date
     return_date: date
+    travellers_count: TravellerCount
     trip_style: str
     other_requirement: str
 
