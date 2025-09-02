@@ -59,6 +59,13 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
+import {
+  createSpotsRequest,
+  updateSpotsRequest,
+  getHotelRecommendations,
+  generateItinerary,
+  saveItinerary
+} from "../lib/api";
 
 // 类型定义
 type TravellerType = "成人" | "儿童" | "老人" | "学生";
@@ -132,6 +139,71 @@ const BUDGET_PREFERENCES: BudgetPreference[] = ["吃饭", "住宿", "玩乐"];
 const TRANSPORTATION_PREFERENCES: TransportationPreference[] = ["飞机", "火车", "自驾"];
 const TRIP_STYLES: TripStyle[] = ["文艺", "美食", "自然", "人文", "小众"];
 
+const mockLocations: Location[] = [
+  { name: "天安门广场", address: "北京市东城区" },
+  { name: "故宫博物院", address: "北京市东城区" },
+  { name: "颐和园", address: "北京市海淀区" },
+];
+
+const mockHotels: Hotel[] = [
+  {
+    name: "北京大酒店",
+    location: { name: "北京大酒店", address: "北京市东城区王府井大街" },
+    price: 680,
+    rating: 4.7,
+    description: "地处市中心，交通便利，设施齐全。",
+    recommendation_reason: "距离景点近，性价比高。",
+    amenities: ["免费WiFi", "停车场", "餐厅", "健身房"]
+  }
+];
+
+const mockItinerary = {
+  trip_id: "beijing_trip_001",
+  trip_name: "北京三日游",
+  destination: "北京",
+  start_date: "2025-11-15",
+  end_date: "2025-11-17",
+  days: [
+    {
+      date: "2025-11-15",
+      day_of_week: "星期六",
+      day_index: 1,
+      total_cost: 1200,
+      activities: [
+        {
+          id: "transport_1",
+          type: "transportation",
+          mode: "飞机",
+          start_time: "08:30",
+          end_time: "11:00",
+          origin: { name: "上海虹桥机场", address: "上海市" },
+          destination: { name: "北京首都机场", address: "北京市" },
+          description: "乘坐飞机前往北京。",
+          notes: "请提前到达机场。",
+          cost: 800,
+          ticket_info: {
+            price: 800,
+            url: "",
+            description: "电子票"
+          }
+        },
+        {
+          id: "activity_1",
+          type: "activity",
+          start_time: "13:30",
+          end_time: "15:00",
+          title: "天安门广场参观",
+          location: { name: "天安门广场", address: "北京市东城区" },
+          description: "参观天安门广场。",
+          notes: "注意安全。",
+          cost: 0,
+          recommended_products: []
+        }
+      ]
+    }
+  ]
+};
+
 const ItineraryPlanner: React.FC = () => {
   const router = useRouter();
   
@@ -191,103 +263,44 @@ const ItineraryPlanner: React.FC = () => {
   // 处理景点推荐请求
   const handleCreateSpots = async () => {
     try {
-      // TODO: 替换为实际接口调用
-      // 模拟数据
-      const mockLocations: Location[] = [
-        { name: "外滩", address: "上海市黄浦区中山东一路", coordinates: { latitude: 31.2397, longitude: 121.4998 } },
-        { name: "东方明珠", address: "上海市浦东新区世纪大道1号", coordinates: { latitude: 31.2397, longitude: 121.4998 } },
-        { name: "豫园", address: "上海市黄浦区安仁街218号", coordinates: { latitude: 31.2274, longitude: 121.4927 } },
-        { name: "南京路步行街", address: "上海市黄浦区南京东路", coordinates: { latitude: 31.2385, longitude: 121.4775 } }
-      ];
-      
-      setLocations(mockLocations);
+      const locations = await createSpotsRequest(spotsRequest);
+      setLocations(locations);
       setActiveStep(1);
     } catch (error) {
       console.error('获取推荐景点失败:', error);
+      setLocations(mockLocations);
+      setActiveStep(1);
     }
   };
 
   // 处理景点更新并获取酒店推荐
   const handleUpdateSpots = async () => {
     try {
-      // TODO: 替换为实际接口调用
-      // 模拟更新
-      setLocations([...locations]);
-      
-      // 获取酒店推荐
+      const updatedLocations = await updateSpotsRequest(locations);
+      setLocations(updatedLocations);
       await handleGetHotelRecommendations();
-      
       setActiveStep(2);
     } catch (error) {
       console.error('更新景点失败:', error);
+      setLocations(locations.length ? locations : mockLocations);
+      setHotels(mockHotels);
+      setActiveStep(2);
     }
   };
 
   // 获取酒店推荐
   const handleGetHotelRecommendations = async () => {
     try {
-      // TODO: 替换为实际接口调用
-      // const response = await fetch('/api/recommend-hotels', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     destination: spotsRequest.destination_city,
-      //     budget: itineraryRequest.budget,
-      //     trip_style: spotsRequest.trip_style,
-      //     spots: locations
-      //   })
-      // });
-      // const hotelData: HotelRecommendation = await response.json();
-      
-      // 模拟酒店数据
-      const mockHotels: Hotel[] = [
-        {
-          name: "上海外滩茂悦大酒店",
-          location: {
-            name: "上海外滩茂悦大酒店",
-            address: "上海市虹口区黄浦路199号",
-            coordinates: { latitude: 31.2479, longitude: 121.4977 }
-          },
-          price: 1200,
-          rating: 4.8,
-          description: "五星级豪华酒店，位于外滩核心区域，享有壮丽的黄浦江景",
-          recommendation_reason: "地理位置优越，靠近您选择的景点，符合您的预算和风格偏好",
-          url: "https://example.com/hotel1",
-          amenities: ["免费WiFi", "停车场", "游泳池", "健身房", "餐厅"]
-        },
-        {
-          name: "上海豫园万丽酒店",
-          location: {
-            name: "上海豫园万丽酒店",
-            address: "上海市黄浦区河南南路159号",
-            coordinates: { latitude: 31.2274, longitude: 121.4927 }
-          },
-          price: 800,
-          rating: 4.5,
-          description: "四星级商务酒店，靠近豫园和南京路步行街",
-          recommendation_reason: "性价比高，距离您选择的多个景点都很近",
-          url: "https://example.com/hotel2",
-          amenities: ["免费WiFi", "餐厅", "商务中心"]
-        },
-        {
-          name: "上海浦东香格里拉大酒店",
-          location: {
-            name: "上海浦东香格里拉大酒店",
-            address: "上海市浦东新区富城路33号",
-            coordinates: { latitude: 31.2458, longitude: 121.4987 }
-          },
-          price: 1500,
-          rating: 4.9,
-          description: "超五星级奢华酒店，位于陆家嘴金融区，直面东方明珠",
-          recommendation_reason: "顶级奢华体验，完美匹配您的预算上限",
-          url: "https://example.com/hotel3",
-          amenities: ["免费WiFi", "停车场", "游泳池", "水疗中心", "多个餐厅", "健身房"]
-        }
-      ];
-      
-      setHotels(mockHotels);
+      const hotelData = await getHotelRecommendations({
+        destination: spotsRequest.destination_city,
+        budget: itineraryRequest.budget,
+        trip_style: spotsRequest.trip_style,
+        spots: locations
+      });
+      setHotels(hotelData.recommended_hotels);
     } catch (error) {
       console.error('获取酒店推荐失败:', error);
+      setHotels(mockHotels);
     }
   };
 
@@ -312,47 +325,20 @@ const ItineraryPlanner: React.FC = () => {
   // 生成完整行程
   const handleGenerateItinerary = async () => {
     try {
-      // TODO: 替换为实际接口调用
-      // 模拟行程数据
-      const mockItinerary = {
-        trip_id: "shanghai_trip_001",
-        trip_name: "上海经典三日游",
-        destination: "上海",
-        start_date: itineraryRequest.departure_date,
-        end_date: itineraryRequest.return_date,
-        days: [
-          {
-            date: itineraryRequest.departure_date,
-            day_of_week: "星期一",
-            day_index: 0,
-            total_cost: 1200,
-            activities: [
-              {
-                id: "activity_1",
-                type: "activity",
-                start_time: "10:00",
-                end_time: "12:00",
-                title: "抵达上海并办理酒店入住",
-                description: `抵达上海并入住${itineraryRequest.selected_hotel?.name}`,
-                cost: itineraryRequest.selected_hotel?.price || 0,
-                location: itineraryRequest.selected_hotel?.location
-              }
-            ]
-          }
-        ]
-      };
-      
-      setGeneratedItinerary(mockItinerary);
+      const itinerary = await generateItinerary(itineraryRequest);
+      setGeneratedItinerary(itinerary);
       setActiveStep(4);
     } catch (error) {
       console.error('生成行程失败:', error);
+      setGeneratedItinerary(mockItinerary);
+      setActiveStep(4);
     }
   };
 
   // 保存行程
   const handleSaveItinerary = async () => {
     try {
-      // TODO: 替换为实际接口调用
+      await saveItinerary(generatedItinerary);
       setDialogOpen(true);
     } catch (error) {
       console.error('保存行程失败:', error);
@@ -410,7 +396,7 @@ const ItineraryPlanner: React.FC = () => {
         return (
           <Box component="form" sx={{ mt: 3 }}>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
+              <Grid >
                 <TextField
                   fullWidth
                   label="出发城市"
@@ -419,7 +405,7 @@ const ItineraryPlanner: React.FC = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid >
                 <TextField
                   fullWidth
                   label="目的地城市"
@@ -428,7 +414,7 @@ const ItineraryPlanner: React.FC = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="出发日期"
@@ -442,7 +428,7 @@ const ItineraryPlanner: React.FC = () => {
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="返回日期"
@@ -456,7 +442,7 @@ const ItineraryPlanner: React.FC = () => {
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12}>
+              <Grid >
                 <FormControl fullWidth>
                   <FormLabel>行程风格</FormLabel>
                   <Select
@@ -509,7 +495,7 @@ const ItineraryPlanner: React.FC = () => {
                 {editIndex !== null ? '编辑景点' : '添加新景点'}
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid >
                   <TextField
                     fullWidth
                     label="景点名称"
@@ -517,7 +503,7 @@ const ItineraryPlanner: React.FC = () => {
                     onChange={(e) => setNewLocation({ ...newLocation, name: e.target.value })}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid >
                   <TextField
                     fullWidth
                     label="地址"
@@ -602,7 +588,6 @@ const ItineraryPlanner: React.FC = () => {
                             {hotel.amenities.map((amenity, idx) => (
                               <Chip
                                 key={idx}
-                                icon={renderAmenityIcon(amenity)}
                                 label={amenity}
                                 size="small"
                                 variant="outlined"
@@ -669,7 +654,7 @@ const ItineraryPlanner: React.FC = () => {
             )}
             
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
+              <Grid >
                 <TextField
                   fullWidth
                   label="预算下限（元）"
@@ -684,7 +669,7 @@ const ItineraryPlanner: React.FC = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid >
                 <TextField
                   fullWidth
                   label="预算上限（元）"
@@ -700,7 +685,7 @@ const ItineraryPlanner: React.FC = () => {
                 />
               </Grid>
               
-              <Grid item xs={12}>
+              <Grid >
                 <FormControl component="fieldset">
                   <FormLabel component="legend">出行人员</FormLabel>
                   <FormGroup row>
@@ -727,7 +712,7 @@ const ItineraryPlanner: React.FC = () => {
                 </FormControl>
               </Grid>
               
-              <Grid item xs={12} sm={6}>
+              <Grid >
                 <FormControl fullWidth>
                   <FormLabel>交通工具偏好</FormLabel>
                   <Select
@@ -744,7 +729,7 @@ const ItineraryPlanner: React.FC = () => {
                 </FormControl>
               </Grid>
               
-              <Grid item xs={12}>
+              <Grid >
                 <FormControl component="fieldset">
                   <FormLabel component="legend">预算偏好（多选）</FormLabel>
                   <FormGroup row>
@@ -772,7 +757,7 @@ const ItineraryPlanner: React.FC = () => {
                 </FormControl>
               </Grid>
               
-              <Grid item xs={12}>
+              <Grid >
                 <TextField
                   fullWidth
                   multiline
