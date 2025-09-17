@@ -1,0 +1,12 @@
+{
+  "query": "我想去婺源旅游",
+  "prefs": {
+    "origin": "上海",
+    "destination": "婺源",
+    "start_date": "2025-09-19",
+    "end_date": "2025-09-24",
+    "themes": ["自然", "人文", "打卡"],
+    "people_count": 2,
+    "budget_level": "中等"
+  }
+}
