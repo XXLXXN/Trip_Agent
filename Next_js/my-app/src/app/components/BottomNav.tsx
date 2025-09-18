@@ -1,5 +1,6 @@
 "use clinet";
 import React from "react";
+import Link from "next/link";
 
 const BottomNav: React.FC = () => {
   return (
@@ -24,6 +25,9 @@ const BottomNav: React.FC = () => {
           <span className="text-[12px] font-medium text-blue-600 mt-1">
             主页
           </span>
+          <Link href="/your-path">
+              <button className="p-2 bg-blue-400">点击跳转-shb</button>
+          </Link>
         </div>
 
         {/* 票务 */}
@@ -44,6 +48,9 @@ const BottomNav: React.FC = () => {
           </svg>
 
           <span className="text-[12px] text-[#808080] mt-1">票务</span>
+          <Link href="/your-path">
+              <button className="p-2 bg-blue-400">点击跳转-sjm</button>
+          </Link>
         </div>
 
         {/* 喜欢 */}
@@ -64,6 +71,9 @@ const BottomNav: React.FC = () => {
           </svg>
 
           <span className="text-[12px] text-[#808080] mt-1">喜欢</span>
+          <Link href="/your-path">
+              <button className="p-2 bg-blue-400">点击跳转-lxd</button>
+          </Link>
         </div>
 
         {/* 我的 */}
@@ -83,6 +93,9 @@ const BottomNav: React.FC = () => {
             </g>
           </svg>
           <span className="text-[12px] text-[#808080] mt-1">我的</span>
+          <Link href="/your-path">
+              <button className="p-2 bg-blue-400">点击跳转-fyx</button>
+          </Link>
         </div>
       </div>
     </nav>
