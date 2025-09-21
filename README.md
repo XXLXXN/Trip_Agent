@@ -1,2 +1,1 @@
-# Trip_Agent
-Trip_Agent is an innovative travel assistant designed to help users plan, organize, and manage their trips with ease. Whether you are booking flights, finding the perfect hotel, or discovering exciting activities, Trip_Agent offers a seamless experience to make your travel planning stress-free and enjoyable.
+页面的内容位于src/app/fireflyx_parts中，详情见fireflyx_parts中的README.md
