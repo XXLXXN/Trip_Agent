@@ -25,7 +25,7 @@ const BottomNav: React.FC = () => {
           <span className="text-[12px] font-medium text-blue-600 mt-1">
             主页
           </span>
-          <Link href="/your-path">
+          <Link href="/jingdiantuijian">
               <button className="p-2 bg-blue-400">点击跳转-shb</button>
           </Link>
         </div>
