@@ -25,32 +25,6 @@ const BottomNav: React.FC = () => {
           <span className="text-[12px] font-medium text-blue-600 mt-1">
             主页
           </span>
-          <Link href="/jingdiantuijian">
-              <button className="p-2 bg-blue-400">点击跳转-shb</button>
-          </Link>
-        </div>
-
-        {/* 票务 */}
-        <div className="flex flex-col items-center">
-          <svg
-            width="25"
-            height="24"
-            viewBox="0 0 25 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g opacity="0.16">
-              <path
-                d="M22.625 8.54V6C22.625 4.9 21.725 4 20.625 4H4.625C3.525 4 2.635 4.89 2.635 6V8.54C2.635 9.23 2.965 9.91 3.575 10.23C4.205 10.58 4.625 11.24 4.625 12C4.625 12.76 4.195 13.43 3.565 13.76C2.965 14.09 2.625 14.77 2.625 15.46V18C2.625 19.1 3.525 20 4.625 20H20.625C21.725 20 22.625 19.1 22.625 18V15.46C22.625 14.77 22.285 14.09 21.685 13.76C21.055 13.42 20.625 12.76 20.625 12C20.625 11.24 21.055 10.58 21.685 10.24C22.285 9.91 22.625 9.23 22.625 8.54ZM13.625 17.5H11.625V15.5H13.625V17.5ZM13.625 13H11.625V11H13.625V13ZM13.625 8.5H11.625V6.5H13.625V8.5Z"
-                fill="#1B1446"
-              />
-            </g>
-          </svg>
-
-          <span className="text-[12px] text-[#808080] mt-1">票务</span>
-          <Link href="/your-path">
-              <button className="p-2 bg-blue-400">点击跳转-sjm</button>
-          </Link>
         </div>
 
         {/* 喜欢 */}
@@ -71,9 +45,7 @@ const BottomNav: React.FC = () => {
           </svg>
 
           <span className="text-[12px] text-[#808080] mt-1">喜欢</span>
-          <Link href="/your-path">
-              <button className="p-2 bg-blue-400">点击跳转-lxd</button>
-          </Link>
+
         </div>
 
         {/* 我的 */}
@@ -93,9 +65,6 @@ const BottomNav: React.FC = () => {
             </g>
           </svg>
           <span className="text-[12px] text-[#808080] mt-1">我的</span>
-          <Link href="/your-path">
-              <button className="p-2 bg-blue-400">点击跳转-fyx</button>
-          </Link>
         </div>
       </div>
     </nav>
