@@ -1,0 +1,238 @@
+/* 画布 */
+.container {
+  width: 375px;
+  height: 812px;
+  margin: 0 auto;
+  background: #f7f8fa;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  overflow: hidden;
+}
+
+.header {
+  background: #fff;
+  height: 215px;
+  width: 375px;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.backBtn {
+  width: 56px;
+  height: 37px;
+  margin-top: 56px;
+  margin-left: 16px;
+  border-radius: 25px;
+  border: 1px solid #ece9e9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.backBtn:hover {
+  background: #f5f5f5;
+  border-color: #cfcfcf;
+}
+
+.locationBar {
+  width: 343px;
+  height: 38px;     
+  box-sizing: border-box;
+  border-radius: 4px;
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 325px 50px;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "label button"
+    "name  button";
+  align-items: end;
+}
+
+.locationLabel {
+  margin-left: 16px;
+  grid-area: label;
+  font-size: 12px;
+  color: #888;
+}
+
+.locationName {
+  grid-area: name;
+  margin-left: 16px;
+  font-size: 20px;  
+  font-weight: 800;
+  color: #111;
+  line-height: 1;
+}
+
+.changeButton {
+  grid-area: button;
+  color: #0768FD;
+  margin-right: 16px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;  
+}
+
+.changeButton:hover { text-decoration: underline; }
+
+
+/* 分类筛选 */
+.categories {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 16px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.categories::-webkit-scrollbar {
+  display: none;
+}
+
+.category{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-left: 17px;
+  padding:0 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: all .2s;
+}
+.category:hover {
+  border-color: #0768FD;
+  color: #0768FD;
+}
+
+.category.active {
+  background: #0768FD;
+  color: #fff;
+  border-color: #0768FD;
+}
+
+.mapContainer {
+  /* 原有的都保留 */
+  flex: 1;
+  overflow: hidden;
+  cursor: grab;
+  background-color: #f0f0f0;
+  position: relative;
+  touch-action: none;
+}
+
+.mapContainer:active {
+  cursor: grabbing;
+}
+
+.mapBackground {
+  position: absolute;
+  width: 2000px;
+  height: 1000px;
+  background-color: #e8e8e8;
+  background-image: 
+    linear-gradient(#ccc 1px, transparent 1px),
+    linear-gradient(90deg, #ccc 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.roads {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.roadHorizontal {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.roadVertical {
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.marker {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  z-index: 10;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.markerIcon {
+  width: 100px;
+  height: 50px;
+  transition: transform 0.2s;
+}
+
+.marker:hover .markerIcon {
+  transform: scale(1.1);
+}
+
+/* 固定在底部的添加按钮 */
+.mapCta {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.addButton {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 14px;
+  background: #0768FD;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 10 8px 20px rgba(7, 104, 253, 0.25);
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.addButton:hover {
+  background: #0654d4;
+}
+
+.addButton:active {
+  transform: translateY(1px);
+}
