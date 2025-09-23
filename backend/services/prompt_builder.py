@@ -1,4 +1,4 @@
-from backend.DataDefinition.DataDefinition import CreateItineraryRequest
+from ..DataDefinition.DataDefinition import CreateItineraryRequest
 
 
 def build_create_itinerary_prompt(request:CreateItineraryRequest) :

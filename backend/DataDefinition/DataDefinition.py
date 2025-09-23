@@ -1,3 +1,4 @@
+from symtable import Class
 from typing import List, Union, Optional, Literal
 
 from pydantic import BaseModel, Field
@@ -134,6 +135,7 @@ class Trip(BaseModel):
     days: List[Day] = []
 
 #输入结构
+#创建景点推荐输入的数据
 class CreateSpotsRequest(BaseModel):
     """
     创建景点推荐请求的基础信息模型。
@@ -151,6 +153,18 @@ class CreateSpotsRequest(BaseModel):
     travellers_count: TravellerCount
     trip_style: str
     other_requirement: str
+
+#创建景点推荐输出的数据
+class SpotNameAndRecReason(BaseModel):
+    SpotName: str
+    RecReason: str
+
+
+class CreateSpotsRequestReturn(BaseModel):
+    success: bool
+    message: str
+    data: SpotNameAndRecReason
+
 
 class HotelSpotsData(BaseModel):
     Hotel:Location
