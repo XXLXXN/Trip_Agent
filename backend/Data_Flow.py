@@ -5,14 +5,17 @@ import redis
 import uuid
 
 from services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt
-from services.send_prompt import send_prompt
 from services.data_validater import validate_data,validate_create_spot_data,validate_create_hotel_data
 from services.connect_location import connect_location
 from services.save_to_db import save_to_db
 
 import json
 from DataDefinition.DataDefinition import CreateItineraryRequest,CreateSpotsRequest
-from DataDefinition.DataDefinition import Trip,Location,HotelSpotsData
+from DataDefinition.DataDefinition import Trip,Location
+
+from .Agents import SpotRecommendation
+from .services.prompt_sender import send_spot_recommendation_prompt
+
 app = FastAPI(
     title="Data Flow",
     description="Data Flow 后端数据的处理流程",
@@ -28,16 +31,21 @@ async def create_spot_recommended(request: CreateSpotsRequest):
     根据用户的出发地、目的地、日期、旅行风格和额外要求，
     利用大语言模型生成并返回推荐的景点列表。
     """
+
     prompt= build_create_spot_prompt(request)
-    llm_response = await send_prompt(prompt)
+    llm_response = await send_spot_recommendation_prompt(prompt)
     recommended_spots_data=validate_create_spot_data(llm_response)
+    #处理并存储大模型返回的信息，把POI加入数据里的的函数
+
     return recommended_spots_data
 
 @app.post("/create/hotelRecommended", response_model=List[Location])
 async def create_hotel_recommended(request: List[Location]):
+    # 缓存用户输入信息的函数
     prompt = build_create_hotel_prompt(request)
     llm_response = await send_prompt(prompt)
     recommended_hotel_data = validate_create_hotel_data(llm_response)
+    # 处理并存储大模型返回的信息，把POI加入数据里的的函数
     #返回酒店
     return recommended_hotel_data
 

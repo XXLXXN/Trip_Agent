@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
 import asyncio
+import json
 
 # --- Pydantic 模型 ---
 # 定义一个模型来规定传入请求的JSON结构
@@ -18,7 +19,7 @@ app = FastAPI()
 # 注意: 'content' 字段将被动态替换
 base_payload = {
     "session_id": "c41c2a64-54f3-4649-b4bd-1fbbc3b75010",
-    "bot_app_key": "gJGSTrbEDHlmKPCozkJabmcorQGcrPmCSjuXAMpLTevTqQDmHfHXxPAygVyDfcguQrxUkAIFWsEqrCwVVhVcqlZUqZaDroiOHmOAlZPQxcNHfQnBWpfsKutbSDCGbXOM",
+    "bot_app_key":"thtprpkQjZcMgPxiSuDHESIkYVvYkIYitXhFPwsafMncoDgtygPfPpzAsDfLvaLlJZcUCTpqpDoyzJGFpVArDyPClSsRBAsyzhwxRvOnqTIAtFDDCfMGTFVIOtPNtSHH",#"gJGSTrbEDHlmKPCozkJabmcorQGcrPmCSjuXAMpLTevTqQDmHfHXxPAygVyDfcguQrxUkAIFWsEqrCwVVhVcqlZUqZaDroiOHmOAlZPQxcNHfQnBWpfsKutbSDCGbXOM",
     "visitor_biz_id": "c41c2a64-54f3-4649-b4bd-1fbbc3b75010",
     "content":"我们有一个学生和三个成人，想要在2025年11月27日出发去上海玩5天，体验当地文化",
     "incremental": False,
@@ -38,19 +39,39 @@ headers = {
     'Content-Type': 'application/json'
 }
 
+def process_and_filter_reply(json_string: str):
+    """
+    接收一个JSON字符串, 解析并检查它是否是我们需要的机器人回复。
+    - event 必须是 'reply' (这个在调用此函数前已经判断)。
+    - data.payload.is_from_self 必须是 False。
+
+    如果满足所有条件, 返回解析后的Python字典, 否则返回None。
+    """
+    try:
+        data = json.loads(json_string)
+        # 使用 .get() 来安全地访问嵌套的键, 避免因缺少键而导致的错误
+        payload = data.get("payload", {})
+        if isinstance(payload, dict) and payload.get("is_from_self") is False:
+            # 条件满足: 这是一个来自机器人的、非回显的回复
+            return payload
+    except (json.JSONDecodeError, AttributeError):
+        # 如果JSON格式错误或数据结构不符合预期, 则忽略
+        return None
+    return None
+
 # --- API 端点 ---
-# 使用 @app.post 装饰器来定义一个接收POST请求的端点
 @app.post("/call_api")
 async def call_tencent_api(data: RequestData):
-    """
-    接收包含 'content' 的POST请求,
-    然后异步流式请求腾讯云API并打印结果。
-    """
+    success= False
     print(f"Received web request to /call_api with content: '{data.content}'")
-
-    # 动态构建本次请求的payload
+    
     request_payload = base_payload.copy()
     request_payload["content"] = data.content
+
+    print("\n--- Sending Request Payload to Tencent Cloud ---")
+    print("--------------------------------------------\n")
+
+    extracted_replies = [] # 用于存储所有符合条件的回复
 
     try:
         async with httpx.AsyncClient(timeout=None) as client:
@@ -59,16 +80,44 @@ async def call_tencent_api(data: RequestData):
                 response.raise_for_status()
 
                 print("--- Streaming Response From Tencent Cloud ---")
+                current_event_type = None
                 async for chunk in response.aiter_text():
                     lines = chunk.strip().split('\n')
                     for line in lines:
-                        if line:
-                            print(line) # 实时打印流式结果
+                        print(line) # 打印原始行数据
+                        if line.startswith('event:'):
+                            # 捕获当前事件类型
+                            current_event_type = line.split(':', 1)[1].strip()
+                        elif line.startswith('data:') and current_event_type == 'reply':
+                            print("Detected 'reply' event data.!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                            # 如果是reply事件的数据, 则进行处理
+                            json_data_string = line.split(':', 1)[1].strip()
+                            # 调用我们的新函数来处理和筛选
+                            filtered_data = process_and_filter_reply(json_data_string)
+
+                            if filtered_data:
+                                # 如果函数返回了数据 (即满足所有条件)
+                                extracted_replies.append(filtered_data)
+                                success = True
+                                print("\n✅ --- DETECTED & EXTRACTED BOT REPLY --- ✅")
+                                # 'filtered_data' 是一个Python字典, 已经是FastAPI可用的类型
+                                print(json.dumps(filtered_data, indent=2, ensure_ascii=False))
+                                print("------------------------------------------\n")
+                            else:
+                                print("Ignored non-bot or self-echoed reply.*********************\n")
+
                 print("--- End of Stream ---")
 
-        return {"status": "success", "message": "Stream processed successfully. Check your server logs for output."}
+        # 在这里, `extracted_replies` 列表包含了所有我们想要的回复数据(字典格式)
+        # 你可以根据业务需求对这个列表进行后续处理
+        return {
+            "success": success,
+            "message": f"Stream processed. Found {len(extracted_replies)} valid bot replies.",
+            "extracted_data": extracted_replies # 将提取的数据作为API的响应返回
+        }
 
     except httpx.RequestError as exc:
+        # ... (异常处理代码保持不变) ...
         error_message = f"An error occurred while requesting {exc.request.url!r}: {exc}"
         print(error_message)
         return {"status": "error", "message": error_message}
@@ -80,6 +129,6 @@ async def call_tencent_api(data: RequestData):
 
 if __name__ == "__main__":
     print("Starting FastAPI server...")
-    print("Send a POST request to http://127.0.0.1:8000/call_api")
+    print("Send a POST request to http://12.0.0.1:8000/call_api")
     print("Request body should be a JSON like: {\"content\": \"your question here\"}")
     uvicorn.run(app, host="127.0.0.1", port=8000)
