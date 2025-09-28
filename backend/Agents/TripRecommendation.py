@@ -4,6 +4,7 @@ import httpx
 import asyncio
 import json
 
+from backend.DataDefinition.DataDefinition import Trip
 
 spot_api_key = os.getenv("SPOT_API_KEY")
 # --- 腾讯云 API 配置 (保持不变) ---
@@ -127,7 +128,7 @@ async def get_bot_reply(content: str) -> list:
         return []
 
 # --- 调试专用的核心功能函数 ---
-async def get_trip_recommendation(content: str) -> list:
+async def get_trip_recommendation(content: str) -> Trip:
     """
     接收content字符串, 调用腾讯云API, 处理流式响应,
     并只返回标记为 is_final:true 且 is_from_self:false 的最终机器人回复。

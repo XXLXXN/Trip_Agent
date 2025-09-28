@@ -1,20 +1,20 @@
 from typing import List
 
-from fastapi import FastAPI,HTTPException
+from fastapi import FastAPI
 import redis
-import uuid
 
-from services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt
-from services.data_validater import validate_data,validate_create_spot_data,validate_create_hotel_data
-from services.connect_location import connect_location
-from services.save_to_db import save_to_db
+from backend.database.database_operations import save_trip_to_db
+from services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt,build_create_traffic_prompt
+from backend.tools.connect_location import connect_location
 
-import json
-from DataDefinition.DataDefinition import CreateItineraryRequest,CreateSpotsRequest
-from DataDefinition.DataDefinition import Trip,Location
+from DataDefinition.DataDefinition import CreateItineraryRequest, CreateSpotsRequest, HotelNameAndRecReason, \
+    CreateHotelRequest, CreateTrafficRequest
+from DataDefinition.DataDefinition import Trip
 
-from .Agents import SpotRecommendation
-from .services.prompt_sender import send_spot_recommendation_prompt
+from backend.Agents import TrafficRecommendation
+from backend.DataDefinition.DataDefinition import SpotNameAndRecReason
+from backend.services.prompt_sender import send_spot_recommendation_prompt, send_hotel_recommendation_prompt, \
+    send_traffic_recommendation_prompt, send_trip_plan_prompt, send_goods_price_search_prompt
 
 app = FastAPI(
     title="Data Flow",
@@ -24,7 +24,7 @@ app = FastAPI(
 
 redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
-@app.post("/create/spotsRecommended", response_model=List[Location])
+@app.post("/create/spotsRecommended", response_model=SpotNameAndRecReason)
 async def create_spot_recommended(request: CreateSpotsRequest):
     """
     用户填写基础信息后，给出推荐景点，用户可增删改。
@@ -33,22 +33,28 @@ async def create_spot_recommended(request: CreateSpotsRequest):
     """
 
     prompt= build_create_spot_prompt(request)
-    llm_response = await send_spot_recommendation_prompt(prompt)
-    recommended_spots_data=validate_create_spot_data(llm_response)
+    recommended_spots_data= await send_spot_recommendation_prompt(prompt)
     #处理并存储大模型返回的信息，把POI加入数据里的的函数
 
     return recommended_spots_data
 
-@app.post("/create/hotelRecommended", response_model=List[Location])
-async def create_hotel_recommended(request: List[Location]):
+@app.post("/create/hotelRecommended", response_model=List[HotelNameAndRecReason])
+async def create_hotel_recommended(request: CreateHotelRequest):
     # 缓存用户输入信息的函数
     prompt = build_create_hotel_prompt(request)
-    llm_response = await send_prompt(prompt)
-    recommended_hotel_data = validate_create_hotel_data(llm_response)
+    recommended_hotel_data  = await send_hotel_recommendation_prompt(prompt)
     # 处理并存储大模型返回的信息，把POI加入数据里的的函数
     #返回酒店
     return recommended_hotel_data
 
+
+@app.post("/create/trafficRecommended",response_model=List[TrafficRecommendation] )
+async def create_traffic_recommended(request:CreateTrafficRequest):
+    prompt = build_create_traffic_prompt(request)
+    recommended_traffic_data = await send_traffic_recommendation_prompt(prompt)
+    # 处理并存储大模型返回的信息，把POI加入数据里的的函数
+    # 返回交通方式
+    return recommended_traffic_data
 
 @app.post("/create/itinerary")
 async def create_itinerary(request:CreateItineraryRequest):
@@ -60,76 +66,42 @@ async def create_itinerary(request:CreateItineraryRequest):
     # 2. 构建提示词
     # 构建提示词，需要根据用户要求，比如什么是不能更改的，如果有冲突按照哪个办，参数的优先级是否需要强调等
     prompts =build_create_itinerary_prompt(request)
-
     # 3. 发送提示词
-    #发送提示词给大模型
-    llm_response = await send_prompt(prompts)
+    # 发送提示词给大模型
+    trip_no_trans=await send_trip_plan_prompt(prompts)
 
-    # 4. 校验结果
-    # 接受并校验返回格式是否正确
-    try:
-        validated_data = validate_data(llm_response)
-    except Exception as e:
-        # 5. 错误处理
-        # #格式不正确的校验与错误抛出流程
-        raise e
-    connect_location(validated_data)
+    trip_data=connect_location(trip_no_trans)
     # 给另一个大模型检查结果是否符合要求（可选）
     # model_to_verify()
-    # --- 缓存数据 ---
-    # 生成一个唯一的ID作为缓存键
-    itinerary_id = str(uuid.uuid4())
-
-    # 将 validated_data (Pydantic 模型) 转换为 JSON 字符串存储
-    # ex 参数设置缓存过期时间，这里设置为 3600 秒 (1小时)
-    # 用户需要在1小时内确认，否则数据会从缓存中移除
-    try:
-        redis_client.set(itinerary_id, validated_data.json(), ex=3600)
-    except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=500, detail=f"Could not connect to Redis: {e}")
-
-    # 7. 返回结果给前端显示，并包含缓存ID
-    # 前端会使用这个 itinerary_id 在用户确认时发送确认请求
-    return {
-        "itinerary_id": itinerary_id,
-        "data": validated_data.json()  # 返回json形式的数据供前端展示
-    }
-
-
+    return trip_data
 
 
 
 @app.post("/confirm/itinerary")
-async def confirm_itinerary(itinerary_id: str):
-    """根据用户确认指令，从缓存中取出数据并保存到数据库"""
-    # 1. 从 Redis 缓存中获取数据
-    try:
-        cached_json_data = redis_client.get(itinerary_id)
-    except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=500, detail=f"Could not connect to Redis: {e}")
+async def confirm_itinerary(confirmed_data:Trip):
+    """根据用户确认指令，从缓存中取出数据并保存到数据库，并进行支付链接生成和加入购物车"""
+    trip_dict=confirmed_data.model_dump()
+    data_id=save_trip_to_db(trip_dict)
+    prompts = build_create_itinerary_prompt(request)
+    #生成支付链接
+    goods=await send_goods_price_search_prompt(prompts)
+    #返回支付信息
+    return data_id,List[goods]
 
-    if not cached_json_data:
-        # 数据已过期或不存在
-        raise HTTPException(status_code=404, detail="Itinerary data not found or has expired. Please regenerate.")
+@app.post("/oneClick/itinerary")
+async def oneclick_itinerary(request):
 
-    # 2. 将缓存的 JSON 字符串反序列化为 Python 对象 (Pydantic 模型)
-    try:
-        validated_data = Trip.model_validate_json(cached_json_data)
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=500, detail="Failed to decode cached data.")
+    """
+    用户一键式规划，生成支付链接
+    根据目前用户提交的数据类型判断用户在哪个阶段一键式规划
+    然后直接返回支付链接
+    """
 
-    # 3. 将数据保存到数据库
-    try:
-        save_to_db(validated_data)
-    except Exception as e:
-        # 数据库保存失败的处理
-        raise HTTPException(status_code=500, detail=f"Failed to save itinerary to database: {e}")
-
-    # 4. 数据保存成功后，从 Redis 缓存中删除此数据
-    redis_client.delete(itinerary_id)
-
-    return {"message": "Itinerary saved successfully!"}
-
+@app.post("/update/itinerary")
+async def update_itinerary(request:UpdateItineraryRequest):
+    prompts = update_itinerary_prompt(request)
+    trip_no_trans = await send_trip_plan_prompt(prompts)
+    trip_data=connect_location(trip_no_trans)
 @app.get("get/itinerary")
 async def get_itinerary_by_id(itinerary_id: str):
     """<UNK>"""

@@ -127,7 +127,7 @@ async def get_bot_reply(content: str) -> list:
         return []
 
 # --- 调试专用的核心功能函数 ---
-async def get_budget_recommendation(content: str) -> list:
+async def search_goods_prices(content: str) -> list:
     """
     接收content字符串, 调用腾讯云API, 处理流式响应,
     并只返回标记为 is_final:true 且 is_from_self:false 的最终机器人回复。
@@ -248,7 +248,7 @@ async def main():
 }"""
     print(spot_api_key)
     # 调用核心函数并等待结果
-    final_replies = await get_budget_recommendation(user_input)
+    final_replies = await search_goods_prices(user_input)
 
     # 打印最终提取到的数据
     print("\n================ FINAL RESULT ================")

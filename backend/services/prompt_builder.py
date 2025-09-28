@@ -1,4 +1,4 @@
-from ..DataDefinition.DataDefinition import CreateItineraryRequest
+from backend.DataDefinition.DataDefinition import CreateItineraryRequest, CreateSpotsRequest
 
 
 def build_create_itinerary_prompt(request:CreateItineraryRequest) :
@@ -9,9 +9,14 @@ def build_create_itinerary_prompt(request:CreateItineraryRequest) :
     return prompt_content
 
 
-def build_create_spot_prompt():
+def build_create_spot_prompt(request:CreateSpotsRequest):
+
     return None
 
 
 def build_create_hotel_prompt():
+    return None
+
+
+def build_create_traffic_prompt():
     return None
