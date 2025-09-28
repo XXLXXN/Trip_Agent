@@ -1,0 +1,315 @@
+/* 大背景设置 */
+.container {
+  width: 375px;
+  height: 833px;
+  margin: 0 auto;
+  background-color: #f2f2f5;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.iconContainer {
+  width: 40px;
+  height: 32px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.methodItem img {
+  width: 100%;
+  height: 100%;
+  margin-right: 12px;
+  object-fit: contain;
+}
+
+/* 顶部导航栏 */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 63px 16px 13px 16px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  height: 113px;
+  width: 375px;
+}
+
+/* 顶部导航栏中的返回按钮 */
+.backButton {
+  background: none;
+  border: 1px solid #ece9e9;
+  /* 灰色边框 */
+  font-size: none;
+  color: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+  width: 56px;
+  height: 37px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* 鼠标悬停设置 */
+.backButton:hover {
+  background-color: #f5f5f5;
+  border-color: #bfbfbf;
+}
+
+.headerTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  padding-left: 8px;
+}
+
+/* 金额部分 */
+.amountSection {
+  background-color: #f3f2f5;
+  padding: 38px 131px 8px 131px;
+  text-align: center;
+}
+
+/* 金额 */
+.amount {
+  font-size: 40px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 倒计时部分 */
+.timerSection {
+  background-color: #f3f2f5;
+  padding: 8px;
+
+  text-align: center;
+}
+
+/* 倒计时文本 */
+.timer {
+  font-size: 14px;
+  font-weight: bold;
+  color: #8d8c8c;
+}
+
+/* 剩余时间 */
+.timeLeft {
+  color: #f8575a;
+  margin-left: 2px;
+  font-weight: bold;
+}
+
+/* 支付方式和银行卡部分 */
+.paymentSection,
+.bankSection {
+  background-color: #f3f2f5;
+  margin-top: 3px;
+  padding: 0 16px;
+  position: relative;
+}
+
+/* 在银行卡部分添加间隔 */
+.bankSection {
+  margin-top: 20px; 
+}
+
+.sectionTitle {
+  font-size: 10px;
+  color: #333;
+  padding: 6px 0;
+  text-align: left;
+  margin: 0;
+}
+
+/* 支付方式列表 */
+.methodList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 1px 0;
+  margin-top: 10px;
+}
+
+.methodItem {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  height: 64px;
+  border: 1px solid #e0e0e0;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.methodItem.selected {
+  border-color: #0768FD;
+  background-color: #f0f8ff;
+  box-shadow: 0 0 0 1px #0768FD;
+}
+
+.methodItem input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  right: 15px;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.radioCustom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f0f0f0;
+  border-radius: 50%;
+  margin-left: auto;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.methodItem input[type="radio"]:checked+.radioCustom {
+  border-color: #0768FD;
+}
+
+.methodItem input[type="radio"]:checked+.radioCustom::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background-color: #0768FD;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.iconPlaceholder {
+  width: 24px;
+  height: 24px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.methodTextContainer {
+  display: flex;
+  align-items: center;
+}
+
+.methodText {
+  font-size: 16px;
+  color: #333;
+}
+
+.recommendText {
+  font-size: 12px;
+  color: #398B2B;
+  background-color: #EBF3EA;
+  padding: 2px 6px;
+  border-radius: 20px;
+  margin-left: 179px;
+  margin-top: -55px;
+}
+
+/* 添加银行卡按钮 */
+.addCardButton {
+  background: none;
+  border: 1px solid #d4e8fd;
+  border-radius: 10px;
+  text-align: center;
+  padding: 8px 114px;
+  color: #0768FD;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f2f5;
+  transition: all 0.2s ease;
+  margin-top: 18px;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+/* 悬停时的按钮效果 */
+.addCardButton:hover {
+  background-color: #f5f5f5;
+  border-color: #bfbfbf;
+}
+
+.plusIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f2f5;  /* 设置背景为白色 */
+  margin-right: 8px;
+  font-size: 24px;  /* 增大字体大小 */
+  font-weight: bold; /* 设置字体为加粗 */
+}
+
+.plusIcon path {
+  fill: #0768FD; /* 设置加号的颜色为蓝色 */
+}
+
+
+.plusIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.addCardButton span {
+  font-weight: bold;
+  color: #0768FD;
+}
+
+/* 确认支付部分 */
+.confirmSection {
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+  margin-top: auto;
+}
+
+.confirmButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #0768FD;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.confirmButton:hover {
+  background-color: #40a9ff;
+}
+
+.confirmText {
+  text-align: center;
+  flex-grow: 1;
+}
