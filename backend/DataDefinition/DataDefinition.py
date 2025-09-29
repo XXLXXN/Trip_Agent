@@ -21,13 +21,9 @@ class TravellerCount(BaseModel):
     travellers: Dict[TravellerType, int] = Field(..., description="出行人员数量，键为类型，值为人数")
 
 #输入数据结构
-class Budget:
+class Budget(BaseModel):
     min:int
     max:int
-
-
-
-
 
 
 
@@ -155,8 +151,9 @@ class CreateSpotsRequest(BaseModel):
     departure_date: date
     return_date: date
     travellers_count: TravellerCount
-    trip_style: str
-    other_requirement: str
+    budget: Optional[Budget] = None
+    trip_style: Optional[str] = None
+    other_requirement: Optional[str] = None
 
 #创建景点推荐输出的数据
 class SpotNameAndRecReason(BaseModel):

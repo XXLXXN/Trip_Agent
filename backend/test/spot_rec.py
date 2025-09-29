@@ -1,14 +1,17 @@
+import sys
+import os
+# 添加项目根目录到Python路径（正确的路径计算）
+current_file_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(current_file_dir))
+sys.path.insert(0, project_root)
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
-from typing import List, Dict
+from typing import List, Dict, Optional
+from datetime import date
 
-# 定义请求模型
-class TripPlanningRequest(BaseModel):
-    destination: str
-    travel_style: str
-    travel_date: str
-    duration: int
+from backend.DataDefinition.DataDefinition import TravellerCount, Budget, CreateSpotsRequest
 
 # 定义响应模型
 class SpotRecommendation(BaseModel):
@@ -47,24 +50,29 @@ async def get_trip_planning_recommendations():
     """
     返回景点推荐数据
     """
-    return {
-        "recommendations": SAMPLE_SPOT_RECOMMENDATIONS
-    }
+    return SAMPLE_SPOT_RECOMMENDATIONS
+   
 
 @app.post("/api/trip-planning")
-async def post_trip_planning_recommendations(request: TripPlanningRequest):
+async def post_trip_planning_recommendations(request: CreateSpotsRequest):
     """
     基于旅行参数返回景点推荐数据
     """
+    # 打印接收到的请求数据以便调试
+    print("Received trip planning request:")
+    print(f"Departure City: {request.departure_city}")
+    print(f"Destination City: {request.destination_city}")
+    print(f"Departure Date: {request.departure_date}")
+    print(f"Return Date: {request.return_date}")
+    print(f"Travellers: {request.travellers_count.travellers}")
+    print(f"Budget: {request.budget}")
+    print(f"Trip Style: {request.trip_style}")
+    print(f"Other Requirements: {request.other_requirement}")
+    
     # 这里可以根据请求参数进行智能推荐
     # 目前暂时返回示例数据
-    return {
-        "destination": request.destination,
-        "travel_style": request.travel_style,
-        "travel_date": request.travel_date,
-        "duration": request.duration,
-        "recommendations": SAMPLE_SPOT_RECOMMENDATIONS
-    }
+    return SAMPLE_SPOT_RECOMMENDATIONS
+
 
 # 健康检查端点
 @app.get("/")

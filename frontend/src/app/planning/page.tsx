@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTripPlan, TripPlanData } from "../context/TripPlanContext";
 
 export default function TravelPlanningPage() {
   const [priceRange, setPriceRange] = useState([200, 30000]);
@@ -47,9 +48,11 @@ export default function TravelPlanningPage() {
   const [adults, setAdults] = useState(2);
   const [elderly, setElderly] = useState(0);
   const [children, setChildren] = useState(1);
+  const [additionalRequirements, setAdditionalRequirements] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { saveTripPlan } = useTripPlan();
 
   const toggleStyle = (style: string) => {
     setSelectedStyles((prev) =>
@@ -75,6 +78,7 @@ export default function TravelPlanningPage() {
         selectedTransport,
         selectedAccommodation,
         selectedStyles,
+        additionalRequirements,
       };
 
       // 发送数据到API路由
@@ -96,8 +100,26 @@ export default function TravelPlanningPage() {
       // 成功后跳转到结果页面，或者根据后端响应处理
       // 这里假设后端返回的数据中包含成功状态和要跳转的页面
       if (result.success) {
-        // 保存后端返回的数据到本地存储或状态管理
-        localStorage.setItem("tripPlanData", JSON.stringify(result.data));
+        // 使用规范的存储方式保存数据
+        const tripPlanData: TripPlanData = {
+          departure,
+          destination,
+          startDate,
+          endDate,
+          adults,
+          elderly,
+          children,
+          priceRange,
+          selectedTransport,
+          selectedAccommodation,
+          selectedStyles,
+          additionalRequirements,
+          backendData: result.data,
+          // 直接保存景点推荐数据
+          spotRecommendations: result.data,
+        };
+
+        saveTripPlan(tripPlanData);
         router.push("/jingdianliebiao"); // 跳转到结果页面
       } else {
         throw new Error(result.message || "处理失败");
@@ -481,8 +503,10 @@ export default function TravelPlanningPage() {
               <div className="space-y-3">
                 <h3 className="font-medium text-[#000000]">其他需求</h3>
                 <Textarea
-                  placeholder="请在此输入您的需求"
+                  placeholder="请在此输入您其他任何需求"
                   className="min-h-[60px] bg-[#f6f8fb] border-0 resize-none text-[#000000]"
+                  value={additionalRequirements}
+                  onChange={(e) => setAdditionalRequirements(e.target.value)}
                 />
               </div>
             </div>

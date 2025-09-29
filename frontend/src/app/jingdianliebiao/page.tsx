@@ -1,46 +1,49 @@
 // app/page.tsx
 
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // 从组件文件夹导入所有子组件
-import Header from '@/components/travelliebiao/Header';
-import SearchBar from '@/components/travelliebiao/SearchBar';
-import HotelCard from '@/components/travelliebiao/HotelCard';
-import BottomNav from '@/components/travelliebiao/BottomNav';
+import Header from "@/components/travelliebiao/Header";
+import SearchBar from "@/components/travelliebiao/SearchBar";
+import HotelCard from "@/components/travelliebiao/HotelCard";
+import BottomNav from "@/components/travelliebiao/BottomNav";
 
 // 从数据文件导入模拟数据
-import { mockHotels } from '@/mockData/travelcarddata';
+import { mockHotels } from "@/mockData/travelcarddata";
 
 export default function TravelSelectionPage() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
   const handleBackClick = () => {
-    router.push('/planning'); // 或者其他你想要跳转的路由
+    router.push("/planning"); // 或者其他你想要跳转的路由
   };
 
   const handleSkipClick = () => {
-    router.push('/traffic'); // 或者其他你想要跳转的路由
+    router.push("/traffic"); // 或者其他你想要跳转的路由
   };
 
   return (
     <div className="page-container">
-      
       {/* 顶部区域 */}
       <div className="top-section">
         <Header onBackClick={handleBackClick} onSkipClick={handleSkipClick} />
-        <SearchBar value={searchQuery} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)} />
+        <SearchBar
+          value={searchQuery}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSearchQuery(e.target.value)
+          }
+        />
       </div>
 
       {/* 推荐区域 */}
       <div className="recommendations-section">
         <div className="recommendations-header">
           <h2 className="recommendations-title">推荐景点方案</h2>
-          
         </div>
 
         {/* 酒店列表 */}
@@ -53,14 +56,14 @@ export default function TravelSelectionPage() {
 
       {/* 底部导航 */}
       <BottomNav />
-      
+
       <style jsx>{`
         .page-container {
           min-height: 100vh;
           background-color: #ffffff;
         }
         .top-section {
-          background-color: #D9D9D9;
+          background-color: #d9d9d9;
           padding-bottom: 5px;
         }
         .recommendations-section {

@@ -1,0 +1,12 @@
+{
+  "departure": "上海",
+  "destination": "北京",
+  "startDate": "2025.8.24",
+  "endDate": "2025.9.15",
+  "adults": 2,
+  "elderly": 0,
+  "children": 1,
+  "priceRange": [200, 30000],
+  "selectedTransport": "plane",
+  "selectedAccommodation": "hotel",
+  "selectedStyles": ["文艺", "美食"]
