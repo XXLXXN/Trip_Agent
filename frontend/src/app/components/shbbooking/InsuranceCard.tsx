@@ -1,6 +1,6 @@
 // src/components/booking/InsuranceCard.tsx
-import { ShieldCheck, Check, Plus } from 'lucide-react';
-import type { InsuranceInfo } from '@/data/bookingData';
+import { ShieldCheck, Check, Plus } from "lucide-react";
+import type { InsuranceInfo } from "../../mockData/shbbookingData";
 
 interface Props {
   data: InsuranceInfo;
@@ -17,7 +17,10 @@ const InsuranceCard = ({ data }: Props) => (
     </div>
     <div className="py-3 space-y-2">
       {data.benefits.map((benefit, index) => (
-        <p key={index} className="text-sm text-gray-600 flex items-center gap-2">
+        <p
+          key={index}
+          className="text-sm text-gray-600 flex items-center gap-2"
+        >
           <Check size={16} className="text-blue-500" /> {benefit}
         </p>
       ))}

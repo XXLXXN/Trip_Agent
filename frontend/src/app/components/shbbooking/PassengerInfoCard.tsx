@@ -1,8 +1,8 @@
 // src/components/booking/PassengerInfoCard.tsx
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect } from "react";
 // 我们需要引入 Check 和 X 图标用于保存和取消
-import { Pencil, Mail, Phone, Check, X } from 'lucide-react';
-import type { PassengerInfo } from '@/data/bookingData';
+import { Pencil, Mail, Phone, Check, X } from "lucide-react";
+import type { PassengerInfo } from "../../mockData/shbbookingData";
 
 interface Props {
   data: PassengerInfo;
@@ -24,7 +24,7 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = () => {
@@ -54,31 +54,35 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
                 className="font-semibold text-gray-800 border-b-2 border-slate-200 focus:border-blue-500 outline-none w-full"
               />
               <div className="flex items-center gap-2">
-                 <Mail size={16} className="text-gray-400" />
-                 <input 
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="text-sm text-gray-500 border-b border-slate-200 focus:border-blue-500 outline-none w-full"
-                 />
+                <Mail size={16} className="text-gray-400" />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="text-sm text-gray-500 border-b border-slate-200 focus:border-blue-500 outline-none w-full"
+                />
               </div>
-               <div className="flex items-center gap-2">
-                 <Phone size={16} className="text-gray-400" />
-                 <input 
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="text-sm text-gray-500 border-b border-slate-200 focus:border-blue-500 outline-none w-full"
-                 />
+              <div className="flex items-center gap-2">
+                <Phone size={16} className="text-gray-400" />
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="text-sm text-gray-500 border-b border-slate-200 focus:border-blue-500 outline-none w-full"
+                />
               </div>
             </div>
           </div>
           {/* 保存和取消按钮 */}
           <div className="flex flex-col gap-2 ml-2">
-             <button onClick={handleSave}><Check size={20} className="text-green-500" /></button>
-             <button onClick={handleCancel}><X size={20} className="text-red-500" /></button>
+            <button onClick={handleSave}>
+              <Check size={20} className="text-green-500" />
+            </button>
+            <button onClick={handleCancel}>
+              <X size={20} className="text-red-500" />
+            </button>
           </div>
         </div>
       </div>
@@ -93,12 +97,18 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
           <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
           <div>
             <p className="font-semibold text-gray-800">{data.name}</p>
-            <p className="text-sm text-gray-500 flex items-center gap-2 mt-2"><Mail size={16} /> {data.email}</p>
-            <p className="text-sm text-gray-500 flex items-center gap-2 mt-1"><Phone size={16} /> {data.phone}</p>
+            <p className="text-sm text-gray-500 flex items-center gap-2 mt-2">
+              <Mail size={16} /> {data.email}
+            </p>
+            <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
+              <Phone size={16} /> {data.phone}
+            </p>
           </div>
         </div>
         {/* 编辑按钮现在会切换到编辑模式 */}
-        <button onClick={() => setIsEditing(true)}><Pencil size={18} className="text-gray-400" /></button>
+        <button onClick={() => setIsEditing(true)}>
+          <Pencil size={18} className="text-gray-400" />
+        </button>
       </div>
     </div>
   );
