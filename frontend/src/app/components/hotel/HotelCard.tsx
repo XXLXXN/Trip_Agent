@@ -1,31 +1,23 @@
-// components/HotelCard.tsx
+// components/hotel/HotelCard.tsx
 
 'use client';
+import { Hotel } from '@/mockData/hoteldata'; // 建议将类型定义集中管理
 
-// Hotel 类型定义，与 data.tsx 保持一致
-interface Hotel {
-  id: number;
-  name: string;
-  location: string;
-  price: number;
-  rating: number;
-  image: string;
-  path: string;
-  isPlan?: boolean;
-}
-
-// 新的 Props 接口
 interface HotelCardProps {
+  /** 酒店数据对象 */
   hotel: Hotel;
-  isSelected: boolean; // 告诉卡片当前是否被选中（显示 - 号）
-  onButtonClick: (hotelId: number) => void; // 当用户点击 +/- 按钮时调用的函数
+  /** 卡片是否处于选中状态，用于决定显示'+'或'-'图标 */
+  isSelected: boolean;
+  /** 当用户点击 +/- 按钮时触发的回调函数 */
+  onToggleSelection: (hotelId: number) => void;
 }
 
-export default function HotelCard({ hotel, isSelected, onButtonClick }: HotelCardProps) {
+export default function HotelCard({ hotel, isSelected, onToggleSelection }: HotelCardProps) {
   
   const handleButtonClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 阻止事件冒泡，以免触发卡片本身的点击跳转
-    onButtonClick(hotel.id);
+    // 阻止事件冒泡，以免触发卡片本身的点击跳转
+    e.stopPropagation();
+    onToggleSelection(hotel.id);
   };
 
   return (

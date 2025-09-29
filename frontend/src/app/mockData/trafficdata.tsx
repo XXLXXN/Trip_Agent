@@ -1,5 +1,6 @@
-// app/data.tsx
+// data/traveldata.tsx
 
+// 定义出行选项的数据结构
 export interface TravelOption {
   id: number;
   name: string;
@@ -8,9 +9,10 @@ export interface TravelOption {
   rating: number;
   image: string;
   path: string;
-  type: 'fly' | 'train'; // 新增：出行方式的类型标签
+  type: 'fly' | 'train'; // 出行方式类型
 }
 
+// 模拟的出行选项数据
 export const mockTravelOptions: TravelOption[] = [
   { id: 1, name: "西南航空", location: "SLEMAN, DIY", price: 125, rating: 4.5, image: "", path: "/travel/southwest-air", type: 'fly' },
   { id: 2, name: "春秋航空", location: "PARANGTRITIS", price: 125, rating: 4.5, image: "", path: "/travel/spring-air", type: 'fly' },

@@ -4,12 +4,14 @@
 
 import { useRouter } from 'next/navigation'; 
 
-// 导出 BottomNav 组件
+/**
+ * 页面底部的固定导航栏，包含一个“下一步”按钮。
+ */
 export default function BottomNav() {
   const router = useRouter(); 
 
   const handleNextClick = () => {
-    // 您可以把 '/summary' 替换为您想跳转的任何目标页面路径
+    // 点击后导航至 /hotel 页面
     router.push('/hotel'); 
   };
 
@@ -20,14 +22,13 @@ export default function BottomNav() {
           下一步
         </button>
       </div>
+      {/* 这是一个占位元素，防止底部导航栏遮挡页面内容 */}
       <div className="bottom-padding"></div>
       <style jsx>{`
         .bottom-nav {
           font-family: 'Inter', semi-bold;
           font-size: 14px;
           font-weight: 500;
-          line-height: auto;
-          letter-spacing: 0.00em;
           position: fixed;
           bottom: 0;
           left: 0;

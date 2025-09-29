@@ -1,63 +1,61 @@
-// app/page.tsx
+// app/hotellist/page.tsx
 
 'use client'
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-// 确保这里的组件路径是正确的
-import Header from '@/components/hotel/Header';
+import SelectionHeader from '@/components/hotel/SelectionHeader';
 import SearchBar from '@/components/hotel/SearchBar';
 import HotelCard from '@/components/hotel/HotelCard';
-import BottomNav from '@/components/hotel/BottomNav';
+import BottomActionNav from '@/components/hotel/BottomActionNav';
 
-// 从您的数据文件导入
-import { mockHotels } from '@/mockData/hoteldata';
+import { mockHotelData } from '@/mockData/hoteldata';
 
-export default function TravelSelectionPage() {
+export default function HotelSelectionPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
-  // 1. STATE: 管理已选择的酒店 ID 列表
+  // State: 跟踪已选择酒店的ID列表，初始值为数据中标记为isPlan的酒店
   const [selectedHotelIds, setSelectedHotelIds] = useState(
-    mockHotels.filter(h => h.isPlan).map(h => h.id)
+    mockHotelData.filter(h => h.isPlan).map(h => h.id)
   );
 
-  // 2. HANDLER: 处理 +/- 按钮点击
-  const handleHotelAction = (hotelId: number) => {
+  // Handler: 处理酒店卡片上的添加/移除操作
+  const toggleHotelSelection = (hotelId: number) => {
     setSelectedHotelIds(prevIds => {
       if (prevIds.includes(hotelId)) {
+        // 如果已存在，则移除
         return prevIds.filter(id => id !== hotelId);
       } else {
+        // 如果不存在，则添加
         return [...prevIds, hotelId];
       }
     });
   };
 
-  // 3. FILTERING: 根据状态和搜索词筛选数据
-  const selectedHotels = mockHotels.filter(h => selectedHotelIds.includes(h.id));
-  const recommendedHotels = mockHotels.filter(h => 
+  // 根据当前选择状态和搜索词，派生出两个列表
+  const selectedHotels = mockHotelData.filter(h => selectedHotelIds.includes(h.id));
+  const availableHotels = mockHotelData.filter(h => 
     !selectedHotelIds.includes(h.id) &&
     h.name.toLowerCase().includes(searchQuery.toLowerCase()) // 应用搜索过滤
   );
 
-  // Header 点击事件
+  // Header 按钮的导航处理
   const handleBackClick = () => router.push('/traffic');
   const handleSkipClick = () => router.push('/messagecard');
 
   return (
     <div className="page-container">
       
-      {/* 顶部区域: Header 和 SearchBar 保持不变 */}
       <div className="top-section">
-        <Header onBackClick={handleBackClick} onSkipClick={handleSkipClick} />
+        <SelectionHeader onBackClick={handleBackClick} onSkipClick={handleSkipClick} />
         <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
 
-      {/* 内容区域: 现在渲染两个列表 */}
-      <div className="content-area">
-        {/* 分区 1: 推荐酒店方案 */}
-        <div className="section">
+      <main className="content-area">
+        {/* 分区 1: 已选的酒店方案 */}
+        <section className="section">
           <div className="section-header">
             <h2 className="section-title">推荐酒店方案</h2>
           </div>
@@ -66,35 +64,34 @@ export default function TravelSelectionPage() {
               <HotelCard
                 key={hotel.id}
                 hotel={hotel}
-                isSelected={true} // 显示 '-'
-                onButtonClick={handleHotelAction}
+                isSelected={true} // 属于已选列表，显示 '-'
+                onToggleSelection={toggleHotelSelection}
               />
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* 分区 2: 推荐酒店 */}
-        <div className="section">
+        {/* 分区 2: 其他可供选择的酒店 */}
+        <section className="section">
           <div className="section-header">
             <h2 className="section-title">推荐酒店</h2>
           </div>
           <div className="card-list">
-            {recommendedHotels.map(hotel => (
+            {availableHotels.map(hotel => (
               <HotelCard
                 key={hotel.id}
                 hotel={hotel}
-                isSelected={false} // 显示 '+'
-                onButtonClick={handleHotelAction}
+                isSelected={false} // 属于可选列表，显示 '+'
+                onToggleSelection={toggleHotelSelection}
               />
             ))}
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
 
-      <BottomNav />
+      <BottomActionNav />
       
       <style jsx>{`
-        /* 保留您的 page 和 top-section 样式 */
         .page-container {
           min-height: 100vh;
           background-color: #ffffff;
@@ -103,8 +100,6 @@ export default function TravelSelectionPage() {
           background-color: #D9D9D9;
           padding-bottom: 5px;
         }
-
-        /* 这是新的内容区域样式 */
         .content-area {
           padding: 16px;
           background-color: #ffffff;
@@ -123,7 +118,6 @@ export default function TravelSelectionPage() {
           font-weight: 600;
           color: #111827;
         }
-
         .card-list {
           display: flex;
           flex-direction: column;
