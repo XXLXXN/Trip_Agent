@@ -20,7 +20,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 # 现在应该可以安全地从backend包导入
-from backend.DataDefinition.DataDefinition import SpotDetailInfo, SpotNameAndRecReason
+from backend.DataDefinition.DataDefinition import SpotDetailInfo, SpotNameAndRecReason, SpotnoPOI
 
 
 # 高德地图API配置
@@ -270,6 +270,149 @@ def get_poi_detail_by_id(poi_id: str) -> Optional[Dict]:
                 return None
         else:
             print(f"HTTP请求失败: {response.status_code}")
+            return None
+            
+    except requests.exceptions.RequestException as e:
+        print(f"请求异常: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"JSON解析错误: {e}")
+        return None
+
+
+def search_and_add_poi(spot_rec: List[SpotnoPOI], city: str = "") -> List[SpotNameAndRecReason]:
+    """根据景点名称搜索POI ID并添加进数据里
+    
+    Args:
+        spot_rec: 景点推荐列表，包含景点名称和推荐理由
+        city: 城市名称，用于提高搜索精度（可选）
+        
+    Returns:
+        包含POI ID的景点推荐列表
+    """
+    
+    print(f"\n=== 开始搜索POI ID ===")
+    print(f"需要处理的景点数量: {len(spot_rec)}")
+    print(f"搜索城市: {city if city else '未指定'}")
+    
+    if not spot_rec:
+        print("警告：景点推荐列表为空")
+        return []
+    
+    result = []
+    
+    for i, spot in enumerate(spot_rec):
+        print(f"\n--- 处理景点 {i + 1}: {spot.SpotName} ---")
+        
+        # 搜索POI ID
+        poi_id = search_poi_id_by_name(spot.SpotName, city)
+        
+        if poi_id:
+            print(f"  成功找到POI ID: {poi_id}")
+            # 创建包含POI ID的景点对象
+            spot_with_poi = SpotNameAndRecReason(
+                SpotName=spot.SpotName,
+                RecReason=spot.RecReason,
+                POIId=poi_id,
+                description=spot.description
+            )
+            result.append(spot_with_poi)
+        else:
+            print(f"  警告：未找到景点 '{spot.SpotName}' 的POI ID")
+            # 如果没有找到POI ID，使用空字符串作为POI ID
+            spot_with_poi = SpotNameAndRecReason(
+                SpotName=spot.SpotName,
+                RecReason=spot.RecReason,
+                POIId="",
+                description=spot.description
+            )
+            result.append(spot_with_poi)
+        
+        # 控制API调用频率，避免超过限制
+        if i < len(spot_rec) - 1:
+            print("等待200ms以控制API调用频率...")
+            time.sleep(0.2)
+    
+    print(f"\n=== POI ID搜索完成 ===")
+    print(f"成功处理景点数量: {len(result)}")
+    return result
+
+
+def search_poi_id_by_name(spot_name: str, city: str = "") -> Optional[str]:
+    """根据景点名称搜索POI ID
+    
+    Args:
+        spot_name: 景点名称
+        city: 城市名称（可选）
+        
+    Returns:
+        POI ID字符串，如果未找到则返回None
+    """
+    
+    print(f"搜索景点: {spot_name}, 城市: {city if city else '未指定'}")
+    
+    if not spot_name:
+        print("景点名称为空，跳过搜索")
+        return None
+    
+    if not AMAP_API_KEY or AMAP_API_KEY == 'your_amap_api_key_here':
+        print("错误：高德地图API密钥未配置")
+        return None
+    
+    try:
+        # 构建请求参数
+        params = {
+            'key': AMAP_API_KEY,
+            'keywords': spot_name,
+        }
+        
+        # 如果指定了城市，添加城市参数
+        if city:
+            params['region'] = city
+        
+        print(f"API请求参数: {params}")
+        print("正在发送API请求...")
+        
+        # 发送API请求
+        response = requests.get("https://restapi.amap.com/v5/place/text", params=params, timeout=10)
+        
+        print(f"API响应状态码: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"API响应数据: {data}")
+            
+            # 检查API响应状态
+            if data.get('status') == '0':
+                error_info = data.get('info', '未知错误')
+                print(f"API调用失败: {error_info}")
+                return None
+                
+            if data.get('status') == '1' and data.get('pois'):
+                pois = data['pois']
+                print(f"找到 {len(pois)} 个相关POI")
+                
+                # 优先选择名称完全匹配的POI
+                for poi in pois:
+                    poi_name = poi.get('name', '')
+                    if poi_name == spot_name:
+                        poi_id = poi.get('id')
+                        print(f"找到完全匹配的POI: {poi_id} - {poi_name}")
+                        return poi_id
+                
+                # 如果没有完全匹配，选择第一个POI
+                if pois:
+                    first_poi = pois[0]
+                    poi_id = first_poi.get('id')
+                    poi_name = first_poi.get('name', '未知名称')
+                    print(f"选择第一个相关POI: {poi_id} - {poi_name}")
+                    return poi_id
+            
+            print(f"未找到景点 '{spot_name}' 的相关POI")
+            return None
+        else:
+            print(f"HTTP请求失败: {response.status_code}")
+            print(f"响应内容: {response.text[:200]}...")
             return None
             
     except requests.exceptions.RequestException as e:

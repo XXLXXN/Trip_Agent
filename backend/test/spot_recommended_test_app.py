@@ -19,7 +19,7 @@ from backend.DataDefinition.DataDefinition import (
     CreateSpotsRequest, TravellerCount, TravellerType, Budget, SpotDetailInfo
 )
 from backend.services.prompt_builder import build_create_spot_prompt
-from backend.tools.map_tools import add_detail_info
+from backend.tools.map_tools import add_detail_info, search_and_add_poi
 from backend.services.prompt_sender import send_spot_recommendation_prompt
 
 # 创建独立的测试应用
@@ -58,7 +58,7 @@ async def test_create_spot_recommended(request: CreateSpotsRequest):
         
         # 3. 添加详细信息
         print("正在添加POI详细信息...")
-        detail_data = add_detail_info(recommended_spots_data)
+        detail_data = add_detail_info(search_and_add_poi(recommended_spots_data))
         print(f"最终返回数据数量: {len(detail_data)}")
         
         print("=== 接口测试完成 ===")

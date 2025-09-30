@@ -25,13 +25,13 @@ from backend.Agents.HotelRecommendation import get_hotel_recommendation
 from backend.Agents.TrafficRecommendation import get_traffic_recommendation
 from backend.Agents.TripRecommendation import get_trip_recommendation
 from backend.Agents.BudgetRecommendation import search_goods_prices
-from backend.DataDefinition.DataDefinition import SpotNameAndRecReason, Trip
-from backend.tools.map_tools import add_detail_info
+from backend.DataDefinition.DataDefinition import SpotNameAndRecReason, SpotnoPOI, Trip
+from backend.tools.map_tools import add_detail_info, search_and_add_poi
 
 # 假设 SpotNameAndRecReason 和 get_spot_recommendation, search_and_add_poi 已经定义
 # from somewhere import SpotNameAndRecReason, get_spot_recommendation, search_and_add_poi
 
-async def send_spot_recommendation_prompt(prompts: str) -> Optional[List[SpotNameAndRecReason]]:
+async def send_spot_recommendation_prompt(prompts: str) -> Optional[List[SpotnoPOI]]:
     """
     根据用户提示获取景点推荐，并解析处理。
 
@@ -71,18 +71,17 @@ async def send_spot_recommendation_prompt(prompts: str) -> Optional[List[SpotNam
                 print(f"解析后的数据: {spot_data}")
                 
                 # 转换为SpotNameAndRecReason对象列表
-                spot_rec = [SpotNameAndRecReason(**item) for item in spot_data]
+                spot_rec = [SpotnoPOI(**item) for item in spot_data]
                 print(f"转换后的Spot对象数量: {len(spot_rec)}")
                 
                 # 调用并处理后续逻辑
-                detail_data = add_detail_info(spot_rec)
+                detail_data = add_detail_info(search_and_add_poi(spot_rec))
                 print(f"添加详情后的数据数量: {len(detail_data)}")
                 
                 # 详细打印提取的数据信息
                 print("\n=== 提取的详细信息 ===")
                 for i, detail in enumerate(detail_data):
                     print(f"\n{i+1}. {detail.SpotName}")
-                    print(f"   POI ID: {detail.POIId}")
                     print(f"   推荐理由: {detail.RecReason}")
                     print(f"   描述: {detail.description}")
                     print(f"   地址: {detail.address}")

@@ -156,6 +156,11 @@ class CreateSpotsRequest(BaseModel):
     other_requirement: Optional[str] = None
 
 #创建景点推荐输出的数据
+class SpotnoPOI(BaseModel):
+    SpotName: str
+    RecReason: str
+    description: Optional[str] = None
+    
 class SpotNameAndRecReason(BaseModel):
     SpotName: str
     RecReason: str

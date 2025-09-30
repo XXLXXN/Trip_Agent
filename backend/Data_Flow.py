@@ -6,7 +6,7 @@ import redis
 from backend.database.database_operations import save_trip_to_db
 from backend.services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt,build_create_traffic_prompt
 from backend.tools.connect_location import connect_location
-from backend.tools.map_tools import add_detail_info
+from backend.tools.map_tools import add_detail_info, search_and_add_poi
 from backend.DataDefinition.DataDefinition import CreateItineraryRequest, CreateSpotsRequest, HotelNameAndRecReason, \
     CreateHotelRequest, CreateTrafficRequest, SpotDetailInfo
 from backend.DataDefinition.DataDefinition import Trip
@@ -34,7 +34,7 @@ async def create_spot_recommended(request: CreateSpotsRequest):
     prompt= build_create_spot_prompt(request)
     recommended_spots_data= await send_spot_recommendation_prompt(prompt)
     #处理并存储大模型返回的信息，把POI加入数据里的的函数
-    detail_data=add_detail_info(recommended_spots_data)
+    detail_data=add_detail_info(search_and_add_poi(recommended_spots_data))
     return detail_data
 
 @app.post("/create/hotelRecommended", response_model=List[HotelNameAndRecReason])
