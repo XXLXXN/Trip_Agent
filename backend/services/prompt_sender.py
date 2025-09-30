@@ -7,7 +7,7 @@ from backend.Agents.TrafficRecommendation import get_traffic_recommendation
 from backend.Agents.TripRecommendation import get_trip_recommendation
 from backend.Agents.BudgetRecommendation import search_goods_prices
 from backend.DataDefinition.DataDefinition import SpotNameAndRecReason, Trip
-from backend.tools.map_tools import search_and_add_poi
+from backend.tools.map_tools import add_detail_info
 import json
 # 假设 SpotNameAndRecReason 和 get_spot_recommendation, search_and_add_poi 已经定义
 # from somewhere import SpotNameAndRecReason, get_spot_recommendation, search_and_add_poi
@@ -35,7 +35,7 @@ async def send_spot_recommendation_prompt(prompts: str) -> Optional[List[SpotNam
         spot_rec: List[SpotNameAndRecReason]= json.loads(raw_json_string)
 
         # 调用并处理后续逻辑
-        search_and_add_poi(spot_rec)
+        add_detail_info(spot_rec)
         return spot_rec
 
     except json.JSONDecodeError as e:
@@ -56,7 +56,7 @@ async def send_hotel_recommendation_prompt(prompt: str) -> list:
     spot_rec_str = data[0]["content"]
     try:
         spot_rec = json.loads(spot_rec_str)
-        search_and_add_poi(spot_rec)
+        add_detail_info(spot_rec)
     except json.JSONDecodeError as e:
         print(f"解析错误: {e}")
     return data
@@ -66,7 +66,7 @@ async def send_traffic_recommendation_prompt(prompt: str) -> list:
     spot_rec_str = data[0]["content"]
     try:
         spot_rec = json.loads(spot_rec_str)
-        search_and_add_poi(spot_rec)
+        add_detail_info(spot_rec)
     except json.JSONDecodeError as e:
         print(f"解析错误: {e}")
     return data
@@ -77,7 +77,7 @@ async def send_trip_plan_prompt(prompt: str) -> Trip:
     spot_rec_str = data[0]["content"]
     try:
         spot_rec = json.loads(spot_rec_str)
-        search_and_add_poi(spot_rec)
+        add_detail_info(spot_rec)
     except json.JSONDecodeError as e:
         print(f"解析错误: {e}")
     return data
@@ -87,7 +87,7 @@ async def send_goods_price_search_prompt(prompt: str) -> list:
     spot_rec_str = data[0]["content"]
     try:
         spot_rec = json.loads(spot_rec_str)
-        search_and_add_poi(spot_rec)
+        add_detail_info(spot_rec)
     except json.JSONDecodeError as e:
         print(f"解析错误: {e}")
     return data

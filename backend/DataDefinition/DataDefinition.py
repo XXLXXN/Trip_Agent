@@ -159,9 +159,17 @@ class CreateSpotsRequest(BaseModel):
 class SpotNameAndRecReason(BaseModel):
     SpotName: str
     RecReason: str
+    POIId:str
+    description: Optional[str] = None
 
-
-
+class SpotDetailInfo(BaseModel):
+    SpotName: str
+    RecReason: str
+    POIId:str
+    description: str
+    address:str
+    photos:Optional[List[Dict]] #每个dict里有url和title
+    rating:Optional[str] 
 
 #创建酒店推荐输入的数据
 class CreateHotelRequest(BaseModel):
