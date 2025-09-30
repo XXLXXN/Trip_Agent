@@ -4,15 +4,14 @@ from fastapi import FastAPI
 import redis
 
 from backend.database.database_operations import save_trip_to_db
-from services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt,build_create_traffic_prompt
+from backend.services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt,build_create_traffic_prompt
 from backend.tools.connect_location import connect_location
-from backend.tools.map_tools import add_poi_info
-from DataDefinition.DataDefinition import CreateItineraryRequest, CreateSpotsRequest, HotelNameAndRecReason, \
+from backend.tools.map_tools import add_detail_info
+from backend.DataDefinition.DataDefinition import CreateItineraryRequest, CreateSpotsRequest, HotelNameAndRecReason, \
     CreateHotelRequest, CreateTrafficRequest, SpotDetailInfo
-from DataDefinition.DataDefinition import Trip
+from backend.DataDefinition.DataDefinition import Trip
 
-from backend.Agents import TrafficRecommendation
-from backend.DataDefinition.DataDefinition import SpotNameAndRecReason
+from backend.DataDefinition.DataDefinition import SpotNameAndRecReason, TrafficRecInfo
 from backend.services.prompt_sender import send_spot_recommendation_prompt, send_hotel_recommendation_prompt, \
     send_traffic_recommendation_prompt, send_trip_plan_prompt, send_goods_price_search_prompt
 
@@ -24,7 +23,7 @@ app = FastAPI(
 
 redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
-@app.post("/create/spotsRecommended", response_model=SpotDetailInfo)
+@app.post("/create/spotsRecommended", response_model=List[SpotDetailInfo])
 async def create_spot_recommended(request: CreateSpotsRequest):
     """
     用户填写基础信息后，给出推荐景点，用户可增删改。
@@ -35,7 +34,7 @@ async def create_spot_recommended(request: CreateSpotsRequest):
     prompt= build_create_spot_prompt(request)
     recommended_spots_data= await send_spot_recommendation_prompt(prompt)
     #处理并存储大模型返回的信息，把POI加入数据里的的函数
-    detail_data=add_poi_info(recommended_spots_data)
+    detail_data=add_detail_info(recommended_spots_data)
     return detail_data
 
 @app.post("/create/hotelRecommended", response_model=List[HotelNameAndRecReason])
@@ -48,7 +47,7 @@ async def create_hotel_recommended(request: CreateHotelRequest):
     return recommended_hotel_data
 
 
-@app.post("/create/trafficRecommended",response_model=List[TrafficRecommendation] )
+@app.post("/create/trafficRecommended",response_model=List[TrafficRecInfo])
 async def create_traffic_recommended(request:CreateTrafficRequest):
     prompt = build_create_traffic_prompt(request)
     recommended_traffic_data = await send_traffic_recommendation_prompt(prompt)

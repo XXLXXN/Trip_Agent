@@ -127,7 +127,7 @@ async def get_bot_reply(content: str) -> list:
         return []
 
 # --- 调试专用的核心功能函数 ---
-async def get_spot_recommendation(content: str) -> list:
+async def get_spot_recommendation(content: str) -> list[dict]:
     """
     接收content字符串, 调用腾讯云API, 处理流式响应,
     并只返回标记为 is_final:true 且 is_from_self:false 的最终机器人回复。
@@ -153,6 +153,7 @@ async def get_spot_recommendation(content: str) -> list:
                 data_buffer = []
 
                 async for line in response.aiter_lines():
+                    print(line)
                     # SSE协议使用空行作为事件分隔符
                     if not line:
                         # 当一个事件结束时，我们处理累积的数据

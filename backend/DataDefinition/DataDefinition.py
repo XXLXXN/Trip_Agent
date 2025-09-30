@@ -152,7 +152,7 @@ class CreateSpotsRequest(BaseModel):
     return_date: date
     travellers_count: TravellerCount
     budget: Optional[Budget] = None
-    trip_style: Optional[str] = None
+    trip_style:str = "不限"
     other_requirement: Optional[str] = None
 
 #创建景点推荐输出的数据
