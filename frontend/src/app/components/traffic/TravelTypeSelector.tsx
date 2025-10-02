@@ -9,60 +9,67 @@ interface TravelTypeSelectorProps {
   onTypeChange: (newType: string) => void;
 }
 
-// 定义出行方式 key 到显示文本的映射
-const typeLabels: { [key: string]: string } = {
-  all: '不限',
-  fly: '航空',
-  train: '高铁',
-  self: '自行安排',
-};
+// 定义出行方式及其标签
+const travelTypes = [
+  { key: 'all', label: '不限' },
+  { key: 'fly', label: '航空' },
+  { key: 'train', label: '高铁' },
+  { key: 'self', label: '自行安排' },
+];
 
 /**
- * 一个自定义样式的下拉选择器，用于选择出行类别。
+ * 一个分段式按钮选择器，用于在不同的出行类别之间切换。
+ * 替代了原生的下拉菜单，以提供更统一和美观的用户体验。
  */
 export default function TravelTypeSelector({ selectedType, onTypeChange }: TravelTypeSelectorProps) {
-  const handleSelectionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onTypeChange(event.target.value);
-  };
-
   return (
     <>
       <div className="selector-container">
-        <div className="selector-frame">
-          <div className="selector-field">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="#4A90E2"/>
-            </svg>
-            <div className="text-area">
-              <span className="label">出行类别</span>
-              <span className="value">{typeLabels[selectedType]}</span>
-            </div>
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1.41 0.589966L6 5.16997L10.59 0.589966L12 1.99997L6 7.99997L0 1.99997L1.41 0.589966Z" fill="#0768FD"/>
-            </svg>
-            
-            {/* 使用一个透明的 <select> 元素覆盖在上方，以调用浏览器原生的选择器 UI */}
-            <select
-              value={selectedType}
-              onChange={handleSelectionChange}
-              className="native-select"
+        <div className="button-group">
+          {travelTypes.map((type) => (
+            <button
+              key={type.key}
+              className={`selector-button ${selectedType === type.key ? 'active' : ''}`}
+              onClick={() => onTypeChange(type.key)}
             >
-              <option value="all">不限</option>
-              <option value="fly">航空</option>
-              <option value="train">高铁</option>
-              <option value="self">自行安排</option>
-            </select>
-          </div>
+              {type.label}
+            </button>
+          ))}
         </div>
       </div>
       <style jsx>{`
-        .selector-container { background-color: #D9D9D9; padding: 0 16px; }
-        .selector-frame { background-color: #ffffff; border-radius: 24px; padding: 16px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07); }
-        .selector-field { position: relative; display: flex; align-items: center; background-color: #F0F7FF; border-radius: 16px; height: 60px; padding: 0 20px; cursor: pointer; }
-        .text-area { display: flex; flex-direction: column; margin-left: 12px; flex-grow: 1; }
-        .label { font-size: 12px; color: #888; }
-        .value { font-size: 16px; font-weight: 600; color: #1B1446; }
-        .native-select { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .selector-container {
+          background-color: #D9D9D9;
+          padding: 8px 16px;
+        }
+        .button-group {
+          display: flex;
+          width: 100%;
+          background-color: #ffffff;
+          border-radius: 9999px; /* 使用一个很大的值来创建胶囊形状 */
+          padding: 4px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+          border: 1px solid #e5e7eb;
+        }
+        .selector-button {
+          flex: 1; /* 让每个按钮平分容器宽度 */
+          padding: 10px 0;
+          border: none;
+          background-color: transparent;
+          color: #4b5563; /* 未选中时的文字颜色 */
+          font-size: 14px;
+          font-weight: 500;
+          border-radius: 9999px;
+          cursor: pointer;
+          transition: background-color 0.3s ease, color 0.3s ease;
+          outline: none;
+        }
+        .selector-button.active {
+          background-color: #0768FD; /* 选中时的背景色 */
+          color: #ffffff; /* 选中时的文字颜色 */
+          font-weight: 600;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
       `}</style>
     </>
   );

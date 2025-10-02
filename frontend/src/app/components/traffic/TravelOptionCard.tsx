@@ -49,9 +49,7 @@ export default function TravelOptionCard({ option }: TravelOptionCardProps) {
               <span className="option-rating">{option.rating}</span>
             </div>
           </div>
-          <button className="select-button">
-            <div className="select-icon"></div>
-          </button>
+          
         </div>
       </div>
       <style jsx>{`
@@ -69,8 +67,7 @@ export default function TravelOptionCard({ option }: TravelOptionCardProps) {
         .option-rating-wrapper { display: flex; align-items: center; gap: 4px; }
         .star-icon { width: 18px; height: 18px; color: #FFBE41; }
         .option-rating { font-family: 'Inter', medium; font-size: 12px; font-weight: 500; color: #BFBFBF; }
-        .select-button { position: absolute; top: 16px; right: 16px; padding: 0; background: none; border: none; cursor: pointer; }
-        .select-icon { width: 20px; height: 4px; background-color: #3b82f6; border-radius: 2px; }
+        
       `}</style>
     </>
   );
