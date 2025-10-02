@@ -5,39 +5,57 @@ import Head from 'next/head';
 import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-// 导入数据
-import { mockLocationData } from '@/mockData/jiudianmockData';
+// Import mock data and components
+import { mockLocationData } from '@/mockData/hotelMockData';
+import TopBar from '@/components/hotelComponents/TopBar';
+import LocationDetails from '@/components/hotelComponents/LocationDetails';
+import Introduction from '@/components/hotelComponents/Introduction';
+import AmenityIcons from '@/components/hotelComponents/AmenityIcons';
+import LocationSection from '@/components/hotelComponents/LocationSection';
+import ReviewSection from '@/components/hotelComponents/ReviewSection';
+import BookingSection from '@/components/hotelComponents/BookingSection';
 
-// 导入所有组件
-import TopBar from '@/components/jiudiancomponents/TopBar';
-import LocationDetails from '@/components/jiudiancomponents/LocationDetails';
-import Introduction from '@/components/jiudiancomponents/Introduction';
-import AmenityIcons from '@/components/jiudiancomponents/AmenityIcons';
-import LocationSection from '@/components/jiudiancomponents/LocationSection';
-import ReviewSection from '@/components/jiudiancomponents/ReviewSection';
-import BookingSection from '@/components/jiudiancomponents/BookingSection';
-
+/**
+ * The main page component for displaying hotel details.
+ * It aggregates all the individual components to build the full page.
+ */
 export default function Home() {
   const router = useRouter();
+  // Refs to DOM elements for smooth scrolling functionality.
   const locationRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Scrolls the page to the location section.
+   */
   const scrollToLocation = () => {
     locationRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  /**
+   * Scrolls the page to the reviews section.
+   */
   const scrollToReviews = () => {
     reviewsRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  /**
+   * Navigates to the map page.
+   */
   const handleOpenMap = () => {
     router.push('/map');
   };
 
+  /**
+   * Navigates to the all reviews page.
+   */
   const handleViewAllReviews = () => {
     router.push('/reviews');
   };
 
+  /**
+   * Navigates to the booking confirmation page.
+   */
   const handleBook = () => {
     router.push('/booking-confirmation');
   };
@@ -66,6 +84,7 @@ export default function Home() {
 
         <AmenityIcons amenitiesStatus={mockLocationData.amenitiesStatus} />
 
+        {/* The div below is the target for the location scroll */}
         <div ref={locationRef}>
           <LocationSection 
             address={mockLocationData.address} 
@@ -73,6 +92,7 @@ export default function Home() {
           />
         </div>
 
+        {/* The div below is the target for the reviews scroll */}
         <div ref={reviewsRef}>
           <ReviewSection 
             reviews={mockLocationData.reviews} 
@@ -88,12 +108,11 @@ export default function Home() {
           padding: 0;
           margin: 0;
           font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
           background-color: #ffffffff;
         }
         a { color: inherit; text-decoration: none; }
         * { box-sizing: border-box; }
+        /* Hide scrollbars for a cleaner look on elements with overflow */
         ::-webkit-scrollbar { display: none; }
       `}</style>
       <style jsx>{`
@@ -102,6 +121,7 @@ export default function Home() {
           position: relative;
         }
         .content {
+          /* Add padding to the bottom to prevent content from being hidden by the fixed BookingSection */
           padding-bottom: 240px; 
         }
       `}</style>

@@ -1,13 +1,15 @@
-// data/mockData.ts
+// data/spotdetailsdata.ts
 
+// 定义评论的数据结构
 export interface Review {
-  name: string;
-  avatar: string;
-  rating: number;
-  date: string;
-  text: string;
+  name: string;      // 用户名
+  avatar: string;    // 用户头像URL
+  rating: number;    // 评分 (1-5)
+  date: string;      // 评论日期
+  text: string;      // 评论内容
 }
 
+// 定义设施状态的数据结构 (1表示可用, 0表示不可用)
 export interface AmenitiesStatus {
   parking: number;
   wifi: number;
@@ -15,25 +17,27 @@ export interface AmenitiesStatus {
   toilet: number;
 }
 
+// 定义整个地点详情页所需的数据结构
 export interface LocationData {
-  name: string;
-  address: string;
-  rating: number;
-  reviewCount: number;
-  featuredImage: string;
-  photos: string[];
-  introduction: string;
-  amenitiesStatus: AmenitiesStatus;
-  reviews: Review[];
-  price: number;
+  name: string;           // 地点名称
+  address: string;        // 地址
+  rating: number;         // 平均评分
+  reviewCount: number;    // 评论总数
+  featuredImage: string;  // 顶部特色图片URL
+  photos: string[];       // 照片列表URL
+  introduction: string;   // 简介文本
+  amenitiesStatus: AmenitiesStatus; // 设施状态
+  reviews: Review[];      // 评论列表
+  price: number;          // 价格
 }
 
+// 导出一个用于开发和测试的模拟数据对象
 export const mockLocationData: LocationData = {
   name: '故宫',
   address: '北京市东城区景山前街4号',
   rating: 4.6,
   reviewCount: 450,
-  featuredImage: 'https://img0.baidu.com/it/u=2618313166,1721466683&fm=253&app=138&f=JPEG?w=800&h=1422', // 假设一张作为精选
+  featuredImage: 'https://img0.baidu.com/it/u=2618313166,1721466683&fm=253&app=138&f=JPEG?w=800&h=1422',
   photos: [
     'https://img0.baidu.com/it/u=2618313166,1721466683&fm=253&app=138&f=JPEG?w=800&h=1422',
     'https://img0.baidu.com/it/u=2618313166,1721466683&fm=253&app=138&f=JPEG?w=800&h=1422',

@@ -1,4 +1,4 @@
-// src/data/bookingData.tsx
+// src/mockData/shbbookingData.tsx
 
 // Define types for our data for type safety
 export interface FlightDetails {

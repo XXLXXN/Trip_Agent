@@ -7,7 +7,7 @@ import {
   Calendar,
   ChevronDown,
 } from "lucide-react";
-import type { FlightDetails } from "../../mockData/shbbookingData";
+import type { FlightDetails } from "../../mockData/bookingData";
 
 interface Props {
   data: FlightDetails;
@@ -75,7 +75,7 @@ const FlightDetailsCard = ({ data }: Props) => (
     <div className="border-t border-gray-100 pt-3 flex justify-between items-center text-sm text-gray-600">
       <div className="flex items-center gap-2">
         <Calendar size={16} />
-        <span>选择航班</span>
+        <span>Select Flight</span>
       </div>
       <ChevronDown size={20} className="text-blue-500" />
     </div>

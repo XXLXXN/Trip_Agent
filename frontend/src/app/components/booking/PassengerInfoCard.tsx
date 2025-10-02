@@ -1,23 +1,23 @@
 // src/components/booking/PassengerInfoCard.tsx
 import { useState, ChangeEvent, useEffect } from "react";
-// 我们需要引入 Check 和 X 图标用于保存和取消
+// Import icons for edit, save, and cancel actions
 import { Pencil, Mail, Phone, Check, X } from "lucide-react";
-import type { PassengerInfo } from "../../mockData/shbbookingData";
+import type { PassengerInfo } from "../../mockData/bookingData";
 
 interface Props {
   data: PassengerInfo;
-  // 添加一个 onSave 回调 prop，用于通知父组件保存数据
+  // Callback prop to notify the parent component of data updates.
   onSave: (updatedData: PassengerInfo) => void;
 }
 
 const PassengerInfoCard = ({ data, onSave }: Props) => {
-  // 用于切换“查看模式”和“编辑模式”的状态
+  // State to toggle between "view" and "edit" modes.
   const [isEditing, setIsEditing] = useState(false);
-  // 用于在编辑时保存表单数据的状态
+  // State to hold form data during editing.
   const [formData, setFormData] = useState<PassengerInfo>(data);
 
-  // 这个 Effect 的作用是，当父组件传入的 data prop 发生变化时，
-  // 同步更新本地的 formData。这能确保表单数据始终与最新的外部数据保持一致。
+  // This Effect syncs the local formData with the parent's data prop whenever it changes.
+  // This ensures the form is always up-to-date with the latest external data.
   useEffect(() => {
     setFormData(data);
   }, [data]);
@@ -28,16 +28,16 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
   };
 
   const handleSave = () => {
-    onSave(formData); // 调用父组件传入的 onSave 方法，更新数据
-    setIsEditing(false); // 退出编辑模式
+    onSave(formData); // Pass the updated data to the parent component.
+    setIsEditing(false); // Exit edit mode.
   };
 
   const handleCancel = () => {
-    setFormData(data); // 将表单数据重置为原始数据
-    setIsEditing(false); // 退出编辑模式
+    setFormData(data); // Reset form data to the original state.
+    setIsEditing(false); // Exit edit mode.
   };
 
-  // 如果处于编辑模式，渲染编辑表单
+  // If in edit mode, render the editing form.
   if (isEditing) {
     return (
       <div className="bg-white rounded-xl shadow-sm p-4">
@@ -45,7 +45,7 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
           <div className="flex items-center gap-3 w-full">
             <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0"></div>
             <div className="space-y-2 w-full">
-              {/* 表单输入框 */}
+              {/* Form inputs */}
               <input
                 type="text"
                 name="name"
@@ -75,7 +75,7 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
               </div>
             </div>
           </div>
-          {/* 保存和取消按钮 */}
+          {/* Save and cancel buttons */}
           <div className="flex flex-col gap-2 ml-2">
             <button onClick={handleSave}>
               <Check size={20} className="text-green-500" />
@@ -89,7 +89,7 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
     );
   }
 
-  // 默认渲染信息展示视图 (你的原始代码)
+  // Default view: Displaying passenger info.
   return (
     <div className="bg-white rounded-xl shadow-sm p-4">
       <div className="flex justify-between items-start">
@@ -105,7 +105,7 @@ const PassengerInfoCard = ({ data, onSave }: Props) => {
             </p>
           </div>
         </div>
-        {/* 编辑按钮现在会切换到编辑模式 */}
+        {/* The edit button switches to edit mode on click. */}
         <button onClick={() => setIsEditing(true)}>
           <Pencil size={18} className="text-gray-400" />
         </button>

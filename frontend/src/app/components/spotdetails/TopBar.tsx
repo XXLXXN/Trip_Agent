@@ -17,21 +17,20 @@ const TopBar = ({ featuredImage }: TopBarProps) => {
   };
 
   const handleFavoriteClick = async () => {
+    // Optimistically update UI and send request to the server.
     setIsFavorited(!isFavorited);
     try {
-      const response = await fetch('/api/favorite', {
+      await fetch('/api/favorite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ favorited: !isFavorited }),
       });
-
-      // if (!response.ok) {
-      //   throw new Error('收藏操作失败');
-      // }
     } catch (error) {
-      console.error('收藏操作失败:', error);
+      console.error('Favorite action failed:', error);
+      // Optional: Revert UI state on API failure.
+      setIsFavorited(isFavorited);
     }
   };
 
@@ -48,18 +47,18 @@ const TopBar = ({ featuredImage }: TopBarProps) => {
         <button className="favorite-button" onClick={handleFavoriteClick}>
           <svg width="56" height="37" viewBox="0 0 56 37" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="56" height="37" rx="18.5" fill="white" fillOpacity="0.2"/>
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="24" 
-              height="24" 
-              viewBox="0 0 24 24" 
-              fill={isFavorited ? "#FF4500" : "white"} 
-              stroke={isFavorited ? "#FF4500" : "white"} 
-              strokeWidth="2" 
-              strokeLinecap="round" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill={isFavorited ? "#FF4500" : "white"}
+              stroke={isFavorited ? "#FF4500" : "white"}
+              strokeWidth="2"
+              strokeLinecap="round"
               strokeLinejoin="round"
-              x="16" // 水平居中: (56-24)/2 = 16
-              y="6.5" // 垂直居中: (37-24)/2 = 6.5
+              x="16" // Horizontally centered: (56-24)/2 = 16
+              y="6.5" // Vertically centered: (37-24)/2 = 6.5
             >
               <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/>
             </svg>

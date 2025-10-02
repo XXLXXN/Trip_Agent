@@ -1,5 +1,5 @@
 // components/AmenityIcons.tsx
-import { AmenitiesStatus } from "../../mockData/jdtjmockData";
+import { AmenitiesStatus } from "../../mockData/spotdetailsdata";
 
 interface AmenityIconsProps {
   amenitiesStatus: AmenitiesStatus;

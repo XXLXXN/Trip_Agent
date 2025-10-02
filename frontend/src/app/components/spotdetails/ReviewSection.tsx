@@ -1,5 +1,5 @@
 // components/ReviewSection.tsx
-import { Review } from "../../mockData/jiudianmockData";
+import { Review } from "../../mockData/spotdetailsdata";
 
 interface ReviewSectionProps {
   reviews: Review[];

@@ -5,42 +5,44 @@ import Head from 'next/head';
 import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-// 导入数据
-import { mockLocationData } from '@/mockData/jdtjmockData';
+// 导入模拟数据和所有页面组件
+import { mockLocationData } from '@/mockData/spotdetailsdata';
+import TopBar from '@/components/spotdetails/TopBar';
+import LocationDetails from '@/components/spotdetails/LocationDetails';
+import Introduction from '@/components/spotdetails/Introduction';
+import AmenityIcons from '@/components/spotdetails/AmenityIcons';
+import LocationSection from '@/components/spotdetails/LocationSection';
+import ReviewSection from '@/components/spotdetails/ReviewSection';
+import BookingSection from '@/components/spotdetails/BookingSection';
 
-// 导入所有组件
-import TopBar from '@/components/jdtjcomponents/TopBar';
-import LocationDetails from '@/components/jdtjcomponents/LocationDetails';
-import Introduction from '@/components/jdtjcomponents/Introduction';
-import AmenityIcons from '@/components/jdtjcomponents/AmenityIcons';
-import LocationSection from '@/components/jdtjcomponents/LocationSection';
-import ReviewSection from '@/components/jdtjcomponents/ReviewSection';
-import BookingSection from '@/components/jdtjcomponents/BookingSection';
-
+/**
+ * 地点详情页主页面组件。
+ * 负责组装所有子组件并处理页面级别的逻辑，如滚动和导航。
+ */
 export default function Home() {
   const router = useRouter();
+  // 创建Ref以引用DOM元素，用于平滑滚动
   const locationRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
 
+  // 滚动到位置区域
   const scrollToLocation = () => {
     locationRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // 滚动到评论区域
   const scrollToReviews = () => {
     reviewsRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleOpenMap = () => {
-    router.push('/map');
-  };
+  // 导航到地图页面
+  const handleOpenMap = () => router.push('/map');
 
-  const handleViewAllReviews = () => {
-    router.push('/reviews');
-  };
+  // 导航到所有评论页面
+  const handleViewAllReviews = () => router.push('/reviews');
 
-  const handleBook = () => {
-    router.push('/jiudiantuijian');
-  };
+  // 导航到预订流程页面
+  const handleBook = () => router.push('/jiudiantuijian');
 
   return (
     <div className="container">
@@ -53,11 +55,7 @@ export default function Home() {
 
       <main className="content">
         <LocationDetails
-          name={mockLocationData.name}
-          address={mockLocationData.address}
-          rating={mockLocationData.rating}
-          reviewCount={mockLocationData.reviewCount}
-          photos={mockLocationData.photos}
+          {...mockLocationData}
           onScrollToLocation={scrollToLocation}
           onScrollToReviews={scrollToReviews}
         />
@@ -66,16 +64,17 @@ export default function Home() {
 
         <AmenityIcons amenitiesStatus={mockLocationData.amenitiesStatus} />
 
+        {/* 将ref附加到div，以便可以滚动到它 */}
         <div ref={locationRef}>
-          <LocationSection 
-            address={mockLocationData.address} 
-            onOpenMap={handleOpenMap} 
+          <LocationSection
+            address={mockLocationData.address}
+            onOpenMap={handleOpenMap}
           />
         </div>
 
         <div ref={reviewsRef}>
-          <ReviewSection 
-            reviews={mockLocationData.reviews} 
+          <ReviewSection
+            reviews={mockLocationData.reviews}
             onViewAllReviews={handleViewAllReviews}
           />
         </div>
@@ -84,25 +83,13 @@ export default function Home() {
       <BookingSection price={mockLocationData.price} onBook={handleBook} />
 
       <style jsx global>{`
-        html, body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          background-color: #ffffffff;
-        }
-        a { color: inherit; text-decoration: none; }
-        * { box-sizing: border-box; }
-        ::-webkit-scrollbar { display: none; }
+        /* 全局样式 */
       `}</style>
       <style jsx>{`
-        .container {
-          min-height: 100vh;
-          position: relative;
-        }
+        .container { min-height: 100vh; position: relative; }
         .content {
-          padding-bottom: 240px; 
+          /* 为底部的固定预约栏留出空间，防止内容被遮挡 */
+          padding-bottom: 240px;
         }
       `}</style>
     </div>

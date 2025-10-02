@@ -14,7 +14,7 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
   return (
     <div className="location-details-container">
       <h2>{name}</h2>
-      
+
       <div className="address-box" onClick={onScrollToLocation}>
         <div className="address-icon">
           <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,7 +22,7 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           </svg>
         </div>
         <div className="address-content">
-          <div className="address-label">位置</div>
+          <div className="address-label">地址</div>
           <div className="address-text">{address}</div>
         </div>
         <div className="address-arrow">
@@ -39,7 +39,7 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           </svg>
         </span>
         <div className="rating-content">
-          <div className="rating-label">评价</div>
+          <div className="rating-label">评分</div>
           <div className="rating-info">
             <span className="rating-score">{rating}</span>
             <span className="review-count">({reviewCount} 条评价)</span>
@@ -65,7 +65,7 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
         .location-details-container {
           border: 1px solid rgba(1, 34, 118, 0.05);
           padding: 16px;
-          margin: 8px; 
+          margin: 8px;
           height: 297px;
           background-color: white;
           border-radius: 16px;
@@ -73,8 +73,8 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           position: relative;
         }
         h2 {
-          font-size: 20px;
-          height: 24px;
+          font-size: 24px;
+          height: 29px;
           font-family: 'Inter', semi-bold;
           font-weight: 500;
           margin-bottom: 16px;

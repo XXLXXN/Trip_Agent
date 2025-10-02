@@ -1,5 +1,8 @@
-// data/mockData.ts
+// mockData/hotelMockData.ts
 
+/**
+ * Represents a single user review.
+ */
 export interface Review {
   name: string;
   avatar: string;
@@ -8,12 +11,19 @@ export interface Review {
   text: string;
 }
 
+/**
+ * Defines the availability status of key amenities.
+ * 1 represents available, 0 represents unavailable.
+ */
 export interface AmenitiesStatus {
   parking: number;
   wifi: number;
   restaurant: number;
 }
 
+/**
+ * Represents the complete data structure for a hotel location.
+ */
 export interface LocationData {
   name: string;
   address: string;
@@ -27,12 +37,15 @@ export interface LocationData {
   price: number;
 }
 
+/**
+ * Mock data for the hotel details page.
+ */
 export const mockLocationData: LocationData = {
   name: '凯悦酒店',
   address: '上海环球港',
   rating: 4.5,
   reviewCount: 120,
-  featuredImage: 'https://gips1.baidu.com/it/u=3670368947,3474620720&fm=3074&app=3074&f=JPEG', // 假设一张作为精选
+  featuredImage: 'https://gips1.baidu.com/it/u=3670368947,3474620720&fm=3074&app=3074&f=JPEG',
   photos: [
     'https://gips1.baidu.com/it/u=3670368947,3474620720&fm=3074&app=3074&f=JPEG',
     'https://gips1.baidu.com/it/u=3670368947,3474620720&fm=3074&app=3074&f=JPEG',
