@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
             max: tripData.priceRange[1],
           }
         : null,
-      trip_style: tripData.selectedStyles?.join(",") || null,
+      trip_style: tripData.selectedStyles?.join(",") || "",
       other_requirement: tripData.additionalRequirements || null,
     };
 
@@ -63,10 +63,14 @@ export async function POST(request: NextRequest) {
     );
 
     if (!backendResponse.ok) {
-      throw new Error(`后端服务错误: ${backendResponse.status}`);
+      console.error("后端响应状态:", backendResponse.status);
+      const errorText = await backendResponse.text();
+      console.error("后端错误响应:", errorText);
+      throw new Error(`后端服务错误: ${backendResponse.status} - ${errorText}`);
     }
 
     const result = await backendResponse.json();
+    console.log("后端API返回结果:", result);
 
     // 包装响应以符合前端期望的格式
     return NextResponse.json(
@@ -80,7 +84,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("API路由错误:", error);
     return NextResponse.json(
-      { error: "服务器内部错误，请稍后重试" },
+      {
+        error:
+          error instanceof Error ? error.message : "服务器内部错误，请稍后重试",
+      },
       { status: 500 }
     );
   }

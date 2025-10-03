@@ -91,15 +91,24 @@ export default function TravelPlanningPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "请求失败");
+        let errorMessage = `请求失败: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          console.error("API响应错误:", errorData);
+          errorMessage = errorData.error || errorMessage;
+        } catch (parseError) {
+          console.error("解析错误响应失败:", parseError);
+          // 如果无法解析JSON，使用状态文本
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
+      console.log("API响应结果:", result);
 
-      // 成功后跳转到结果页面，或者根据后端响应处理
-      // 这里假设后端返回的数据中包含成功状态和要跳转的页面
-      if (result.success) {
+      // 检查响应格式是否正确
+      if (result.success && result.data) {
         // 使用规范的存储方式保存数据
         const tripPlanData: TripPlanData = {
           departure,
@@ -120,9 +129,9 @@ export default function TravelPlanningPage() {
         };
 
         saveTripPlan(tripPlanData);
-        router.push("/jingdianliebiao"); // 跳转到结果页面
+        router.push("/spotslist"); // 跳转到结果页面
       } else {
-        throw new Error(result.message || "处理失败");
+        throw new Error(result.message || "服务器返回数据格式不正确");
       }
     } catch (err) {
       console.error("提交失败:", err);

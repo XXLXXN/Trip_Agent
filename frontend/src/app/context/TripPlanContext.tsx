@@ -8,10 +8,21 @@ import React, {
   ReactNode,
 } from "react";
 
+// 照片数据类型
+export interface Photo {
+  url: string;
+  title: string;
+}
+
 // 景点推荐数据类型
 export interface SpotRecommendation {
   SpotName: string;
   RecReason: string;
+  POIId: string;
+  description: string;
+  address: string;
+  photos: Photo[];
+  rating: string;
 }
 
 // 旅行规划数据类型
