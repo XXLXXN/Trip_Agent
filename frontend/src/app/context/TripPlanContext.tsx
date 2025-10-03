@@ -41,6 +41,8 @@ export interface TripPlanData {
   additionalRequirements: string;
   // 后端返回的景点推荐数据
   spotRecommendations?: SpotRecommendation[];
+  // 用户选择的景点信息（完整信息）
+  selectedSpots?: SpotRecommendation[];
   // 其他后端返回的数据
   backendData?: any;
 }
@@ -58,6 +60,7 @@ type TripPlanAction =
   | { type: "SET_ERROR"; payload: string | null }
   | { type: "SET_DATA"; payload: TripPlanData }
   | { type: "SET_SPOT_RECOMMENDATIONS"; payload: SpotRecommendation[] }
+  | { type: "SET_SELECTED_SPOTS"; payload: SpotRecommendation[] }
   | { type: "CLEAR_DATA" };
 
 // 初始状态
@@ -91,6 +94,18 @@ function tripPlanReducer(
         isLoading: false,
         error: null,
       };
+    case "SET_SELECTED_SPOTS":
+      return {
+        ...state,
+        data: state.data
+          ? {
+              ...state.data,
+              selectedSpots: action.payload,
+            }
+          : null,
+        isLoading: false,
+        error: null,
+      };
     case "CLEAR_DATA":
       return { ...initialState };
     default:
@@ -104,9 +119,11 @@ const TripPlanContext = createContext<{
   dispatch: React.Dispatch<TripPlanAction>;
   saveTripPlan: (data: TripPlanData) => void;
   saveSpotRecommendations: (recommendations: SpotRecommendation[]) => void;
+  saveSelectedSpots: (selectedSpots: SpotRecommendation[]) => void;
   clearTripPlan: () => void;
   getTripPlan: () => TripPlanData | null;
   getSpotRecommendations: () => SpotRecommendation[] | null;
+  getSelectedSpots: () => SpotRecommendation[] | null;
 } | null>(null);
 
 // Provider组件
@@ -178,9 +195,33 @@ export function TripPlanProvider({ children }: { children: ReactNode }) {
     return state.data;
   };
 
+  // 保存用户选择的景点信息
+  const saveSelectedSpots = (selectedSpots: SpotRecommendation[]) => {
+    try {
+      // 获取当前数据
+      const currentData = getTripPlan();
+      const updatedData = {
+        ...(currentData || {}),
+        selectedSpots: selectedSpots,
+      } as TripPlanData;
+
+      // 保存到sessionStorage和状态
+      sessionStorage.setItem("tripPlanData", JSON.stringify(updatedData));
+      dispatch({ type: "SET_SELECTED_SPOTS", payload: selectedSpots });
+    } catch (error) {
+      console.error("Failed to save selected spots:", error);
+      dispatch({ type: "SET_ERROR", payload: "保存选择的景点信息失败" });
+    }
+  };
+
   // 获取景点推荐数据
   const getSpotRecommendations = (): SpotRecommendation[] | null => {
     return state.data?.spotRecommendations || null;
+  };
+
+  // 获取用户选择的景点信息
+  const getSelectedSpots = (): SpotRecommendation[] | null => {
+    return state.data?.selectedSpots || null;
   };
 
   return (
@@ -190,9 +231,11 @@ export function TripPlanProvider({ children }: { children: ReactNode }) {
         dispatch,
         saveTripPlan,
         saveSpotRecommendations,
+        saveSelectedSpots,
         clearTripPlan,
         getTripPlan,
         getSpotRecommendations,
+        getSelectedSpots,
       }}
     >
       {children}

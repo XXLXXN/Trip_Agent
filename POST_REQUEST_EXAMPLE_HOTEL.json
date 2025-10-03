@@ -1,0 +1,51 @@
+{
+  "hotel_budget": null,
+  "hotel_level": null,
+  "arr_date": "2025-08-24",
+  "return_date": "2025-08-30",
+  "travellers_count": {
+    "travellers": {
+      "成人": 2,
+      "老人": 1,
+      "儿童": 0,
+      "学生": 0
+    }
+  },
+  "spot_info": [
+    {
+      "name": "故宫博物院",
+      "id": "B000A7BM4H",
+      "address": "中国最大的古代文化艺术博物馆"
+    },
+    {
+      "name": "天安门广场",
+      "id": "B0FFKEPXS2",
+      "address": "世界上最大的城市广场"
+    },
+    {
+      "name": "798艺术区",
+      "id": "B000A81FY5",
+      "address": "酒仙桥路4号"
+    },
+    {
+      "name": "南锣鼓巷",
+      "id": "B0FFFAH7I9",
+      "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)"
+    },
+    {
+      "name": "簋街",
+      "id": "B0FFHF130I",
+      "address": "东直门大街5-11号"
+    },
+    {
+      "name": "什刹海",
+      "id": "B000A7O5PK",
+      "address": "地安门西大街49号"
+    },
+    {
+      "name": "止观小馆",
+      "id": "B0FFGWGO81",
+      "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)"
+    }
+  ]
+}

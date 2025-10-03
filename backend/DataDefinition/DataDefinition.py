@@ -178,8 +178,8 @@ class SpotDetailInfo(BaseModel):
 
 #创建酒店推荐输入的数据
 class CreateHotelRequest(BaseModel):
-    hotel_budget:int
-    hotel_level:str
+    hotel_budget:Optional[Budget] = None
+    hotel_level:Optional[str] = None
     arr_date: date
     return_date: date
     travellers_count:TravellerCount
@@ -189,6 +189,17 @@ class CreateHotelRequest(BaseModel):
 class HotelNameAndRecReason(BaseModel):
     hotel_name: str
     rec_reason: str
+    description: Optional[str] = None
+
+
+class HotelDetailInfo(BaseModel):
+    SpotName: str
+    RecReason: str
+    POIId:str
+    description: str
+    address:str
+    photos:Optional[List[Dict]] #每个dict里有url和title
+    rating:Optional[str] 
 
 #创建交通方式推荐输入的数据
 class CreateTrafficRequest(BaseModel):

@@ -16,7 +16,7 @@ export default function TravelSelectionPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpotIds, setSelectedSpotIds] = useState<number[]>([]);
   const router = useRouter();
-  const { getSpotRecommendations } = useTripPlan();
+  const { getSpotRecommendations, saveSelectedSpots } = useTripPlan();
 
   // 获取后端返回的景点数据
   const backendSpots = getSpotRecommendations();
@@ -30,20 +30,41 @@ export default function TravelSelectionPage() {
         image: spot.photos?.[0]?.url || "/placeholder-spot.jpg",
         path: `/spotdetails/${spot.POIId}`,
         recommendationReason: spot.RecReason,
+        poiId: spot.POIId,
+        address: spot.address,
         isPlan: true, // 默认全部都是推荐方案
       })) || []
     );
   }, [backendSpots]);
 
-  // 初始化选择状态
+  // 初始化选择状态 - 默认选择所有景点
   React.useEffect(() => {
     if (convertedSpots.length > 0) {
-      const defaultSelectedIds = convertedSpots
-        .filter((spot) => spot.isPlan)
-        .map((spot) => spot.id);
+      const defaultSelectedIds = convertedSpots.map((spot) => spot.id);
       setSelectedSpotIds(defaultSelectedIds);
     }
   }, [convertedSpots]);
+
+  // 当选择状态变化时，保存完整景点信息到上下文
+  React.useEffect(() => {
+    if (backendSpots && selectedSpotIds.length > 0) {
+      const selectedSpotsInfo = backendSpots.filter((spot, index) =>
+        selectedSpotIds.includes(index + 1)
+      );
+      saveSelectedSpots(selectedSpotsInfo);
+    }
+  }, [selectedSpotIds, backendSpots, saveSelectedSpots]);
+
+  // 获取被选中的景点信息（用于发送给后端）
+  const getSelectedSpotInfo = () => {
+    return convertedSpots
+      .filter((spot) => selectedSpotIds.includes(spot.id))
+      .map((spot) => ({
+        name: spot.name,
+        id: spot.poiId,
+        address: spot.address,
+      }));
+  };
 
   // HANDLER: 处理卡片上 +/- 按钮的点击事件
   const handleSpotAction = (spotId: number) => {
