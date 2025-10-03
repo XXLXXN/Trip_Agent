@@ -8,9 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "15.5.3",
+    "@headlessui/react": "^2.2.9",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -49,8 +47,11 @@
     "geist": "^1.3.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
+    "next": "15.5.3",
     "next-themes": "^0.4.6",
+    "react": "^18",
     "react-day-picker": "9.8.0",
+    "react-dom": "^18",
     "react-hook-form": "^7.60.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.4",
@@ -61,13 +62,13 @@
     "zod": "3.25.67"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",
-    "tw-animate-css": "1.3.3"
+    "tw-animate-css": "1.3.3",
+    "typescript": "^5"
   }
 }
