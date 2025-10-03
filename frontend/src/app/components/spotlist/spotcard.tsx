@@ -156,13 +156,16 @@ export default function SpotCard({
         .icon-minus {
           width: 14px;
           height: 3px;
-          background-color: #0768fd;
+          background-color: #0768FD;
           border-radius: 2px;
+          position: relative; /* 添加相对定位 */
+          top: 3px;          /* 将图标向下移动7px */
+          right: 4px;  
         }
-        .icon-plus {
-          width: 16px;
-          height: 16px;
-        }
+        .icon-plus { width: 20px;
+                     height: 20px;
+                     position: relative; /* 添加相对定位 */ 
+                     top:-4px;}
       `}</style>
     </>
   );
