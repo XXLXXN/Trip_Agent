@@ -65,7 +65,7 @@ export default function SpotDetailsPage() {
       setSpotData(mockLocationData);
     }
     setIsLoading(false);
-  }, [poiid, getSpotRecommendations]);
+  }, [poiid]); // 移除了getSpotRecommendations依赖
 
   // 滚动到位置区域
   const scrollToLocation = () => {

@@ -53,7 +53,7 @@ export default function TravelSelectionPage() {
       );
       saveSelectedSpots(selectedSpotsInfo);
     }
-  }, [selectedSpotIds, backendSpots, saveSelectedSpots]);
+  }, [selectedSpotIds, backendSpots]);
 
   // 获取被选中的景点信息（用于发送给后端）
   const getSelectedSpotInfo = () => {
