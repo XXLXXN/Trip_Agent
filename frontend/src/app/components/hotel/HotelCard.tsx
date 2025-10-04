@@ -10,12 +10,15 @@ interface HotelCardProps {
   isSelected: boolean;
   /** 当用户点击 +/- 按钮时触发的回调函数 */
   onToggleSelection: (hotelId: number) => void;
+  /** (可选) 调整 +/- 按钮的垂直位置（单位：像素），默认为 16 */
+  buttonVerticalOffset?: number;
 }
 
 export default function HotelCard({
   hotel,
   isSelected,
   onToggleSelection,
+  buttonVerticalOffset = 16, // 为新属性设置默认值
 }: HotelCardProps) {
   const handleButtonClick = (e: React.MouseEvent) => {
     // 阻止事件冒泡，以免触发卡片本身的点击跳转
@@ -68,7 +71,12 @@ export default function HotelCard({
             </div>
           </div>
         </div>
-        <button className="action-button" onClick={handleButtonClick}>
+        {/* 使用内联 style 将 props 变量应用到 CSS */}
+        <button
+          className="action-button"
+          onClick={handleButtonClick}
+          style={{ top: `${buttonVerticalOffset}px` }}
+        >
           {isSelected ? (
             <div className="icon-minus"></div>
           ) : (
@@ -149,11 +157,13 @@ export default function HotelCard({
           flex-direction: column;
           justify-content: space-between; /* 确保价格等信息在底部 */
           gap: 6px;
-          padding: 16px; /* 恢复 SpotCard 的 padding */
+          /* 关键改动 (1): 增加右侧内边距，防止内容与按钮重叠 */
+          padding: 16px 48px 16px 16px;
         }
 
         /* 保持原有的文本样式 */
         .hotel-name {
+          width: 150px;
           font-size: 16px; /* 调整为 SpotCard 的字体大小 */
           font-weight: 600; /* 调整为 SpotCard 的字体粗细 */
           color: #1b1446;
@@ -162,7 +172,6 @@ export default function HotelCard({
           white-space: nowrap; /* 单行显示 */
           overflow: hidden;
           text-overflow: ellipsis; /* 超出部分显示省略号 */
-          max-width: 180px; /* 限制名称文本宽度 */
         }
         .hotel-location-wrapper {
           display: flex;
@@ -218,7 +227,6 @@ export default function HotelCard({
         /* 保持按钮样式 */
         .action-button {
           position: absolute;
-          top: 16px;
           right: 16px;
           background: none;
           border: none;
@@ -231,12 +239,14 @@ export default function HotelCard({
           background-color: #0768fd;
           border-radius: 2px;
           position: relative; /* 添加相对定位 */
-          top: 7px; /* 将图标向下移动7px */
+          top: 3px; /* 将图标向下移动7px */
           right: 3px;
         }
         .icon-plus {
           width: 20px;
           height: 20px;
+          position: relative; 
+          top: -5px;
         }
       `}</style>
     </>
