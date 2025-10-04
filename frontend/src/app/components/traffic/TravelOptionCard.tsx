@@ -78,20 +78,20 @@ export default function TravelOptionCard({ option }: TravelOptionCardProps) {
         .column {
           display: flex;
           flex-direction: column;
-          gap: 14px;
+          gap: 4px; /* 减小了这里的间距 */
           flex-shrink: 0;
         }
         
         .departure-column { width: 85px; align-items: flex-start; }
-        .arrival-column { width: 85px; align-items: flex-start; }
-        .price-column { width: 85px; align-items: flex-start; }
+        .arrival-column { width: 85px; align-items: flex-end; /* 修改为右对齐 */ transform: translateX(-15px);}
+        .price-column { width: 85px; align-items: flex-end; /* 修改为右对齐 */ transform: translateX(-8px);}
 
         .middle-column {
           width: 55px;
           align-items: center;
           gap: 6px;
           padding-top: 5px;
-          transform: translateX(-15px);
+          transform: translateX(-9px);
         }
 
         .time {
