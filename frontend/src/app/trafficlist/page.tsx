@@ -9,15 +9,25 @@ import Header from '@/components/traffic/Header';
 import TravelTypeSelector from '@/components/traffic/TravelTypeSelector';
 import TravelOptionCard from '@/components/traffic/TravelOptionCard';
 import BottomNav from '@/components/traffic/BottomNav';
+
+// =================================================================
+// 1. 数据调用过程
+//    下面的 import 语句就是从本地文件 "调用" (导入) 模拟数据的过程。
+//    在实际应用中，这里会被替换为从 API 获取数据的逻辑，
+//    例如使用 useEffect 和 fetch。
+//    请确保 `@/data/trafficdata` 这个路径与你的项目文件结构一致。
+// =================================================================
 import { mockTravelOptions } from '@/mockData/trafficdata';
+import type { TravelOption } from '@/mockData/trafficdata';
+
 
 export default function TravelSelectionPage() {
   const router = useRouter();
 
-  // 状态管理：当前选中的出行类别，默认为 'fly'
-  const [selectedType, setSelectedType] = useState('fly');
+  const [selectedType, setSelectedType] = useState('all'); // 默认显示所有
 
-  // 根据 selectedType 筛选出行方式列表
+  // 2. 数据处理和筛选
+  //    这里基于导入的数据进行筛选，逻辑保持不变。
   const getFilteredOptions = () => {
     if (selectedType === 'all') return mockTravelOptions;
     if (selectedType === 'self') return [];
@@ -26,13 +36,11 @@ export default function TravelSelectionPage() {
 
   const filteredTravelOptions = getFilteredOptions();
 
-  // 定义 Header 按钮的点击事件
   const handleBackClick = () => router.push('/jingdianliebiao');
   const handleSkipClick = () => router.push('/hotel');
 
   return (
     <div className="page-container">
-      
       <div className="top-section">
         <Header onBackClick={handleBackClick} onSkipClick={handleSkipClick} />
         <TravelTypeSelector 
@@ -47,6 +55,9 @@ export default function TravelSelectionPage() {
         </div>
 
         <div className="option-list">
+          {/* 3. 数据渲染
+              筛选后的数据在这里被 map 遍历，并传递给 TravelOptionCard 组件进行渲染。
+          */}
           {filteredTravelOptions.length > 0 ? (
             filteredTravelOptions.map((option) => (
               <TravelOptionCard key={option.id} option={option} /> 
@@ -60,9 +71,9 @@ export default function TravelSelectionPage() {
       <BottomNav />
       
       <style jsx>{`
-        .page-container { min-height: 100vh; background-color: #ffffff; }
+        .page-container { min-height: 100vh; background-color: #f9fafb; }
         .top-section { background-color: #D9D9D9; padding-bottom: 8px; }
-        .recommendations-section { padding: 16px; background-color: #ffffff; }
+        .recommendations-section { padding: 16px; }
         .recommendations-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .recommendations-title { font-size: 1.125rem; font-weight: 600; color: #111827; }
         .option-list { display: flex; flex-direction: column; gap: 16px; align-items: center; }
