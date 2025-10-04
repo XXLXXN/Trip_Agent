@@ -1,19 +1,308 @@
 "use client";
 
-import React from "react";
-// 附近地点推荐卡片组件
+import React, { useState, useEffect } from "react";
 import NearbyPlaceCard from "@/components/NearbyPlaceCard";
-// 推荐目的地卡片组件
 import DestinationCard from "@/components/DestinationCard";
-// 底部导航栏组件
 import BottomNav from "@/components/BottomNav";
 import { nearbyPlaces, destinations } from "@/mockData/HomePage.js";
+import Link from "next/link";
 
-import Link from "next/link"
+// 位置信息类型定义
+interface LocationData {
+  latitude: number;
+  province: string;
+  longitude: number;
+  city: string;
+  country: string;
+  isp: string;
+  source: string;
+}
+
+interface AddressData {
+  full_address: string;
+  city: string;
+  country: string;
+  components: any;
+  street?: string;
+  province?: string;
+  neighbourhood?: string;
+  county?: string;
+  postcode?: string;
+}
 
 export default function Home() {
+  const [mainLocation, setMainLocation] = useState("定位中...");
+  const [currentLocation, setCurrentLocation] = useState("定位中...");
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 通过IP获取位置信息的函数
+  const getLocationByIp = async (): Promise<LocationData | null> => {
+    try {
+      const services = [
+        'http://ip-api.com/json/?lang=zh-CN',
+        'https://ipapi.co/json/',
+        'http://www.geoplugin.net/json.gp'
+      ];
+
+      for (const service of services) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
+          
+          const response = await fetch(service, { 
+            signal: controller.signal 
+          });
+          clearTimeout(timeoutId);
+
+          if (response.ok) {
+            const data = await response.json();
+
+            if (service.includes('ip-api.com') && data.status === 'success') {
+              return {
+                latitude: data.lat,
+                longitude: data.lon,
+                city: data.city,    
+                province: data.regionName,
+                country: data.country,
+                isp: data.isp,
+                source: 'ip-api.com'
+              };
+            } else if (service.includes('ipapi.co')) {
+              return {
+                latitude: data.latitude,
+                longitude: data.longitude,
+                city: data.city,
+                province: data.regionName,
+                country: data.country_name,
+                isp: data.org,
+                source: 'ipapi.co'
+              };
+            } else if (service.includes('geoplugin.net')) {
+              return {
+                latitude: parseFloat(data.geoplugin_latitude),
+                longitude: parseFloat(data.geoplugin_longitude),
+                city: data.geoplugin_city,
+                province: data.regionName,
+                country: data.geoplugin_countryName,
+                isp: '未知',
+                source: 'geoplugin'
+              };
+            }
+          }
+        } catch (error) {
+          console.log(`服务 ${service} 失败:`, error);
+          continue;
+        }
+      }
+
+      throw new Error('所有IP地理位置服务均不可用');
+    } catch (error) {
+      console.error('获取IP位置时出错:', error);
+      return null;
+    }
+  };
+
+  // 通过经纬度获取详细地址的函数
+  const getDetailedAddress = async (latitude: number, longitude: number): Promise<AddressData | null> => {
+    const apiKey = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY;
+    
+    if (!apiKey) {
+      console.error('OpenCage API密钥未配置');
+      return null;
+    }
+
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&key=${apiKey}&language=zh&pretty=1`;
+
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+
+        if (data.status.code === 200 && data.results.length > 0) {
+          const result = data.results[0];
+          const address = result.formatted;
+          const components = result.components;
+          
+          // 从地址组件中提取城市和国家
+          const street = components.roadnum || '';
+          const city = components.city || components.town || components.village || components.county || '';
+          const province = components.state || components.province || components.region || components.territory || '';
+          const country = components.country || '';
+          const postcode = components.postcode || '';
+          const neighbourhood = components.neighbourhood || components.suburb || components.village || components.city || '';
+          
+          console.log('完整地址:', address);
+          console.log('城市:', city, '国家:', country);
+          
+          return {
+            full_address: address,
+            neighbourhood: neighbourhood,
+            street: street,
+            city: city,
+            province: province,
+            country: country,
+            postcode: postcode,
+            components: components 
+          };
+        } else {
+          throw new Error('无法获取地址信息');
+        }
+      } else {
+        throw new Error(`OpenCage API请求失败，状态码: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('获取详细地址时出错:', error);
+      return null;
+    }
+  };
+
+  // 统一的位置信息处理函数
+  const processLocationData = async (lat: number, lon: number, source: string) => {
+    try {
+      setLatitude(lat);
+      setLongitude(lon);
+      
+      // 首先尝试获取详细地址信息
+      const addressInfo = await getDetailedAddress(lat, lon);
+      
+      if (addressInfo) {
+        setMainLocation(`${addressInfo.province}, ${addressInfo.country}`);
+        
+        if (addressInfo.full_address) {
+          const addressParts = addressInfo.full_address.split(',').map(part => part.trim());
+          
+          // 根据地址长度决定取多少个字段
+          let locationText = '';
+          if (addressParts.length >= 2) {
+            // 取最后两个字段，这样显示更具体
+            locationText = addressParts.slice(-1).join(', ');
+          } else if (addressParts.length === 1) {
+            // 只有一个字段时直接使用
+            locationText = addressParts[0];
+          } else {
+            // 没有字段时使用备选方案
+            locationText =  addressInfo.street || '未知位置';
+          }
+          
+          setCurrentLocation(locationText);
+        } else {
+          // 回退到原来的逻辑
+          setCurrentLocation(`${addressInfo.street}, ${addressInfo.neighbourhood}`);
+        }
+      } else {
+        // 如果获取详细地址失败，回退到IP定位信息
+        const ipLocation = await getLocationByIp();
+        if (ipLocation) {
+          setMainLocation(`${ipLocation.province}, ${ipLocation.country}`);
+          setCurrentLocation(`${ipLocation.city}`);
+        } else {
+          throw new Error('无法获取位置信息');
+        }
+      }
+    } catch (error) {
+      console.error('处理位置数据时出错:', error);
+      throw error;
+    }
+  };
+
+  // 使用浏览器定位
+  const getBrowserLocation = async (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        resolve(false);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            await processLocationData(latitude, longitude, 'browser');
+            resolve(true);
+          } catch (error) {
+            console.error('浏览器定位处理失败:', error);
+            resolve(false);
+          }
+        },
+        (error) => {
+          console.warn('浏览器定位失败:', error);
+          resolve(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        }
+      );
+    });
+  };
+
+  // 使用IP定位
+  const getIPLocation = async (): Promise<boolean> => {
+    try {
+      const locationInfo = await getLocationByIp();
+      if (locationInfo) {
+        await processLocationData(locationInfo.latitude, locationInfo.longitude, 'ip');
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('IP定位失败:', error);
+      return false;
+    }
+  };
+
+  // 使用默认位置
+  const useDefaultLocation = () => {
+    const defaultLat = 39.90873966065374;
+    const defaultLon = 116.3974673500868;
+    setLatitude(defaultLat);
+    setLongitude(defaultLon);
+    setMainLocation("北京, 中国");
+    setCurrentLocation("北京市东城区天安门广场");
+    setIsLoading(false);
+  };
+
+  // 统一的位置获取函数
+  const fetchLocation = async () => {
+    setIsLoading(true);
+    
+    try {
+      // 首先尝试浏览器定位
+      const browserSuccess = await getBrowserLocation();
+      
+      if (!browserSuccess) {
+        // 浏览器定位失败，尝试IP定位
+        const ipSuccess = await getIPLocation();
+        
+        if (!ipSuccess) {
+          // 所有定位方式都失败，使用默认位置
+          useDefaultLocation();
+        }
+      }
+    } catch (error) {
+      console.error('获取位置信息失败:', error);
+      useDefaultLocation();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLocation();
+  }, []);
+
+  // 手动刷新位置
+  const refreshLocation = async () => {
+    setIsLoading(true);
+    setMainLocation("定位中...");
+    setCurrentLocation("定位中...");
+    
+    await fetchLocation();
+  };  
   return (
-    /* 页面主容器 */
     <main className="min-h-screen bg-white">
       {/* 顶部区域 */}
       <div className="grid w-full h-39">
@@ -23,33 +312,18 @@ export default function Home() {
           <div className="h-12"></div>
           {/* 位置信息 */}
           <div className="px-4 h-[54px] flex py-2">
-            {/* 标语与位置字体 */}
             <div className="text-white flex-1">
               <p className="text-[10px] uppercase tracking-wide">
                 美好的旅程始于现在
               </p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <h1 className="text-xl font-semibold">上海, 中国</h1>
-                  {/*figma直接复制来的svg */}
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M6.35147 8.7515C6.8201 8.28287 7.5799 8.28287 8.04853 8.7515L12 12.703L15.9515 8.7515C16.4201 8.28287 17.1799 8.28287 17.6485 8.7515C18.1172 9.22013 18.1172 9.97992 17.6485 10.4486L12.8485 15.2486C12.3799 15.7172 11.6201 15.7172 11.1515 15.2486L6.35147 10.4486C5.88284 9.97992 5.88284 9.22013 6.35147 8.7515Z"
-                      fill="white"
-                    />
-                  </svg>
+                  <h1 className="text-xl font-semibold">
+                    {isLoading ? "定位中..." : mainLocation}
+                  </h1>
                 </div>
               </div>
             </div>
-            {/* 联系客服按钮 */}
             <Link href="/fireflyx_parts/interactive">
               <button className="bg-[#E4F1FF] backdrop-blur-lg rounded-full px-4 py-3 text-sm font-semibold flex items-center justify-center text-[#2065A9]">
                 联系客服
@@ -62,10 +336,7 @@ export default function Home() {
       <section className="h-29 felx px-4">
         <Link href="/planning">
           <div className="bg-[url('/HomePage/TripPlan_Placeholder.jpg')] bg-cover rounded-xl h-full ">
-            <h3
-              className="text-base font-semibold text-[#1E1E1E]
-            pt-4 pl-4 mb-1"
-            >
+            <h3 className="text-base font-semibold text-[#1E1E1E] pt-4 pl-4 mb-1">
               旅游规划
             </h3>
             <p className="text-xs text-[#8C8C8C] pl-4">点击开启美好旅程</p>
@@ -76,9 +347,7 @@ export default function Home() {
       <section className="h-116 flex flex-col gap-4">
         {/* 当前规划区域 */}
         <section className="pt-7 px-4">
-          {/* 当前位置信息 */}
           <div className="flex mb-4 justify-between flex-grow h-[34px]">
-            {/* 当前图标与“当前” */}
             <div className="flex items-center py-2">
               <svg
                 width="20"
@@ -93,41 +362,24 @@ export default function Home() {
                 />
               </svg>
 
-              <h2 className="text-sm font-semibold text-[#1B1446] pl-1">
-                当前
-              </h2>
+              <h2 className="text-sm font-semibold text-[#1B1446] pl-1">当前</h2>
             </div>
-            {/* 当前位置与定位按钮 */}
             <div className="flex items-center gap-2">
-              {/* 当前位置*/}
               <div className="flex-col items-end">
                 <div className="text-[10px] text-[#808080] text-right uppercase tracking-wide">
                   当前位置
                 </div>
-                {/* 当前位置名称与下拉箭头 */}
                 <div className="flex items-center">
-                  <div className="text-xs font-semibold text-[#1B1446] ">
-                    Sleman, Yogyakarta
+                  <div className="text-xs font-semibold text-[#1B1446]">
+                    {currentLocation}
                   </div>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M3.70503 5.10505C3.97839 4.83168 4.42161 4.83168 4.69497 5.10505L7 7.41007L9.30503 5.10505C9.57839 4.83168 10.0216 4.83168 10.295 5.10505C10.5683 5.37842 10.5683 5.82163 10.295 6.095L7.49497 8.895C7.22161 9.16837 6.77839 9.16837 6.50503 8.895L3.70503 6.095C3.43166 5.82163 3.43166 5.37842 3.70503 5.10505Z"
-                      fill="#1B1446"
-                    />
-                  </svg>
                 </div>
               </div>
-              {/* 定位按钮 */}
-              <button className="bg-[#0768FD]/10 rounded-lg h-full px-[2px]">
-                {/*figma直接复制来的定位svg */}
+              <button 
+                className="bg-[#0768FD]/10 rounded-lg h-full px-[2px]"
+                onClick={refreshLocation}
+                disabled={isLoading}
+              >
                 <svg
                   width="16"
                   height="16"
@@ -150,8 +402,6 @@ export default function Home() {
               </button>
             </div>
           </div>
-
-          {/* 附近地点卡片 */}
           <Link href="fireflyx_parts/current">
             <div className="space-y-3">
               {nearbyPlaces.map((place, index) => (
@@ -201,7 +451,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* 水平滚动的目的地卡片 */}
           <div className="flex gap-2 overflow-x-auto pb-1">
             {destinations.map((destination, index) => (
               <DestinationCard key={index} {...destination} />
@@ -209,6 +458,7 @@ export default function Home() {
           </div>
         </section>
       </section>
+
       {/* 底部导航栏 */}
       <BottomNav />
     </main>
