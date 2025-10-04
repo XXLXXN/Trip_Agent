@@ -8,9 +8,21 @@ type TransitionProviderProps = {
 };
 
 const variants = {
-  initial: { opacity: 0, y: 16, filter: "blur(4px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -16, filter: "blur(4px)" },
+  initial: { 
+    opacity: 0, 
+    x: 100, // 从右侧进入
+    filter: "blur(4px)" 
+  },
+  animate: { 
+    opacity: 1, 
+    x: 0, // 移动到正常位置
+    filter: "blur(0px)" 
+  },
+  exit: { 
+    opacity: 0, 
+    x: -100, // 向左滑出
+    filter: "blur(4px)" 
+  },
 };
 
 export default function TransitionProvider({ children }: TransitionProviderProps) {
@@ -24,7 +36,7 @@ export default function TransitionProvider({ children }: TransitionProviderProps
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={{ duration: 0.25, ease: "easeInOut" }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
         style={{ willChange: "opacity, transform, filter" }}
       >
         {children}
