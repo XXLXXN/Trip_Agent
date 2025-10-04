@@ -1,0 +1,33 @@
+{
+  "hotel_budget": {
+    "min": 200,
+    "max": 500
+  },
+  "hotel_level": "经济型",
+  "arr_date": "2025-12-03",
+  "return_date": "2025-12-08",
+  "travellers_count": {
+    "travellers": {
+      "ADULT": 2,
+      "CHILD": 1
+    }
+  },
+  "spot_info": [
+    {
+      "name": "兵马俑博物馆",
+      "id": "poi_001",
+      "address": "西安市临潼区"
+    },
+    {
+      "name": "大雁塔",
+      "id": "poi_002",
+      "address": "西安市雁塔区"
+    },
+    {
+      "name": "回民街",
+      "id": "poi_003",
+      "address": "西安市莲湖区"
+    }
+  ],
+  "other_requirement": "需要家庭房，最好有儿童游乐设施，离地铁站近一些"
+}

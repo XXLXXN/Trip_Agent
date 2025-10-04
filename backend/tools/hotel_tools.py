@@ -83,8 +83,8 @@ def add_hotel_detail_info(hotel_rec: List[HotelNameAndRecReason]) -> List[HotelD
             if detail_info:
                 # 构建HotelDetailInfo对象
                 hotel_detail = HotelDetailInfo(
-                    SpotName=hotel.hotel_name,
-                    RecReason=hotel.rec_reason,
+                    hotel_name=hotel.hotel_name,
+                    rec_reason=hotel.rec_reason,
                     POIId=hotel.POIId,
                     description=detail_info.get('description', hotel.description or ''),
                     address=detail_info.get('address', ''),
@@ -97,8 +97,8 @@ def add_hotel_detail_info(hotel_rec: List[HotelNameAndRecReason]) -> List[HotelD
             else:
                 # 如果无法获取详细信息，使用基础信息创建对象
                 hotel_detail = HotelDetailInfo(
-                    SpotName=hotel.hotel_name,
-                    RecReason=hotel.rec_reason,
+                    hotel_name=hotel.hotel_name,
+                    rec_reason=hotel.rec_reason,
                     POIId=hotel.POIId,
                     description=hotel.description or '',
                     address='',

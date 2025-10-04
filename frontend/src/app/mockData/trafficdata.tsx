@@ -1,22 +1,73 @@
-// data/traveldata.tsx
 
-// 定义出行选项的数据结构
 export interface TravelOption {
   id: number;
-  name: string;
-  location: string;
-  price: number;
-  rating: number;
-  image: string;
+  type: 'fly' | 'train';
   path: string;
-  type: 'fly' | 'train'; // 出行方式类型
+  
+  departureTime: string;
+  arrivalTime: string;
+  
+  departureStation: string;
+  arrivalStation: string;
+  
+  travelNumber: string;
+  duration: string;
+  
+  price: number;
+  airline: string | null;
 }
 
-// 模拟的出行选项数据
 export const mockTravelOptions: TravelOption[] = [
-  { id: 1, name: "西南航空", location: "SLEMAN, DIY", price: 125, rating: 4.5, image: "", path: "/travel/southwest-air", type: 'fly' },
-  { id: 2, name: "春秋航空", location: "PARANGTRITIS", price: 125, rating: 4.5, image: "", path: "/travel/spring-air", type: 'fly' },
-  { id: 3, name: "复兴号 G1 次", location: "北京南站", price: 90, rating: 4.8, image: "", path: "/travel/fuxing-g1", type: 'train' },
-  { id: 4, name: "和谐号 D311 次", location: "上海虹桥", price: 75, rating: 4.6, image: "", path: "/travel/hexie-d311", type: 'train' },
-  { id: 5, name: "东方航空", location: "CAPETOWN", price: 150, rating: 4.4, image: "", path: "/travel/eastern-air", type: 'fly' },
+  { 
+    id: 1, 
+    type: 'train', 
+    path: '/travel/train-details/g135',
+    departureTime: '17:45',
+    arrivalTime: '18:21',
+    departureStation: '无锡东',
+    arrivalStation: '上海虹桥',
+    travelNumber: 'G135',
+    duration: '36分',
+    price: 53,
+    airline: null,
+  },
+  { 
+    id: 2, 
+    type: 'fly', 
+    path: '/travel/flight-details/ca1832',
+    departureTime: '08:00',
+    arrivalTime: '10:15',
+    departureStation: '首都 T3',
+    arrivalStation: '虹桥 T2',
+    travelNumber: 'CA1832',
+    duration: '2h 15m',
+    price: 480,
+    airline: '中国国际航空',
+  },
+  { 
+    id: 3, 
+    type: 'train', 
+    path: '/travel/train-details/d2281',
+    departureTime: '09:12',
+    arrivalTime: '11:45',
+    departureStation: '杭州东',
+    arrivalStation: '温州南',
+    travelNumber: 'D2281',
+    duration: '2h 33m',
+    price: 115,
+    airline: null,
+  },
+  { 
+    id: 4, 
+    type: 'fly', 
+    path: '/travel/flight-details/mu5104',
+    departureTime: '14:30',
+    arrivalTime: '16:55',
+    departureStation: '大兴',
+    arrivalStation: '虹桥 T1',
+    travelNumber: 'MU5104',
+    duration: '2h 25m',
+    price: 520,
+    airline: '东方航空',
+  },
 ];

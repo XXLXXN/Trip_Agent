@@ -154,6 +154,7 @@ async def get_hotel_recommendation(content: str) -> list:
 
                 async for line in response.aiter_lines():
                     # SSE协议使用空行作为事件分隔符
+                    print(line)
                     if not line:
                         # 当一个事件结束时，我们处理累积的数据
                         if current_event_type == 'reply' and data_buffer:

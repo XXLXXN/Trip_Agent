@@ -200,8 +200,8 @@ class HotelNameAndRecReason(BaseModel):
 
 
 class HotelDetailInfo(BaseModel):
-    SpotName: str
-    RecReason: str
+    hotel_name: str
+    rec_reason: str
     POIId:str
     description: str
     address:str
