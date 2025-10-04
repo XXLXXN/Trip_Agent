@@ -296,7 +296,7 @@ export default function TravelPlanningPage() {
           <div className="bg-[#ffffff] rounded-2xl p-6 shadow-sm border-0">
             <div className="space-y-6">
               {/* Location Selection */}
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center">
@@ -351,55 +351,62 @@ export default function TravelPlanningPage() {
               </div>
 
               {/* Date Selection */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
-                  <div className="flex items-center gap-3">
+              <div className="bg-[#f6f8fb] rounded-2xl overflow-hidden">
+                <div className="flex">
+                  {/* 共享的图标区域 - 与地点卡片对齐 */}
+                  <div className="flex items-center justify-center pl-4 pr-3">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center">
                       <img src="/date_range.svg" alt="日历图标" className="h-12 w-12" />
                     </div>
-                    <div>
-                      <p className="text-sm text-[#808080]">启程日期</p>
-                      <p className="font-medium text-[#000000]">{startDate}</p>
-                    </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-[#0768fd]"
-                    onClick={() => handleDateEdit("startDate")}
-                  >
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <img
-                        src="_ form action2.svg"
-                        className="w-8 h-8 object-contain"
-                      />
-                    </div>
-                  </Button>
-                </div>
 
-                <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                      <img src="/date_range.svg" alt="日历图标" className="h-12 w-12" />
+                  {/* 右侧内容区域 */}
+                  <div className="flex-1">
+                    {/* 启程日期 */}
+                    <div className="flex items-center justify-between py-4 pr-4">
+                      <div className="flex-1">
+                        <p className="text-sm text-[#808080]">启程日期</p>
+                        <p className="font-medium text-[#000000]">{startDate}</p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-[#0768fd]"
+                        onClick={() => handleDateEdit("startDate")}
+                      >
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <img
+                            src="_ form action2.svg"
+                            className="w-8 h-8 object-contain"
+                          />
+                        </div>
+                      </Button>
                     </div>
-                    <div>
-                      <p className="text-sm text-[#808080]">返程日期</p>
-                      <p className="font-medium text-[#000000]">{endDate}</p>
+
+                    {/* 分割线 */}
+                    <div className="border-t border-[#e0e0e0] mr-3"></div>
+
+                    {/* 返程日期 */}
+                    <div className="flex items-center justify-between py-4 pr-4">
+                      <div className="flex-1">
+                        <p className="text-sm text-[#808080]">返程日期</p>
+                        <p className="font-medium text-[#000000]">{endDate}</p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-[#0768fd]"
+                        onClick={() => handleDateEdit("endDate")}
+                      >
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <img
+                            src="_ form action2.svg"
+                            className="w-8 h-8 object-contain"
+                          />
+                        </div>
+                      </Button>
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-[#0768fd]"
-                    onClick={() => handleDateEdit("endDate")}
-                  >
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <img
-                        src="_ form action2.svg"
-                        className="w-8 h-8 object-contain"
-                      />
-                    </div>
-                  </Button>
                 </div>
               </div>
 
