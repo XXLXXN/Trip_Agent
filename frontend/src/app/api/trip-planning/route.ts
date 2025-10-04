@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     // 发送到后端API
     const backendResponse = await fetch(
-      "http://localhost:8000/api/trip-planning",
+      "http://localhost:8002/api/trip-planning",
       {
         method: "POST",
         headers: {

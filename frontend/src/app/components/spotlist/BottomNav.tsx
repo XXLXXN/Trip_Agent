@@ -84,7 +84,7 @@ export default function BottomNav() {
       console.log("酒店推荐请求成功:", result);
 
       // 请求成功后才导航到交通页面
-      router.push("/traffic");
+      router.push("/hotelslist");
     } catch (error) {
       console.error("处理下一步点击时发生错误:", error);
       setError("网络错误，请检查网络连接后重试");

@@ -34,9 +34,9 @@ export async function POST(request: NextRequest) {
 
     console.log("发送给后端的酒店推荐请求数据:", backendData);
 
-    // 发送到后端API (假设后端端口为8000)
+    // 发送到统一API服务 (使用端口8002)
     const backendResponse = await fetch(
-      "http://localhost:8000/api/hotel-recommendation",
+      "http://localhost:8002/api/hotel-recommendation",
       {
         method: "POST",
         headers: {
