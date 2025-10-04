@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+connect_location.py - 自动为Trip对象添加Transportation项目（POI版本）
+"""
 
 import os
+import sys
 import time
 from typing import List, Optional, Union
 from dataclasses import dataclass
+
+# 添加上级目录到路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from DataDefinition.DataDefinition import Trip, Day, DayActivity, Activity, Transportation, Location, Coordinates
 
 @dataclass
@@ -744,3 +752,270 @@ def connect_location(trip: Trip) -> Trip:
     except Exception as e:
         print(f"连接地点时发生错误: {e}")
         return trip
+
+
+def create_complex_trip():
+    """创建复杂的测试行程"""
+    print("=" * 80)
+    print("🧪 创建复杂行程测试用例")
+    print("=" * 80)
+    
+    from datetime import date, time
+    
+    # 创建Trip对象
+    trip = Trip(
+        user_id="test_user_complex_001",
+        trip_id="shanghai_complex_trip_001",
+        trip_name="上海两日游",
+        destination="上海",
+        start_date=date(2025, 1, 15),
+        end_date=date(2025, 1, 16),
+        days=[]
+    )
+    
+    # Day 1: 虹桥机场 → 华东师范大学普陀校区 → 南京路步行街 → 上海交通大学徐汇校区 → 秋果酒店
+    day1 = Day(
+        date=date(2025, 1, 15),
+        day_of_week="星期三",
+        day_index=1,
+        total_cost=0.0,
+        activities=[
+            Activity(
+                id="activity_1",
+                start_time=time(10, 0, 0),
+                end_time=time(10, 30, 0),
+                description="到达虹桥机场，办理入境手续",
+                notes="请提前准备好身份证件",
+                cost=0.0,
+                type="activity",
+                title="到达虹桥机场",
+                location=Location(
+                    name="虹桥机场",
+                    address="长宁区虹桥路2550号",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            ),
+            Activity(
+                id="activity_2",
+                start_time=time(11, 30, 0),
+                end_time=time(13, 0, 0),
+                description="参观华东师范大学普陀校区，体验校园文化",
+                notes="可以参观图书馆、教学楼等标志性建筑",
+                cost=0.0,
+                type="activity",
+                title="华东师范大学普陀校区游玩",
+                location=Location(
+                    name="华东师范大学普陀校区",
+                    address="中山北路3663号",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            ),
+            Activity(
+                id="activity_3",
+                start_time=time(14, 0, 0),
+                end_time=time(16, 0, 0),
+                description="游览南京路步行街，体验上海商业文化",
+                notes="可以购买、品尝小吃，感受上海风情",
+                cost=0.0,
+                type="activity",
+                title="南京路步行街游览",
+                location=Location(
+                    name="南京路步行街",
+                    address="上海市黄浦区南京路步行街",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            ),
+            Activity(
+                id="activity_4",
+                start_time=time(16, 30, 0),
+                end_time=time(18, 0, 0),
+                description="参观上海交通大学徐汇校区，了解百年学府历史",
+                notes="可以参观老图书馆、工程馆等历史建筑",
+                cost=0.0,
+                type="activity",
+                title="上海交通大学徐汇校区游玩",
+                location=Location(
+                    name="上海交通大学徐汇校区",
+                    address="徐汇区华山路1954号",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            ),
+            Activity(
+                id="activity_5",
+                start_time=time(18, 30, 0),
+                end_time=time(19, 0, 0),
+                description="入住秋果酒店交通大学地铁站店",
+                notes="办理入住手续，稍作休息",
+                cost=0.0,
+                type="activity",
+                title="入住秋果酒店",
+                location=Location(
+                    name="秋果酒店交通大学地铁站店",
+                    address="长宁区新华路24号",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            )
+        ]
+    )
+    
+    # Day 2: 上海交通大学闵行校区 → 华东师范大学闵行校区 → 浦东国际机场
+    day2 = Day(
+        date=date(2025, 1, 16),
+        day_of_week="星期四",
+        day_index=2,
+        total_cost=0.0,
+        activities=[
+            Activity(
+                id="activity_6",
+                start_time=time(9, 0, 0),
+                end_time=time(11, 0, 0),
+                description="参观上海交通大学闵行校区，体验现代化校园",
+                notes="可以参观新图书馆、体育馆等现代化设施",
+                cost=0.0,
+                type="activity",
+                title="上海交通大学闵行校区游玩",
+                location=Location(
+                    name="上海交通大学闵行校区",
+                    address="闵行区东川路800号",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            ),
+            Activity(
+                id="activity_7",
+                start_time=time(11, 30, 0),
+                end_time=time(13, 0, 0),
+                description="参观华东师范大学闵行校区，体验校园生活",
+                notes="可以参观教学楼、学生活动中心等",
+                cost=0.0,
+                type="activity",
+                title="华东师范大学闵行校区游玩",
+                location=Location(
+                    name="华东师范大学闵行校区",
+                    address="东川路500号",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            ),
+            Activity(
+                id="activity_8",
+                start_time=time(14, 0, 0),
+                end_time=time(14, 30, 0),
+                description="前往浦东国际机场，办理登机手续",
+                notes="请提前2小时到达机场，准备好登机证件",
+                cost=0.0,
+                type="activity",
+                title="前往浦东国际机场",
+                location=Location(
+                    name="浦东国际机场",
+                    address="浦东新区浦东国际机场",
+                    coordinates=None
+                ),
+                recommended_products=[]
+            )
+        ]
+    )
+    
+    # 添加天数到行程
+    trip.days = [day1, day2]
+    
+    print("✅ 复杂行程创建成功！")
+    print(f"行程名称: {trip.trip_name}")
+    print(f"目的地: {trip.destination}")
+    print(f"行程天数: {len(trip.days)}")
+    
+    # 显示行程概览
+    for i, day in enumerate(trip.days, 1):
+        print(f"\n第{i}天 ({day.date}):")
+        for j, activity in enumerate(day.activities, 1):
+            print(f"  {j}. {activity.title} ({activity.start_time}-{activity.end_time})")
+            print(f"     地点: {activity.location.name}")
+            print(f"     地址: {activity.location.address}")
+    
+    return trip
+
+
+def test_complex_trip_connect():
+    """测试复杂行程的connect_location功能"""
+    print("\n" + "=" * 80)
+    print("🚀 开始执行connect_location函数")
+    print("=" * 80)
+    
+    # 创建行程
+    trip = create_complex_trip()
+    
+    # 立即保存原始trip到complex_trip.json（在connect_location之前）
+    try:
+        import json
+        trip_json = trip.model_dump(mode='json')
+        with open("complex_trip.json", 'w', encoding='utf-8') as f:
+            json.dump(trip_json, f, ensure_ascii=False, indent=2)
+        print("✅ 原始复杂用例已保存到: complex_trip.json")
+    except Exception as e:
+        print(f"❌ 原始trip保存失败: {e}")
+    
+    # 执行connect_location（传入副本，避免修改原始数据）
+    print("\n正在连接地点，添加交通信息...")
+    import copy
+    trip_copy = copy.deepcopy(trip)
+    result_trip = connect_location(trip_copy)
+    
+    if result_trip:
+        print("✅ connect_location执行成功！")
+        
+        # 分析结果
+        total_activities = sum(len(day.activities) for day in result_trip.days)
+        transportation_count = sum(1 for day in result_trip.days 
+                                 for activity in day.activities 
+                                 if hasattr(activity, 'mode') and activity.mode)
+        
+        print(f"\n📊 结果统计:")
+        print(f"总活动数: {total_activities}")
+        print(f"交通项目数: {transportation_count}")
+        
+        # 保存JSON结果
+        output_file = "complex_trip_output.json"
+        complex_trip_file = "complex_trip.json"
+        
+        try:
+            # 使用model_dump(mode='json')来正确处理date对象
+            trip_json = result_trip.model_dump(mode='json')
+            
+            # 保存到complex_trip_output.json（原始输出文件）
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(trip_json, f, ensure_ascii=False, indent=2)
+            
+            print(f"✅ JSON结果已保存到: {output_file}")
+            
+            # 保存到complex_trip.json（复杂用例文件）
+            with open(complex_trip_file, 'w', encoding='utf-8') as f:
+                json.dump(trip_json, f, ensure_ascii=False, indent=2)
+            
+            print(f"✅ 复杂用例已保存到: {complex_trip_file}")
+            
+            # 显示JSON结构预览
+            print(f"\n📋 JSON结构预览 (前2000字符):")
+            print("-" * 60)
+            json_str = json.dumps(trip_json, ensure_ascii=False, indent=2)
+            print(json_str[:2000])
+            if len(json_str) > 2000:
+                print(f"\n... (完整内容请查看文件: {output_file} 或 {complex_trip_file})")
+            
+        except Exception as e:
+            print(f"❌ JSON保存失败: {e}")
+    
+    else:
+        print("❌ connect_location执行失败！")
+    
+    print("\n" + "=" * 80)
+    print("测试完成！")
+    print("=" * 80)
+
+
+if __name__ == "__main__":
+    test_complex_trip_connect()
