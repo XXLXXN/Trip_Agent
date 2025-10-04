@@ -23,7 +23,12 @@ export default function HotelCard({ hotel, isSelected, onToggleSelection }: Hote
   return (
     <>
       <div className="hotel-card">
-        <div className="hotel-image-placeholder"></div>
+        {/* === START: 修改图片结构以匹配 SpotCard === */}
+        <div className="spot-image-container">
+          {/* 这里可以使用真实的 <img /> 标签，并应用 .spot-image 类 */}
+          <div className="hotel-image-placeholder"></div> 
+        </div>
+        {/* === END: 修改图片结构以匹配 SpotCard === */}
         <div className="hotel-info">
           <h3 className="hotel-name">{hotel.name}</h3>
           <div className="hotel-location-wrapper">
@@ -49,20 +54,89 @@ export default function HotelCard({ hotel, isSelected, onToggleSelection }: Hote
           {isSelected ? (
             <div className="icon-minus"></div>
           ) : (
-            <svg className="icon-plus" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 3.33331V12.6666" stroke="#0768FD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M3.33331 8H12.6666" stroke="#0768FD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <svg
+                className="icon-plus"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8 3.33331V12.6666"
+                  stroke="#0768FD"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M3.33331 8H12.6666"
+                  stroke="#0768FD"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
           )}
         </button>
       </div>
       <style jsx>{`
-        .hotel-card { background-color: white; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
-        .hotel-image-placeholder { width: 80px; height: 80px; background-color: #e5e7eb; border-radius: 12px; flex-shrink: 0; }
-        .hotel-info { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; }
-        .hotel-name { font-size: 14px; font-weight: 500; color: #1B1446; }
+        /* 调整 .hotel-card 以适应新的图片尺寸 (114px 高度) */
+        .hotel-card { 
+            background-color: white; 
+            border-radius: 16px; 
+            /* 保持 SpotCard 的尺寸: width: 343px, height: 114px */
+            width: 343px; 
+            height: 114px; /* 强制高度为 114px */
+            
+            border: 1px solid #f3f4f6; /* 添加 SpotCard 的边框 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* 调整阴影 */
+            
+            padding: 0; /* 移除 padding, 因为内容区和图片容器各自有 padding 或尺寸控制 */
+            display: flex; 
+            align-items: stretch; /* 确保子项（如图片容器）能占满高度 */
+            gap: 0; /* 移除 gap，让图片和内容紧贴 */
+            position: relative; 
+            overflow: hidden; /* 确保圆角生效 */
+            cursor: pointer; /* 确保可点击 */
+        }
+        
+        /* 引入 SpotCard 的图片容器样式 */
+        .spot-image-container {
+            width: 134px;
+            height: 100%; /* 高度占满父容器 (114px) */
+            flex-shrink: 0;
+            border-radius: 12px; /* 圆角应该只在容器内部生效，这里设置了 border-radius，但由于父容器 overflow: hidden，子容器的圆角会由父容器的圆角控制。 */
+            overflow: hidden;
+            background-color: #e5e7eb; /* 默认背景色 */
+        }
+        /* 确保占位符能填满容器 */
+        .hotel-image-placeholder { 
+            width: 100%;
+            height: 100%;
+            background-color: #e5e7eb; 
+            border-radius: 12px; /* 仅图片占位符有圆角 */
+        }
+        
+        /* 调整内容区的 padding 和布局 */
+        .hotel-info { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; /* 确保价格等信息在底部 */
+            gap: 6px; 
+            padding: 16px; /* 恢复 SpotCard 的 padding */
+        }
+        
+        /* 保持原有的文本样式 */
+        .hotel-name { 
+            font-size: 16px; /* 调整为 SpotCard 的字体大小 */
+            font-weight: 600; /* 调整为 SpotCard 的字体粗细 */
+            color: #1B1446;
+            margin: 0;
+        }
         .hotel-location-wrapper { display: flex; align-items: center; gap: 4px; }
-        .hotel-location { font-size: 10px; color: #808080; text-transform: uppercase; }
+        .hotel-location { font-size: 12px; color: #6b7280; text-transform: none; /* 移除大写 */ }
         .price-and-rating-wrapper { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .hotel-price-wrapper { display: flex; align-items: baseline; gap: 2px; }
         .hotel-price { font-size: 14px; font-weight: 600; color: #398B2B; }
@@ -70,9 +144,19 @@ export default function HotelCard({ hotel, isSelected, onToggleSelection }: Hote
         .hotel-rating-wrapper { display: flex; align-items: center; gap: 4px; }
         .star-icon { width: 16px; height: 16px; color: #FFBE41; }
         .hotel-rating { font-size: 12px; color: #BFBFBF; }
+        
+        /* 保持按钮样式 */
         .action-button { position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; padding: 4px; }
-        .icon-minus { width: 14px; height: 3px; background-color: #0768FD; border-radius: 2px; }
-        .icon-plus { width: 16px; height: 16px; }
+        .icon-minus {
+          width: 14px;
+          height: 3px;
+          background-color: #0768FD;
+          border-radius: 2px;
+          position: relative; /* 添加相对定位 */
+          top: 7px;          /* 将图标向下移动7px */
+          right: 3px;    
+        }
+        .icon-plus { width: 20px; height: 20px; }
       `}</style>
     </>
   );

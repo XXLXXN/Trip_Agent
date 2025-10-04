@@ -2,21 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const tripData = await request.json();
+    const hotelRequestData = await request.json();
 
     // 验证必需字段
     const requiredFields = [
-      "departure",
-      "destination",
-      "startDate",
-      "endDate",
-      "adults",
-      "elderly",
-      "children",
-      "priceRange",
+      "arr_date",
+      "return_date",
+      "travellers_count",
+      "spot_info",
     ];
     const missingFields = requiredFields.filter(
-      (field) => !(field in tripData)
+      (field) => !(field in hotelRequestData)
     );
 
     if (missingFields.length > 0) {
@@ -26,33 +22,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 转换数据格式以符合后端API要求
+    // 构建发送给后端的请求数据
     const backendData = {
-      departure_city: tripData.departure,
-      destination_city: tripData.destination,
-      departure_date: formatDateForBackend(tripData.startDate),
-      return_date: formatDateForBackend(tripData.endDate),
-      travellers_count: {
-        travellers: {
-          成人: tripData.adults || 0,
-          老人: tripData.elderly || 0,
-          儿童: tripData.children || 0,
-          学生: 0, // 前端没有学生字段，设为0
-        },
-      },
-      budget: tripData.priceRange
-        ? {
-            min: tripData.priceRange[0],
-            max: tripData.priceRange[1],
-          }
-        : null,
-      trip_style: tripData.selectedStyles?.join(",") || "",
-      other_requirement: tripData.additionalRequirements || null,
+      hotel_budget: hotelRequestData.hotel_budget || null,
+      hotel_level: hotelRequestData.hotel_level || null,
+      arr_date: formatDateForBackend(hotelRequestData.arr_date),
+      return_date: formatDateForBackend(hotelRequestData.return_date),
+      travellers_count: hotelRequestData.travellers_count,
+      spot_info: hotelRequestData.spot_info,
     };
 
-    // 发送到后端API
+    console.log("发送给后端的酒店推荐请求数据:", backendData);
+
+    // 发送到后端API (假设后端端口为8000)
     const backendResponse = await fetch(
-      "http://localhost:8000/api/trip-planning",
+      "http://localhost:8000/api/hotel-recommendation",
       {
         method: "POST",
         headers: {
@@ -72,12 +56,12 @@ export async function POST(request: NextRequest) {
     const result = await backendResponse.json();
     console.log("后端API返回结果:", result);
 
-    // 包装响应以符合前端期望的格式
+    // 返回响应
     return NextResponse.json(
       {
         success: true,
         data: result,
-        message: "行程规划成功",
+        message: "酒店推荐请求发送成功",
       },
       { status: 200 }
     );
