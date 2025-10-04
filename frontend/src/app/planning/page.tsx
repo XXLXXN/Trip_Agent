@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   MapPin,
@@ -24,26 +24,44 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTripPlan, TripPlanData } from "../context/TripPlanContext";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+import { AnimatePresence, motion } from "framer-motion";
+import { zhCN } from "date-fns/locale";
 
 export default function TravelPlanningPage() {
   const [priceRange, setPriceRange] = useState([200, 30000]);
   const [adultCount, setAdultCount] = useState(2);
   const [studentCount, setStudentCount] = useState(1);
   const [selectedTransport, setSelectedTransport] = useState("plane");
-  const [selectedAccommodation, setSelectedAccommodation] = useState("hotel");
+  const [selectedAccommodation, setSelectedAccommodation] = useState<string[]>([]);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
 
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showDateModal, setShowDateModal] = useState(false);
   const [showTravelerModal, setShowTravelerModal] = useState(false);
+  const [showMoreModal, setShowMoreModal] = useState(false);
   const [editingField, setEditingField] = useState<
-    "departure" | "destination" | "startDate" | "endDate" | null
+    "departure" | "destination" | "startDate" | "endDate" | "minPrice" | "maxPrice" | null
   >(null);
 
   const [departure, setDeparture] = useState("上海");
   const [destination, setDestination] = useState("北京");
   const [startDate, setStartDate] = useState("2025.8.24");
   const [endDate, setEndDate] = useState("2025.9.15");
+  const [dateError, setDateError] = useState<string | null>(null);
+  const [tempSelectedDate, setTempSelectedDate] = useState<Date | undefined>(undefined);
+
+  // 打开日期卡片时禁用页面滚动，关闭时恢复
+  useEffect(() => {
+    if (showDateModal) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [showDateModal]);
 
   const [adults, setAdults] = useState(2);
   const [elderly, setElderly] = useState(0);
@@ -57,6 +75,18 @@ export default function TravelPlanningPage() {
   const toggleStyle = (style: string) => {
     setSelectedStyles((prev) =>
       prev.includes(style) ? prev.filter((s) => s !== style) : [...prev, style]
+    );
+  };
+
+  const toggleTransport = (transport: string) => {
+    setSelectedTransport(selectedTransport === transport ? "" : transport);
+  };
+
+  const toggleAccommodation = (accommodation: string) => {
+    setSelectedAccommodation((prev) =>
+      prev.includes(accommodation) 
+        ? prev.filter((item) => item !== accommodation)
+        : [...prev, accommodation]
     );
   };
 
@@ -120,7 +150,7 @@ export default function TravelPlanningPage() {
           children,
           priceRange,
           selectedTransport,
-          selectedAccommodation,
+          selectedAccommodation: selectedAccommodation.join(","),
           selectedStyles,
           additionalRequirements,
           backendData: result.data,
@@ -148,6 +178,10 @@ export default function TravelPlanningPage() {
 
   const handleDateEdit = (field: "startDate" | "endDate") => {
     setEditingField(field);
+    // 预选中当前值
+    const current = field === "startDate" ? startDate : endDate;
+    setTempSelectedDate(parseDateString(current));
+    setDateError(null);
     setShowDateModal(true);
   };
 
@@ -161,15 +195,47 @@ export default function TravelPlanningPage() {
     setEditingField(null);
   };
 
-  const handleDateSave = (value: string) => {
+  const handleDateSave = () => {
+    if (!tempSelectedDate) return;
+    const formatted = formatDate(tempSelectedDate);
     if (editingField === "startDate") {
-      setStartDate(value);
+      setStartDate(formatted);
+      // 新规则：返程日期不能早于启程日期 => 若返程 < 启程，则将返程对齐为启程
+      const end = parseDateString(endDate);
+      if (end && end.getTime() < tempSelectedDate.getTime()) {
+        setEndDate(formatted);
+      }
     } else if (editingField === "endDate") {
-      setEndDate(value);
+      setEndDate(formatted);
     }
     setShowDateModal(false);
     setEditingField(null);
   };
+
+  function parseDateString(input: string): Date | undefined {
+    // 期望格式: YYYY.M.DD 或 YYYY.MM.DD
+    const parts = input.split(".");
+    if (parts.length !== 3) return undefined;
+    const [y, m, d] = parts.map((p) => parseInt(p, 10));
+    if (!y || !m || !d) return undefined;
+    const dt = new Date(y, m - 1, d);
+    return isNaN(dt.getTime()) ? undefined : dt;
+  }
+
+  function formatDate(date: Date): string {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}.${m}.${d}`;
+  }
+
+  const today = useMemo(() => {
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    return t;
+  }, []);
+
+  const startDateObj = useMemo(() => parseDateString(startDate), [startDate]);
 
   const handleTravelerSave = () => {
     setAdultCount(adults);
@@ -177,11 +243,30 @@ export default function TravelPlanningPage() {
     setShowTravelerModal(false);
   };
 
+  const handlePriceEdit = (field: "minPrice" | "maxPrice") => {
+    setEditingField(field);
+  };
+
+  const handlePriceSave = (value: number, field: "minPrice" | "maxPrice") => {
+    const newValue = Math.max(100, Math.min(50000, value));
+    if (field === "minPrice") {
+      setPriceRange([newValue, Math.max(newValue, priceRange[1])]);
+    } else {
+      setPriceRange([Math.min(priceRange[0], newValue), newValue]);
+    }
+    setEditingField(null);
+  };
+
+  const formatPrice = (price: number) => {
+    if (price >= 20000) return `¥${price}`;
+    return `¥${price}`;
+  };
+
   const getTravelerText = () => {
     const parts = [];
     if (adults > 0) parts.push(`${adults}成人`);
     if (elderly > 0) parts.push(`${elderly}老人`);
-    if (children > 0) parts.push(`${children}学生`);
+    if (children > 0) parts.push(`${children}儿童`);
     return parts.join("，");
   };
 
@@ -214,8 +299,8 @@ export default function TravelPlanningPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#83b4fe] rounded-full flex items-center justify-center">
-                      <MapPin className="h-4 w-4 text-white" />
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                      <img src="/location_on.svg" alt="出发图标" className="h-12 w-12" />
                     </div>
                     <div>
                       <p className="text-sm text-[#808080]">出发地</p>
@@ -239,8 +324,8 @@ export default function TravelPlanningPage() {
 
                 <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#83b4fe] rounded-full flex items-center justify-center">
-                      <Plane className="h-4 w-4 text-white" />
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                      <img src="/Vector.svg" alt="目的地图标" className="h-12 w-12" />
                     </div>
                     <div>
                       <p className="text-sm text-[#808080]">目的地</p>
@@ -269,8 +354,8 @@ export default function TravelPlanningPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#83b4fe] rounded-full flex items-center justify-center">
-                      <Calendar className="h-4 w-4 text-white" />
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                      <img src="/date_range.svg" alt="日历图标" className="h-12 w-12" />
                     </div>
                     <div>
                       <p className="text-sm text-[#808080]">启程日期</p>
@@ -294,8 +379,8 @@ export default function TravelPlanningPage() {
 
                 <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#83b4fe] rounded-full flex items-center justify-center">
-                      <Calendar className="h-4 w-4 text-white" />
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                      <img src="/date_range.svg" alt="日历图标" className="h-12 w-12" />
                     </div>
                     <div>
                       <p className="text-sm text-[#808080]">返程日期</p>
@@ -319,13 +404,10 @@ export default function TravelPlanningPage() {
               </div>
 
               {/* Traveler Count */}
-              <div
-                className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl cursor-pointer"
-                onClick={() => setShowTravelerModal(true)}
-              >
+              <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-[#83b4fe] rounded-full flex items-center justify-center">
-                    <Users className="h-4 w-4 text-white" />
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                    <img src="/supervisor_account.svg" alt="人数图标" className="h-12 w-12" />
                   </div>
                   <div>
                     <p className="text-sm text-[#808080]">出行人数</p>
@@ -334,49 +416,84 @@ export default function TravelPlanningPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-8 h-8 bg-[#83b4fe] text-white hover:bg-[#0768fd]"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAdultCount(Math.max(1, adultCount - 1));
-                    }}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="w-8 text-center font-medium text-[#000000]">
-                    {adults + elderly + children}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-8 h-8 bg-[#0768fd] text-white hover:bg-[#074ee8]"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAdultCount(adultCount + 1);
-                    }}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-[#0768fd]"
+                  onClick={() => setShowTravelerModal(true)}
+                >
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <img
+                      src="_ form action.svg"
+                      className="w-8 h-8 object-contain"
+                    />
+                  </div>
+                </Button>
               </div>
 
               {/* Price Range */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="px-3 py-1 bg-[#83b4fe] text-white rounded-full text-sm">
-                    ¥{priceRange[0]}
-                  </span>
-                  <span className="px-3 py-1 bg-[#83b4fe] text-white rounded-full text-sm">
-                    ¥{priceRange[1]}
-                  </span>
+                  {editingField === "minPrice" ? (
+                    <Input
+                      type="number"
+                      value={priceRange[0]}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 100;
+                        setPriceRange([value, Math.max(value, priceRange[1])]);
+                      }}
+                      onBlur={() => setEditingField(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          setEditingField(null);
+                        }
+                      }}
+                      className="px-3 py-1 bg-[#83b4fe] text-white rounded-full text-sm border-0 text-center w-20"
+                      min="100"
+                      max="50000"
+                      autoFocus
+                    />
+                  ) : (
+                    <button
+                      className="px-3 py-1 bg-[#83b4fe] text-white rounded-full text-sm hover:bg-[#0768fd] transition-colors"
+                      onClick={() => handlePriceEdit("minPrice")}
+                    >
+                      {formatPrice(priceRange[0])}
+                    </button>
+                  )}
+                  
+                  {editingField === "maxPrice" ? (
+                    <Input
+                      type="number"
+                      value={priceRange[1]}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 100;
+                        setPriceRange([Math.min(priceRange[0], value), value]);
+                      }}
+                      onBlur={() => setEditingField(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          setEditingField(null);
+                        }
+                      }}
+                      className="px-3 py-1 bg-[#83b4fe] text-white rounded-full text-sm border-0 text-center w-20"
+                      min="100"
+                      max="50000"
+                      autoFocus
+                    />
+                  ) : (
+                    <button
+                      className="px-3 py-1 bg-[#83b4fe] text-white rounded-full text-sm hover:bg-[#0768fd] transition-colors"
+                      onClick={() => handlePriceEdit("maxPrice")}
+                    >
+                      {formatPrice(priceRange[1])}
+                    </button>
+                  )}
                 </div>
                 <Slider
                   value={priceRange}
                   onValueChange={setPriceRange}
-                  max={50000}
+                  max={priceRange[1] >= 20000 ? priceRange[1] : 20000}
                   min={100}
                   step={100}
                   className="w-full"
@@ -396,7 +513,7 @@ export default function TravelPlanningPage() {
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
-                    onClick={() => setSelectedTransport("train")}
+                    onClick={() => toggleTransport("train")}
                   >
                     <img src="/Train.svg" alt="火车图标" className="h-8 w-8" />
                     火车
@@ -410,7 +527,7 @@ export default function TravelPlanningPage() {
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
-                    onClick={() => setSelectedTransport("bus")}
+                    onClick={() => toggleTransport("bus")}
                   >
                     <img src="/Bus.svg" alt="汽车图标" className="h-8 w-8" />
                     汽车
@@ -424,7 +541,7 @@ export default function TravelPlanningPage() {
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
-                    onClick={() => setSelectedTransport("plane")}
+                    onClick={() => toggleTransport("plane")}
                   >
                     <img src="/Flight.svg" alt="飞机图标" className="h-8 w-8" />
                     飞机
@@ -438,30 +555,30 @@ export default function TravelPlanningPage() {
                 <div className="flex gap-3">
                   <Button
                     variant={
-                      selectedAccommodation === "hotel" ? "default" : "outline"
+                      selectedAccommodation.includes("hotel") ? "default" : "outline"
                     }
                     className={`flex-1 flex items-center gap-2 py-3 border-2 ${
-                      selectedAccommodation === "hotel"
+                      selectedAccommodation.includes("hotel")
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
-                    onClick={() => setSelectedAccommodation("hotel")}
+                    onClick={() => toggleAccommodation("hotel")}
                   >
                     <img src="/Hotel.svg" alt="酒店图标" className="h-8 w-8" />
                     住宿
                   </Button>
                   <Button
                     variant={
-                      selectedAccommodation === "attractions"
+                      selectedAccommodation.includes("attractions")
                         ? "default"
                         : "outline"
                     }
                     className={`flex-1 flex items-center gap-2 py-3 border-2 ${
-                      selectedAccommodation === "attractions"
+                      selectedAccommodation.includes("attractions")
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
-                    onClick={() => setSelectedAccommodation("attractions")}
+                    onClick={() => toggleAccommodation("attractions")}
                   >
                     <img
                       src="/Attraction.svg"
@@ -471,15 +588,9 @@ export default function TravelPlanningPage() {
                     景点
                   </Button>
                   <Button
-                    variant={
-                      selectedAccommodation === "more" ? "default" : "outline"
-                    }
-                    className={`flex-1 flex items-center gap-2 py-3 border-2 ${
-                      selectedAccommodation === "more"
-                        ? "border-[#ff9141] text-[#000000] bg-white hover:bg-gray-50"
-                        : "border-transparent bg-white text-[#000000] hover:border-gray-300"
-                    }`}
-                    onClick={() => setSelectedAccommodation("more")}
+                    variant="outline"
+                    className="flex-1 flex items-center gap-2 py-3 border-2 border-transparent bg-white text-[#000000] hover:border-gray-300"
+                    onClick={() => setShowMoreModal(true)}
                   >
                     <img src="/More.svg" alt="更多图标" className="h-8 w-8" />
                     更多
@@ -605,60 +716,122 @@ export default function TravelPlanningPage() {
         </div>
       )}
 
-      {showDateModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-[#000000]">
-                {editingField === "startDate" ? "选择启程日期" : "选择返程日期"}
-              </h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowDateModal(false)}
-              >
-                <X className="h-5 w-5 text-[#808080]" />
-              </Button>
-            </div>
-            <Input
-              type="date"
-              defaultValue={
-                editingField === "startDate" ? "2025-08-24" : "2025-09-15"
-              }
-              className="mb-4 bg-[#f6f8fb] border-0 text-[#000000]"
-              onChange={(e) => {
-                const date = new Date(e.target.value);
-                const formatted = `${date.getFullYear()}.${(date.getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}.${date
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}`;
-                if (editingField === "startDate") {
-                  setStartDate(formatted);
-                } else {
-                  setEndDate(formatted);
-                }
-              }}
+      <AnimatePresence>
+        {showDateModal && (
+          <>
+            <motion.div
+              key="date-backdrop"
+              className="fixed inset-0 bg-black/50 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowDateModal(false)}
             />
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                className="flex-1 bg-transparent border-[#dddddd] text-[#000000]"
-                onClick={() => setShowDateModal(false)}
-              >
-                取消
-              </Button>
-              <Button
-                className="flex-1 bg-[#0768fd] hover:bg-[#074ee8] text-white"
-                onClick={() => setShowDateModal(false)}
-              >
-                确定
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+            <motion.div
+              key="date-sheet"
+              className="fixed left-0 right-0 bottom-0 z-50"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 260, damping: 28 }}
+            >
+              <div className="bg-white rounded-t-2xl p-3 pb-4 shadow-2xl max-w-sm w-full mx-auto h-[100vh]" style={{ paddingBottom: "6px" }}>
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-base font-medium text-[#111111]">
+                    {editingField === "startDate" ? "选择启程日期" : "选择返程日期"}
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowDateModal(false)}
+                  >
+                    <X className="h-5 w-5 text-[#808080]" />
+                  </Button>
+                </div>
+
+                <div className="bg-[#f6f8fb] rounded-xl p-2 flex justify-center">
+                  <DayPicker
+                    mode="single"
+                    selected={tempSelectedDate}
+                    onSelect={(d) => {
+                      setDateError(null);
+                      if (!d) {
+                        setTempSelectedDate(undefined);
+                        return;
+                      }
+                      // 归零时分
+                      const picked = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+                      if (editingField === "startDate") {
+                        // 规则：启程日期不能早于今天 => picked >= today
+                        if (picked.getTime() < today.getTime()) {
+                          setDateError("启程日期不能早于今天");
+                          setTempSelectedDate(undefined);
+                          return;
+                        }
+                      } else if (editingField === "endDate") {
+                        // 规则：返程日期不能早于启程日期 => end >= start
+                        if (startDateObj && picked.getTime() < startDateObj.getTime()) {
+                          setDateError("返程日期不能早于启程日期");
+                          setTempSelectedDate(undefined);
+                          return;
+                        }
+                      }
+                      setTempSelectedDate(picked);
+                    }}
+                    // 禁用不合法日期
+                    disabled={
+                      editingField === "startDate"
+                        ? [{ before: today }]
+                        : startDateObj
+                        ? [{ before: startDateObj }]
+                        : undefined
+                    }
+                    locale={zhCN}
+                    styles={{
+                      root: { fontSize: 12.5, color: "#111111" },
+                      caption_label: { fontWeight: 600, color: "#111111" },
+                      head_cell: { color: "#333333", fontWeight: 500 },
+                      day: { color: "#111111", width: 30, height: 30, margin: 2, padding: 0 },
+                      day_selected: { backgroundColor: "#0768fd", color: "#ffffff" },
+                      day_today: { border: "1px solid #0768fd" },
+                      nav_button: { color: "#111111" },
+                      table: { margin: 0 },
+                      months: { gap: 0, justifyContent: "center", display: "flex" },
+                      month: { margin: "0 auto" },
+                    }}
+                    modifiersClassNames={{
+                      selected: "rounded-full ring-2 ring-[#0768fd] ring-offset-0",
+                      today: "rounded-full",
+                    }}
+                    weekStartsOn={1}
+                  />
+                </div>
+
+                {dateError && (
+                  <p className="text-red-600 text-xs mt-2">{dateError}</p>
+                )}
+
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1 bg-transparent border-[#dddddd] text-[#111111]"
+                    onClick={() => setShowDateModal(false)}
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    className="flex-1 bg-[#0768fd] hover:bg-[#074ee8] text-white"
+                    disabled={!tempSelectedDate}
+                    onClick={handleDateSave}
+                  >
+                    确定
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {showTravelerModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -783,6 +956,66 @@ export default function TravelPlanningPage() {
           </div>
         </div>
       )}
+
+      {/* More Options Modal */}
+      {showMoreModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-medium text-[#000000]">
+                更多预算选项
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowMoreModal(false)}
+              >
+                <X className="h-5 w-5 text-[#808080]" />
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                { id: "food", name: "美食", icon: "🍽️" },
+                { id: "shopping", name: "购物", icon: "🛍️" },
+                { id: "entertainment", name: "娱乐", icon: "🎭" },
+                { id: "transport", name: "交通", icon: "🚗" },
+                { id: "souvenir", name: "纪念品", icon: "🎁" },
+                { id: "insurance", name: "保险", icon: "🛡️" },
+              ].map((option) => (
+                <Button
+                  key={option.id}
+                  variant={
+                    selectedAccommodation.includes(option.id) ? "default" : "outline"
+                  }
+                  className={`w-full flex items-center gap-3 py-3 border-2 ${
+                    selectedAccommodation.includes(option.id)
+                      ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
+                      : "border-transparent bg-white text-[#000000] hover:border-gray-300"
+                  }`}
+                  onClick={() => {
+                    toggleAccommodation(option.id);
+                  }}
+                >
+                  <span className="text-xl">{option.icon}</span>
+                  {option.name}
+                </Button>
+              ))}
+            </div>
+
+            <div className="flex gap-2 mt-6">
+              <Button
+                variant="outline"
+                className="flex-1 bg-transparent border-[#dddddd] text-[#000000]"
+                onClick={() => setShowMoreModal(false)}
+              >
+                取消
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
