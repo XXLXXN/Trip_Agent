@@ -170,6 +170,7 @@ export default function SpotDetailsPage() {
         .container {
           min-height: 100vh;
           position: relative;
+          background:white;
         }
         .content {
           /* 为底部的固定预约栏留出空间，防止内容被遮挡 */
