@@ -76,6 +76,7 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           font-size: 24px;
           height: 29px;
           font-family: 'Inter', semi-bold;
+          color: black;
           font-weight: 500;
           margin-bottom: 16px;
         }

@@ -94,7 +94,7 @@ const TopBar = ({ featuredImage }: TopBarProps) => {
       </div>
       <style jsx>{`
         .top-bar-container {
-          background-color: rgba(0, 0, 0, 0.4);
+          background-color: rgba(255, 255, 255, 0.4);
           position: relative;
           width: 100%;
           height: 293px;
