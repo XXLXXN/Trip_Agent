@@ -430,7 +430,7 @@ export default function Home() {
                 />
               </svg>
 
-              <h2 className="text-[14px] font-semibold text-[#1B1B446]">
+              <h2 className="text-[14px] font-semibold text-[#1B1B44]">
                 好地推荐
               </h2>
             </div>
