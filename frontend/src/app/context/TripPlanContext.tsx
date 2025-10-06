@@ -25,6 +25,18 @@ export interface SpotRecommendation {
   rating: string;
 }
 
+// 酒店推荐数据类型
+export interface HotelRecommendation {
+  SpotName: string;
+  RecReason: string;
+  POIId: string;
+  description: string;
+  address: string;
+  photos: Photo[];
+  rating: string;
+  cost: number;
+}
+
 // 旅行规划数据类型
 export interface TripPlanData {
   departure: string;
@@ -43,6 +55,10 @@ export interface TripPlanData {
   spotRecommendations?: SpotRecommendation[];
   // 用户选择的景点信息（完整信息）
   selectedSpots?: SpotRecommendation[];
+  // 后端返回的酒店推荐数据
+  hotelRecommendations?: HotelRecommendation[];
+  // 用户选择的酒店信息（完整信息）
+  selectedHotels?: HotelRecommendation[];
   // 其他后端返回的数据
   backendData?: any;
 }
@@ -61,6 +77,8 @@ type TripPlanAction =
   | { type: "SET_DATA"; payload: TripPlanData }
   | { type: "SET_SPOT_RECOMMENDATIONS"; payload: SpotRecommendation[] }
   | { type: "SET_SELECTED_SPOTS"; payload: SpotRecommendation[] }
+  | { type: "SET_HOTEL_RECOMMENDATIONS"; payload: HotelRecommendation[] }
+  | { type: "SET_SELECTED_HOTELS"; payload: HotelRecommendation[] }
   | { type: "CLEAR_DATA" };
 
 // 初始状态
@@ -106,6 +124,30 @@ function tripPlanReducer(
         isLoading: false,
         error: null,
       };
+    case "SET_HOTEL_RECOMMENDATIONS":
+      return {
+        ...state,
+        data: state.data
+          ? {
+              ...state.data,
+              hotelRecommendations: action.payload,
+            }
+          : null,
+        isLoading: false,
+        error: null,
+      };
+    case "SET_SELECTED_HOTELS":
+      return {
+        ...state,
+        data: state.data
+          ? {
+              ...state.data,
+              selectedHotels: action.payload,
+            }
+          : null,
+        isLoading: false,
+        error: null,
+      };
     case "CLEAR_DATA":
       return { ...initialState };
     default:
@@ -120,10 +162,14 @@ const TripPlanContext = createContext<{
   saveTripPlan: (data: TripPlanData) => void;
   saveSpotRecommendations: (recommendations: SpotRecommendation[]) => void;
   saveSelectedSpots: (selectedSpots: SpotRecommendation[]) => void;
+  saveHotelRecommendations: (recommendations: HotelRecommendation[]) => void;
+  saveSelectedHotels: (selectedHotels: HotelRecommendation[]) => void;
   clearTripPlan: () => void;
   getTripPlan: () => TripPlanData | null;
   getSpotRecommendations: () => SpotRecommendation[] | null;
   getSelectedSpots: () => SpotRecommendation[] | null;
+  getHotelRecommendations: () => HotelRecommendation[] | null;
+  getSelectedHotels: () => HotelRecommendation[] | null;
 } | null>(null);
 
 // Provider组件
@@ -224,6 +270,54 @@ export function TripPlanProvider({ children }: { children: ReactNode }) {
     return state.data?.selectedSpots || null;
   };
 
+  // 保存酒店推荐数据
+  const saveHotelRecommendations = (recommendations: HotelRecommendation[]) => {
+    try {
+      // 获取当前数据
+      const currentData = getTripPlan();
+      const updatedData = {
+        ...(currentData || {}),
+        hotelRecommendations: recommendations,
+      } as TripPlanData;
+
+      // 保存到sessionStorage和状态
+      sessionStorage.setItem("tripPlanData", JSON.stringify(updatedData));
+      dispatch({ type: "SET_HOTEL_RECOMMENDATIONS", payload: recommendations });
+    } catch (error) {
+      console.error("Failed to save hotel recommendations:", error);
+      dispatch({ type: "SET_ERROR", payload: "保存酒店推荐数据失败" });
+    }
+  };
+
+  // 保存用户选择的酒店信息
+  const saveSelectedHotels = (selectedHotels: HotelRecommendation[]) => {
+    try {
+      // 获取当前数据
+      const currentData = getTripPlan();
+      const updatedData = {
+        ...(currentData || {}),
+        selectedHotels: selectedHotels,
+      } as TripPlanData;
+
+      // 保存到sessionStorage和状态
+      sessionStorage.setItem("tripPlanData", JSON.stringify(updatedData));
+      dispatch({ type: "SET_SELECTED_HOTELS", payload: selectedHotels });
+    } catch (error) {
+      console.error("Failed to save selected hotels:", error);
+      dispatch({ type: "SET_ERROR", payload: "保存选择的酒店信息失败" });
+    }
+  };
+
+  // 获取酒店推荐数据
+  const getHotelRecommendations = (): HotelRecommendation[] | null => {
+    return state.data?.hotelRecommendations || null;
+  };
+
+  // 获取用户选择的酒店信息
+  const getSelectedHotels = (): HotelRecommendation[] | null => {
+    return state.data?.selectedHotels || null;
+  };
+
   return (
     <TripPlanContext.Provider
       value={{
@@ -232,10 +326,14 @@ export function TripPlanProvider({ children }: { children: ReactNode }) {
         saveTripPlan,
         saveSpotRecommendations,
         saveSelectedSpots,
+        saveHotelRecommendations,
+        saveSelectedHotels,
         clearTripPlan,
         getTripPlan,
         getSpotRecommendations,
         getSelectedSpots,
+        getHotelRecommendations,
+        getSelectedHotels,
       }}
     >
       {children}
