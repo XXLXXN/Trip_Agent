@@ -30,11 +30,12 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
       <style jsx>{`
         .search-container {
           padding: 0 16px;
+          color: white;
         }
         .search-frame {
           background-color: #ffffff;
           border-radius: 24px;
-          padding: 16px;
+          padding: 12px;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
         }
         .search-field {
@@ -42,7 +43,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
           align-items: center;
           background-color: #f3f4f6;
           border-radius: 16px;
-          height: 53px;
+          height: 45px;
           padding: 0 20px;
         }
         .search-field svg {

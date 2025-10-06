@@ -1,4 +1,4 @@
-// components/spotlist/BottomNav.tsx
+// components/spotlist/BottomNav.tsx - 保持不变，确认以下CSS属性存在且正确
 
 "use client";
 
@@ -117,20 +117,19 @@ export default function BottomNav() {
           </button>
         )}
       </div>
-      {/* 这个空白 div 用于在页面底部创建占位空间，防止列表的最后一条内容被固定的导航栏遮挡 */}
-      <div className="bottom-padding"></div>
       <style jsx>{`
         .bottom-nav {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          padding: 16px;
-          background-color: white;
-          border-top: 1px solid #ffffff;
+          position: fixed; /* 核心：固定定位 */
+          bottom: 0; /* 贴紧屏幕底部 */
+          left: 0; /* 贴紧屏幕左侧 */
+          right: 0; /* 贴紧屏幕右侧，使其横跨整个宽度 */
+          padding: 16px; /* 内部填充 */
+          background-color: white; /* 背景色 */
+          border-top: 1px solid #e0e0e0; /* 顶部细边框，提供视觉分离 */
+          box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* 顶部阴影，增加浮动感 */
           display: flex;
           justify-content: center;
-          z-index: 10; /* 确保在最上层 */
+          z-index: 1000; /* 确保它在所有其他内容之上 */
         }
         .error-section {
           display: flex;
@@ -173,9 +172,6 @@ export default function BottomNav() {
           font-size: 1rem;
           border: none;
           cursor: pointer;
-        }
-        .bottom-padding {
-          height: 88px; /* 预留空间，高度约等于导航栏高度 + padding */
         }
       `}</style>
     </>

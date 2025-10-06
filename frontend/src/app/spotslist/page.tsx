@@ -92,71 +92,106 @@ export default function TravelSelectionPage() {
   const handleBackClick = () => router.push("/planning");
   const handleSkipClick = () => router.push("/traffic");
 
+  // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
+  const bottomNavHeight = "88px"; 
+
   return (
-    <div className="page-container">
-      <div className="top-section">
+    <div className="page-wrapper">
+      <div className="scroll-container">
+        {/* Header部分，它会正常随页面滚动消失 */}
         <Header onBackClick={handleBackClick} onSkipClick={handleSkipClick} />
-        <SearchBar
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
 
-      {/* 内容区域，分为两个部分 */}
-      <div className="content-area">
-        {/* 已选方案列表 */}
-        <div className="section">
-          <div className="section-header">
-            <h2 className="section-title">推荐景点方案</h2>
-          </div>
-          <div className="card-list">
-            {selectedSpots.map((spot) => (
-              <SpotCard
-                key={spot.id}
-                spot={spot}
-                isSelected={true} // 标记为已选，显示 '-' 按钮
-                onButtonClick={handleSpotAction}
-              />
-            ))}
-          </div>
+        {/* 搜索框的包裹容器，这个容器将实现悬浮效果 */}
+        <div className="sticky-search-bar">
+          <SearchBar
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
 
-        {/* 推荐景点列表 */}
-        <div className="section">
-          <div className="section-header">
-            <h2 className="section-title">推荐景点</h2>
+        {/* 内容区域，它将在悬浮的搜索框下方滚动 */}
+        <div className="content-area">
+          {/* 已选方案列表 */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-title">推荐景点方案</h2>
+            </div>
+            <div className="card-list">
+              {selectedSpots.map((spot) => (
+                <SpotCard
+                  key={spot.id}
+                  spot={spot}
+                  isSelected={true}
+                  onButtonClick={handleSpotAction}
+                />
+              ))}
+            </div>
           </div>
-          <div className="card-list">
-            {recommendedSpots.map((spot) => (
-              <SpotCard
-                key={spot.id}
-                spot={spot}
-                isSelected={false} // 标记为未选，显示 '+' 按钮
-                onButtonClick={handleSpotAction}
-              />
-            ))}
+
+          {/* 推荐景点列表 */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-title">推荐景点</h2>
+            </div>
+            <div className="card-list">
+              {recommendedSpots.map((spot) => (
+                <SpotCard
+                  key={spot.id}
+                  spot={spot}
+                  isSelected={false}
+                  onButtonClick={handleSpotAction}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
+      {/* 固定的底部导航 */}
       <BottomNav />
 
       <style jsx>{`
-        .page-container {
-          min-height: 100vh;
-          background-color: #ffffff;
+        /* 确保html和body不产生滚动条 */
+        :global(html),
+        :global(body) {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
         }
-        .top-section {
-          background-color: #d9d9d9;
-          padding-bottom: 5px;
+
+        .page-wrapper {
+          height: 100vh;
+          width: 100vw;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
         }
+
+        .scroll-container {
+        background-color: #ffffff;
+          flex-grow: 1;
+          overflow-y: auto;
+          padding-bottom: ${bottomNavHeight};
+        }
+
+        /* 关键：包裹搜索框的容器样式 */
+        .sticky-search-bar {
+          position: sticky; /* 实现悬浮的核心属性 */
+          top: 0; /* 悬浮在滚动容器的最顶部 */
+          z-index: 10; /* 确保它在内容区域之上 */
+          background-color: transparent; /* 背景色，防止下方内容透视 */
+          padding-bottom: 5px; /* 保持与原设计一致的底部间距 */
+        }
+
         .content-area {
           padding: 16px;
           background-color: #ffffff;
           display: flex;
           flex-direction: column;
-          gap: 24px; /* 两个 section 之间的间距 */
+          gap: 24px;
         }
+        
         .section-header {
           display: flex;
           align-items: center;

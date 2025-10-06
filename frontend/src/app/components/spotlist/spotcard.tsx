@@ -122,12 +122,16 @@ export default function SpotCard({
           position: relative;
         }
         .spot-name {
+          width: 150px;
           font-family: "Inter", sans-serif;
           font-size: 16px;
           font-weight: 600;
           color: #1b1446;
           margin: 0;
           line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .recommendation-reason {
           font-family: "Inter", sans-serif;
