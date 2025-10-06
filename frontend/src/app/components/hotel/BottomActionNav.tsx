@@ -9,7 +9,7 @@ export default function BottomActionNav() {
 
   const handleNextClick = () => {
     // 点击后导航到下一页
-    router.push('/messagecard'); 
+    router.push('/trafficlist'); 
   };
 
   return (

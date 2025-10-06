@@ -25,7 +25,7 @@ const TopBar = ({ featuredImage }: TopBarProps) => {
    * Handles the click event for the back button, navigating to the previous page.
    */
   const handleBackClick = () => {
-    router.push('/jingdiantuijian');
+    router.push('/hotelslist');
   };
 
   /**

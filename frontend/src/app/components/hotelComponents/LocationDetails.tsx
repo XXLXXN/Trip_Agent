@@ -55,8 +55,8 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
       </div>
 
       <style jsx>{`
-        .location-details-container { border: 1px solid rgba(1, 34, 118, 0.05); padding: 16px; margin: 8px; height: 297px; background-color: white; border-radius: 16px; margin-top: -46px; position: relative; }
-        h2 { font-size: 20px; height: 24px; font-family: 'Inter', semi-bold; font-weight: 500; margin-bottom: 16px; }
+        .location-details-container { border: 1px solid rgba(1, 34, 118, 0.05); padding: 16px; margin: 8px; background-color: white; border-radius: 16px; margin-top: -46px; position: relative; }
+        h2 { font-size: 20px; font-family: 'Inter', semi-bold; font-weight: 500; margin-bottom: 16px; color:black; word-break: break-word; }
         .address-box, .rating-box { display: flex; align-items: center; height: 51px; padding: 8px; border-radius: 12px; border: 1px solid rgba(1, 34, 118, 0.05); margin-bottom: 12px; cursor: pointer; }
         .address-icon, .rating-icon { display: flex; justify-content: center; align-items: center; width: 24px; height: 24px; margin-right: 4px; }
         .address-content, .rating-content { flex-grow: 1; display: flex; flex-direction: column; }

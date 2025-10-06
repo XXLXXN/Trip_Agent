@@ -201,8 +201,8 @@ export default function HotelSelectionPage() {
   );
 
   // Header 按钮的导航处理
-  const handleBackClick = () => router.push("/traffic");
-  const handleSkipClick = () => router.push("/messagecard");
+  const handleBackClick = () => router.push("/spotslist");
+  const handleSkipClick = () => router.push("/trafficlist");
 
   // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
   const bottomNavHeight = "88px";

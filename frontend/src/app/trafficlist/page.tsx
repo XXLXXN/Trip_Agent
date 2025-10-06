@@ -27,8 +27,8 @@ export default function TravelSelectionPage() {
 
   const filteredTravelOptions = getFilteredOptions();
 
-  const handleBackClick = () => router.push('/jingdianliebiao');
-  const handleSkipClick = () => router.push('/hotel');
+  const handleBackClick = () => router.push('/hotelslist');
+  const handleSkipClick = () => router.push('/messagecard');
   
   // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
   const bottomNavHeight = "88px";

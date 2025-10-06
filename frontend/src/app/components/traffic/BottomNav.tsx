@@ -12,7 +12,7 @@ export default function BottomNav() {
 
   const handleNextClick = () => {
     // 点击后导航至 /hotel 页面
-    router.push('/hotel'); 
+    router.push('/messagecard'); 
   };
 
   return (
