@@ -1,6 +1,7 @@
 // components/hotel/HotelCard.tsx
 
 "use client";
+import { useRouter } from "next/navigation";
 import { Hotel } from "@/mockData/hoteldata"; // 建议将类型定义集中管理
 
 interface HotelCardProps {
@@ -20,6 +21,13 @@ export default function HotelCard({
   onToggleSelection,
   buttonVerticalOffset = 16, // 为新属性设置默认值
 }: HotelCardProps) {
+  const router = useRouter();
+
+  // 处理整个卡片的点击，用于页面跳转
+  const handleCardClick = () => {
+    router.push(hotel.path);
+  };
+
   const handleButtonClick = (e: React.MouseEvent) => {
     // 阻止事件冒泡，以免触发卡片本身的点击跳转
     e.stopPropagation();
@@ -28,7 +36,7 @@ export default function HotelCard({
 
   return (
     <>
-      <div className="hotel-card">
+      <div className="hotel-card" onClick={handleCardClick}>
         {/* 酒店图片容器 */}
         <div className="hotel-image-container">
           {hotel.image && hotel.image !== "/placeholder-hotel.jpg" ? (
@@ -245,7 +253,7 @@ export default function HotelCard({
         .icon-plus {
           width: 20px;
           height: 20px;
-          position: relative; 
+          position: relative;
           top: -5px;
         }
       `}</style>

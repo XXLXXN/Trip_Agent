@@ -55,17 +55,6 @@ export default function TravelSelectionPage() {
     }
   }, [selectedSpotIds, backendSpots]);
 
-  // 获取被选中的景点信息（用于发送给后端）
-  const getSelectedSpotInfo = () => {
-    return convertedSpots
-      .filter((spot) => selectedSpotIds.includes(spot.id))
-      .map((spot) => ({
-        name: spot.name,
-        id: spot.poiId,
-        address: spot.address,
-      }));
-  };
-
   // HANDLER: 处理卡片上 +/- 按钮的点击事件
   const handleSpotAction = (spotId: number) => {
     setSelectedSpotIds((prevIds) => {

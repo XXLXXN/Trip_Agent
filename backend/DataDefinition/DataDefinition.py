@@ -246,6 +246,7 @@ class FlightDetails(BaseTrafficDetails):
         "price": 850.50,
         "flight_number": "CA1234",
         "airline": "中国国际航空",
+        "duration": "2:30:00"
     }
     """
     traffic_type: Literal["flight"] = "flight"
@@ -267,6 +268,7 @@ class TrainDetails(BaseTrafficDetails):
         "price": 180.00,
         "train_number": "G8801",
         "seat_class": "二等座",
+        "duration": "00:50:00"
     }
     """
     traffic_type: Literal["train"] = "train"
@@ -324,5 +326,115 @@ class CreateItineraryRequest(BaseModel):
 
 #扫描所需商品和支付链接的输出数据
 class Goods(BaseModel):
-    name: str
-    pay_link:str
+    order_id: str
+    amount: float
+    payment_url: str
+    timestamp: datetime
+    currency: str = "CNY"
+
+
+
+# 1. 定义账单类型枚举 (包含“其他”类别)
+class BillType(str, Enum):
+    """
+    账单记录的类型。
+    """
+    FOOD = "美食"
+    HOTEL = "酒店"
+    TICKET = "票务"
+    TRANSPORTATION = "交通"
+    SHOPPING = "购物"
+    OTHER = "其他"
+
+# 2. 定义基础账单结构
+class BaseBill(BaseModel):
+    """
+    账单记录的基础信息结构。
+    """
+    # 建议使用时区感知的时间（例如：ISO 8601 格式，带 +08:00）
+    transaction_time: datetime = Field(
+        ...,
+        description="交易发生的时间（精确到秒，建议包含时区信息）。"
+    )
+    name: str = Field(
+        ...,
+        description="账单的名称或描述（例如：'海底捞'、'银行卡年费'）。"
+    )
+    # 收入为正数，支出为负数
+    amount: float = Field(
+        ...,
+        description="收支数额。收入为正数，支出为负数（例如：-128.88 表示支出 128.88 元）。"
+    )
+    order_id: Optional[str] = Field(
+        None,
+        description="可选的订单号或交易流水号。"
+    )
+    avatar_url: Optional[str] = Field(
+        None,
+        description="头像/图标图片的URL或路径（例如：商户Logo或类别图标）。"
+    )
+
+# 3. 定义完整的账单记录结构 (包含 Docstring 示例)
+class BillEntry(BaseBill):
+    """
+    一条完整的账单记录，包含类型信息。
+    """
+    category: BillType = Field(
+        ...,
+        description="账单的种类，使用 BillType 枚举（美食、酒店、票务、交通、购物、其他）。"
+    )
+
+    class Config:
+        # 在 schema_extra 中提供示例数据，Pydantic 会将其包含在生成的 Schema（Docstring）中。
+        schema_extra = {
+            "examples": [
+                {
+                    "category": "美食",
+                    "transaction_time": "2025-10-05T18:30:00+08:00",
+                    "name": "海底捞火锅",
+                    "amount": -345.50,
+                    "order_id": "ZF2025100518300123456",
+                    "avatar_url": "https://images.example.com/icons/food.png"
+                },
+                {
+                    "category": "酒店",
+                    "transaction_time": "2025-10-06T15:00:00+08:00",
+                    "name": "北京丽思卡尔顿酒店",
+                    "amount": -1899.00,
+                    "order_id": "JD2025100615000098765",
+                    "avatar_url": "https://images.example.com/icons/hotel.png"
+                },
+                {
+                    "category": "交通",
+                    "transaction_time": "2025-10-07T14:45:00+08:00",
+                    "name": "滴滴快车",
+                    "amount": -25.60,
+                    "order_id": "DD20251007144500556677",
+                    "avatar_url": None
+                },
+                {
+                    "category": "购物",
+                    "transaction_time": "2025-10-07T20:10:00+08:00",
+                    "name": "苹果商城购买耳机",
+                    "amount": -1999.00,
+                    "order_id": "AP20251007201000998877",
+                    "avatar_url": "https://images.example.com/icons/shopping.png"
+                },
+                {
+                    "category": "其他",
+                    "transaction_time": "2025-10-08T10:00:00+08:00",
+                    "name": "水电费缴纳",
+                    "amount": -150.00,
+                    "order_id": "GF20251008100000111222",
+                    "avatar_url": "https://images.example.com/icons/utility.png"
+                },
+                {
+                    "category": "其他",
+                    "transaction_time": "2025-10-08T12:00:00+08:00",
+                    "name": "收到的红包",
+                    "amount": 50.00, # 收入示例
+                    "order_id": "RP20251008120000445566",
+                    "avatar_url": "https://images.example.com/icons/redpacket.png"
+                },
+            ]
+        }

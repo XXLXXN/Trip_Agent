@@ -22,7 +22,7 @@ import SearchBar from "@/components/hotel/SearchBar";
 import HotelCard from "@/components/hotel/HotelCard";
 import BottomActionNav from "@/components/hotel/BottomActionNav";
 
-import { useTripPlan } from "../context/TripPlanContext";
+import { useTripPlan, HotelRecommendation } from "../context/TripPlanContext";
 
 export default function HotelSelectionPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +30,12 @@ export default function HotelSelectionPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { getTripPlan, getSelectedSpots } = useTripPlan();
+  const {
+    getTripPlan,
+    getSelectedSpots,
+    saveHotelRecommendations,
+    getHotelRecommendations,
+  } = useTripPlan();
 
   // State: 跟踪已选择酒店的ID列表
   const [selectedHotelIds, setSelectedHotelIds] = useState<number[]>([]);
@@ -48,6 +53,39 @@ export default function HotelSelectionPage() {
 
         if (!tripPlan || !selectedSpots) {
           throw new Error("缺少必要的旅行规划数据");
+        }
+
+        // 检查是否已经有酒店数据，避免重复请求
+        const existingHotelRecommendations = getHotelRecommendations();
+        if (
+          existingHotelRecommendations &&
+          existingHotelRecommendations.length > 0
+        ) {
+          console.log("已有酒店推荐数据，跳过API请求");
+
+          // 直接使用已有的数据
+          const convertedHotels: Hotel[] = existingHotelRecommendations.map(
+            (hotel: HotelRecommendation, index: number) => ({
+              id: index + 1,
+              name: hotel.SpotName,
+              location: hotel.address,
+              price: hotel.cost || 200,
+              rating: parseFloat(hotel.rating) || 4.0,
+              image: hotel.photos?.[0]?.url || "/placeholder-hotel.jpg",
+              path: `/hoteldetails/${hotel.POIId}`,
+              isPlan: index === 0,
+            })
+          );
+
+          setHotels(convertedHotels);
+
+          // 默认选择第一个酒店（推荐方案）
+          if (convertedHotels.length > 0) {
+            setSelectedHotelIds([convertedHotels[0].id]);
+          }
+
+          setIsLoading(false);
+          return;
         }
 
         // 构建请求数据
@@ -111,6 +149,21 @@ export default function HotelSelectionPage() {
 
         setHotels(convertedHotels);
 
+        // 保存酒店推荐数据到TripPlanContext，供详情页使用
+        const hotelRecommendations: HotelRecommendation[] = hotelData.map(
+          (hotel: any) => ({
+            SpotName: hotel.SpotName,
+            RecReason: hotel.RecReason || "推荐酒店",
+            POIId: hotel.POIId,
+            description: hotel.description || "酒店详情信息",
+            address: hotel.address || "地址信息",
+            photos: hotel.photos || [],
+            rating: hotel.rating || "0",
+            cost: hotel.cost || 0,
+          })
+        );
+        saveHotelRecommendations(hotelRecommendations);
+
         // 默认选择第一个酒店（推荐方案）
         if (convertedHotels.length > 0) {
           setSelectedHotelIds([convertedHotels[0].id]);
@@ -124,7 +177,7 @@ export default function HotelSelectionPage() {
     };
 
     fetchHotelRecommendations();
-  }, [getTripPlan, getSelectedSpots]);
+  }, []); // 空依赖数组，确保只执行一次
 
   // Handler: 处理酒店卡片上的添加/移除操作
   const toggleHotelSelection = (hotelId: number) => {
