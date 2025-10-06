@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-connect_location.py - 自动为Trip对象添加Transportation项目（POI版本）
-"""
 
 import os
 import sys
@@ -595,23 +592,8 @@ def create_transportation_with_api(
                     import math
                     distance_km = math.sqrt((origin_lat - dest_lat)**2 + (origin_lng - dest_lng)**2) * 111
                     
-                    if distance_km < 0.5:
-                        print(f"距离很近({distance_km:.2f}公里)，只返回步行方案")
-                        transport_info = {
-                            'transport_options': [{
-                                'mode': 'walk',
-                                'cost': 0.0,
-                                'duration': int(distance_km * 1000 / 1.4 * 60),  # 按步行速度1.4m/s计算
-                                'distance': int(distance_km * 1000),
-                                'description': f"步行约{int(distance_km * 1000 / 1.4 / 60)}分钟（距离{distance_km:.2f}公里）",
-                                'notes': '距离很近，建议步行'
-                            }],
-                            'has_options': True,
-                            'total_options': 1
-                        }
-                    else:
-                        print(f"距离{distance_km:.2f}公里，获取四种交通方案")
-                        transport_info = get_transport_info_from_api_by_poi(amap_api, origin_poi_id, dest_poi_id, destination_city)
+                    print(f"距离{distance_km:.2f}公里，获取四种交通方案")
+                    transport_info = get_transport_info_from_api_by_poi(amap_api, origin_poi_id, dest_poi_id, destination_city)
                 else:
                     print("无法获取POI坐标，使用API获取交通信息")
                     transport_info = get_transport_info_from_api_by_poi(amap_api, origin_poi_id, dest_poi_id, destination_city)
