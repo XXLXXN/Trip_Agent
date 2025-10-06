@@ -1,5 +1,4 @@
 // app/hoteldetails/[poiid]/page.tsx
-
 "use client";
 
 import Head from "next/head";
@@ -17,10 +16,6 @@ import ReviewSection from "@/components/hotelComponents/ReviewSection";
 import BookingSection from "@/components/hotelComponents/BookingSection";
 import { useTripPlan } from "../../context/TripPlanContext";
 
-/**
- * 动态酒店详情页主页面组件。
- * 根据POIId从后端数据中获取对应酒店的详细信息。
- */
 export default function HotelDetailsPage() {
   const router = useRouter();
   const params = useParams();
@@ -29,12 +24,14 @@ export default function HotelDetailsPage() {
   const { getHotelRecommendations } = useTripPlan();
   const [hotelData, setHotelData] = useState<LocationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // 【新增】为经纬度坐标创建一个新的 state
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
 
-  // 创建Ref以引用DOM元素，用于平滑滚动
   const locationRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
 
-  // 根据POIId从后端数据中查找对应的酒店信息
+  // 第一个 useEffect：获取酒店基础数据
   useEffect(() => {
     const backendHotels = getHotelRecommendations();
     if (backendHotels && backendHotels.length > 0) {
@@ -42,51 +39,69 @@ export default function HotelDetailsPage() {
         (hotel: any) => hotel.POIId === poiid
       );
       if (foundHotel) {
-        // 将后端数据转换为前端需要的格式
         const convertedData: LocationData = {
           name: foundHotel.SpotName,
           address: foundHotel.address || mockLocationData.address,
           rating: parseFloat(foundHotel.rating) || mockLocationData.rating,
-          reviewCount: mockLocationData.reviewCount, // 使用mock数据
-          featuredImage:
-            foundHotel.photos?.[0]?.url || mockLocationData.featuredImage,
-          photos:
-            foundHotel.photos?.map((photo: any) => photo.url) ||
-            mockLocationData.photos,
+          reviewCount: mockLocationData.reviewCount,
+          featuredImage: foundHotel.photos?.[0]?.url || mockLocationData.featuredImage,
+          photos: foundHotel.photos?.map((photo: any) => photo.url) || mockLocationData.photos,
           introduction: foundHotel.description || mockLocationData.introduction,
-          amenitiesStatus: mockLocationData.amenitiesStatus, // 使用mock数据
-          reviews: mockLocationData.reviews, // 使用mock数据
+          amenitiesStatus: mockLocationData.amenitiesStatus,
+          reviews: mockLocationData.reviews,
           price: foundHotel.cost || mockLocationData.price,
         };
         setHotelData(convertedData);
       } else {
-        // 如果没有找到对应的酒店，使用mock数据
         setHotelData(mockLocationData);
       }
     } else {
-      // 如果没有后端数据，使用mock数据
       setHotelData(mockLocationData);
     }
     setIsLoading(false);
   }, [poiid, getHotelRecommendations]);
 
-  // 滚动到位置区域
-  const scrollToLocation = () => {
-    locationRef.current?.scrollIntoView({ behavior: "smooth" });
+  // 【新增】第二个 useEffect：当酒店数据加载后，调用内部API获取经纬度
+  useEffect(() => {
+    if (hotelData?.address) {
+      const fetchCoordinates = async () => {
+        try {
+          const response = await fetch('/api/geocode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: hotelData.address }),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.coordinates) {
+              setCoordinates(data.coordinates);
+            }
+          } else {
+            console.error("获取坐标失败:", await response.text());
+          }
+        } catch (error) {
+          console.error("请求坐标 API 时出错:", error);
+        }
+      };
+      fetchCoordinates();
+    }
+  }, [hotelData]);
+
+  // 事件处理函数
+  const scrollToLocation = () => locationRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToReviews = () => reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  // 【修改】导航到地图页面，现在使用高德地图URL
+  const handleOpenMap = () => {
+    if (coordinates && hotelData) {
+      const [lng, lat] = coordinates;
+      window.open(`https://uri.amap.com/marker?position=${lng},${lat}&name=${encodeURIComponent(hotelData.name)}`, '_blank');
+    } else {
+      alert("正在获取地图坐标，请稍候...");
+    }
   };
 
-  // 滚动到评论区域
-  const scrollToReviews = () => {
-    reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  // 导航到地图页面
-  const handleOpenMap = () => router.push("/map");
-
-  // 导航到所有评论页面
   const handleViewAllReviews = () => router.push("/reviews");
-
-  // 导航到预订流程页面
   const handleBook = () => router.push("/booking");
 
   if (isLoading) {
@@ -94,6 +109,7 @@ export default function HotelDetailsPage() {
       <div className="loading-container">
         <div className="loading-spinner"></div>
         <p>加载中...</p>
+        {/* 加载动画的 CSS */}
         <style jsx>{`
           .loading-container {
             display: flex;
@@ -152,11 +168,12 @@ export default function HotelDetailsPage() {
 
         <AmenityIcons amenitiesStatus={currentData.amenitiesStatus} />
 
-        {/* 将ref附加到div，以便可以滚动到它 */}
         <div ref={locationRef}>
+          {/* 【修改】将坐标传递给 LocationSection */}
           <LocationSection
             address={currentData.address}
             onOpenMap={handleOpenMap}
+            coordinates={coordinates}
           />
         </div>
 
@@ -170,6 +187,7 @@ export default function HotelDetailsPage() {
 
       <BookingSection onBook={handleBook} />
 
+      {/* --- 您的 CSS 代码，原封不动 --- */}
       <style jsx global>{`
         html,
         body {

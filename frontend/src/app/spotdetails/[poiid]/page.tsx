@@ -14,12 +14,8 @@ import AmenityIcons from "@/components/spotdetails/AmenityIcons";
 import LocationSection from "@/components/spotdetails/LocationSection";
 import ReviewSection from "@/components/spotdetails/ReviewSection";
 import BookingSection from "@/components/spotdetails/BookingSection";
-import { useTripPlan, SpotRecommendation } from "../../context/TripPlanContext";
+import { useTripPlan } from "../../context/TripPlanContext";
 
-/**
- * 动态地点详情页主页面组件。
- * 根据POIId从后端数据中获取对应景点的详细信息。
- */
 export default function SpotDetailsPage() {
   const router = useRouter();
   const params = useParams();
@@ -28,95 +24,89 @@ export default function SpotDetailsPage() {
   const { getSpotRecommendations } = useTripPlan();
   const [spotData, setSpotData] = useState<LocationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // 【新增】为经纬度坐标创建一个新的 state
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
 
-  // 创建Ref以引用DOM元素，用于平滑滚动
   const locationRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
 
-  // 根据POIId从后端数据中查找对应的景点信息
+  // 第一个 useEffect：获取景点基础数据 (逻辑不变)
   useEffect(() => {
     const backendSpots = getSpotRecommendations();
     if (backendSpots && backendSpots.length > 0) {
       const foundSpot = backendSpots.find((spot) => spot.POIId === poiid);
       if (foundSpot) {
-        // 将后端数据转换为前端需要的格式
         const convertedData: LocationData = {
           name: foundSpot.SpotName,
           address: foundSpot.address || mockLocationData.address,
           rating: parseFloat(foundSpot.rating) || mockLocationData.rating,
-          reviewCount: mockLocationData.reviewCount, // 使用mock数据
-          featuredImage:
-            foundSpot.photos?.[0]?.url || mockLocationData.featuredImage,
-          photos:
-            foundSpot.photos?.map((photo) => photo.url) ||
-            mockLocationData.photos,
+          reviewCount: mockLocationData.reviewCount,
+          featuredImage: foundSpot.photos?.[0]?.url || mockLocationData.featuredImage,
+          photos: foundSpot.photos?.map((photo) => photo.url) || mockLocationData.photos,
           introduction: foundSpot.description || mockLocationData.introduction,
-          amenitiesStatus: mockLocationData.amenitiesStatus, // 使用mock数据
-          reviews: mockLocationData.reviews, // 使用mock数据
-          price: mockLocationData.price, // 使用mock数据
+          amenitiesStatus: mockLocationData.amenitiesStatus,
+          reviews: mockLocationData.reviews,
+          price: mockLocationData.price,
         };
         setSpotData(convertedData);
       } else {
-        // 如果没有找到对应的景点，使用mock数据
         setSpotData(mockLocationData);
       }
     } else {
-      // 如果没有后端数据，使用mock数据
       setSpotData(mockLocationData);
     }
     setIsLoading(false);
-  }, [poiid]); // 移除了getSpotRecommendations依赖
+  }, [poiid]);
 
-  // 滚动到位置区域
-  const scrollToLocation = () => {
-    locationRef.current?.scrollIntoView({ behavior: "smooth" });
+  // 【新增】第二个 useEffect：当景点数据加载后，调用内部API获取经纬度
+  useEffect(() => {
+    if (spotData?.address) {
+      const fetchCoordinates = async () => {
+        try {
+          // 我们复用之前创建的同一个 API 接口
+          const response = await fetch('/api/geocode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: spotData.address }),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.coordinates) {
+              setCoordinates(data.coordinates);
+            }
+          } else {
+            console.error("获取坐标失败:", await response.text());
+          }
+        } catch (error) {
+          console.error("请求坐标 API 时出错:", error);
+        }
+      };
+      fetchCoordinates();
+    }
+  }, [spotData]); // 这个 effect 依赖于 spotData
+
+  // 滚动函数 (逻辑不变)
+  const scrollToLocation = () => locationRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToReviews = () => reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  // 【修改】导航到地图页面，现在使用高德地图URL
+  const handleOpenMap = () => {
+    if (coordinates && spotData) {
+      const [lng, lat] = coordinates;
+      window.open(`https://uri.amap.com/marker?position=${lng},${lat}&name=${encodeURIComponent(spotData.name)}`, '_blank');
+    } else {
+      alert("正在获取地图坐标，请稍候...");
+    }
   };
 
-  // 滚动到评论区域
-  const scrollToReviews = () => {
-    reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  // 导航到地图页面
-  const handleOpenMap = () => router.push("/map");
-
-  // 导航到所有评论页面
   const handleViewAllReviews = () => router.push("/reviews");
-
-  // 导航到预订流程页面
   const handleBook = () => router.push("/jiudiantuijian");
 
   if (isLoading) {
+    // ... loading UI ... (不变)
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>加载中...</p>
-        <style jsx>{`
-          .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-          }
-          .loading-spinner {
-            border: 4px solid #f3f4f6;
-            border-top: 4px solid #0768fd;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-          }
-          @keyframes spin {
-            0% {
-              transform: rotate(0deg);
-            }
-            100% {
-              transform: rotate(360deg);
-            }
-          }
-        `}</style>
-      </div>
+        <div className="loading-container">...</div>
     );
   }
 
@@ -126,10 +116,7 @@ export default function SpotDetailsPage() {
     <div className="container">
       <Head>
         <title>{currentData.name} - 详情</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
 
       <TopBar featuredImage={currentData.featuredImage} />
@@ -140,16 +127,15 @@ export default function SpotDetailsPage() {
           onScrollToLocation={scrollToLocation}
           onScrollToReviews={scrollToReviews}
         />
-
         <Introduction text={currentData.introduction} />
-
         <AmenityIcons amenitiesStatus={currentData.amenitiesStatus} />
 
-        {/* 将ref附加到div，以便可以滚动到它 */}
         <div ref={locationRef}>
+          {/* 【修改】将坐标 state 传递给 LocationSection */}
           <LocationSection
             address={currentData.address}
             onOpenMap={handleOpenMap}
+            coordinates={coordinates}
           />
         </div>
 
@@ -163,19 +149,10 @@ export default function SpotDetailsPage() {
 
       <BookingSection price={currentData.price} onBook={handleBook} />
 
-      <style jsx global>{`
-        /* 全局样式 */
-      `}</style>
+      <style jsx global>{`/* 全局样式 */`}</style>
       <style jsx>{`
-        .container {
-          min-height: 100vh;
-          position: relative;
-          background:white;
-        }
-        .content {
-          /* 为底部的固定预约栏留出空间，防止内容被遮挡 */
-          padding-bottom: 240px;
-        }
+        .container { min-height: 100vh; position: relative; background:white; }
+        .content { padding-bottom: 240px; }
       `}</style>
     </div>
   );

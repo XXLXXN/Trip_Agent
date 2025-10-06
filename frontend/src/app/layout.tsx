@@ -1,3 +1,5 @@
+// app/layout.tsx
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -26,6 +28,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* 
+        Next.js 会自动处理 head 标签, 
+        但为了清晰地添加外部样式表, 我们可以显式地写出 <head> 标签。
+      */}
+      <head>
+        {/* --- 在这里添加高德地图的 CSS 链接 --- */}
+        <link
+          rel="stylesheet"
+          href="https://a.amap.com/jsapi_demos/static/demo-center/css/demoutils.css"
+        />
+        {/* ------------------------------------ */}
+      </head>
+
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <TripPlanProvider>
           <TransitionProvider>{children}</TransitionProvider>
