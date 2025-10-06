@@ -167,10 +167,11 @@ export default function TravelSelectionPage() {
         /* 关键：包裹搜索框的容器样式 */
         .sticky-search-bar {
           position: sticky; /* 实现悬浮的核心属性 */
-          top: 0; /* 悬浮在滚动容器的最顶部 */
+          top: 2px; /* 悬浮在滚动容器的最顶部 */
           z-index: 10; /* 确保它在内容区域之上 */
           background-color: transparent; /* 背景色，防止下方内容透视 */
           padding-bottom: 5px; /* 保持与原设计一致的底部间距 */
+          
         }
 
         .content-area {

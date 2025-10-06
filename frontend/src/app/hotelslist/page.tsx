@@ -204,6 +204,9 @@ export default function HotelSelectionPage() {
   const handleBackClick = () => router.push("/traffic");
   const handleSkipClick = () => router.push("/messagecard");
 
+  // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
+  const bottomNavHeight = "88px";
+
   // 加载状态和错误处理
   if (isLoading) {
     return (
@@ -227,65 +230,97 @@ export default function HotelSelectionPage() {
   }
 
   return (
-    <div className="page-container">
-      <div className="top-section">
+    <div className="page-wrapper">
+      <div className="scroll-container">
+        {/* Header部分，它会正常随页面滚动消失 */}
         <SelectionHeader
           onBackClick={handleBackClick}
           onSkipClick={handleSkipClick}
         />
-        <SearchBar
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+
+        {/* 搜索框的包裹容器，这个容器将实现悬浮效果 */}
+        <div className="sticky-search-bar">
+          <SearchBar
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        {/* 内容区域，它将在悬浮的搜索框下方滚动 */}
+        <main className="content-area">
+          {/* 分区 1: 已选的酒店方案 */}
+          <section className="section">
+            <div className="section-header">
+              <h2 className="section-title">推荐酒店方案</h2>
+            </div>
+            <div className="card-list">
+              {selectedHotels.map((hotel) => (
+                <HotelCard
+                  key={hotel.id}
+                  hotel={hotel}
+                  isSelected={true} // 属于已选列表，显示 '-'
+                  onToggleSelection={toggleHotelSelection}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* 分区 2: 其他可供选择的酒店 */}
+          <section className="section">
+            <div className="section-header">
+              <h2 className="section-title">推荐酒店</h2>
+            </div>
+            <div className="card-list">
+              {availableHotels.map((hotel) => (
+                <HotelCard
+                  key={hotel.id}
+                  hotel={hotel}
+                  isSelected={false} // 属于可选列表，显示 '+'
+                  onToggleSelection={toggleHotelSelection}
+                />
+              ))}
+            </div>
+          </section>
+        </main>
       </div>
-
-      <main className="content-area">
-        {/* 分区 1: 已选的酒店方案 */}
-        <section className="section">
-          <div className="section-header">
-            <h2 className="section-title">推荐酒店方案</h2>
-          </div>
-          <div className="card-list">
-            {selectedHotels.map((hotel) => (
-              <HotelCard
-                key={hotel.id}
-                hotel={hotel}
-                isSelected={true} // 属于已选列表，显示 '-'
-                onToggleSelection={toggleHotelSelection}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* 分区 2: 其他可供选择的酒店 */}
-        <section className="section">
-          <div className="section-header">
-            <h2 className="section-title">推荐酒店</h2>
-          </div>
-          <div className="card-list">
-            {availableHotels.map((hotel) => (
-              <HotelCard
-                key={hotel.id}
-                hotel={hotel}
-                isSelected={false} // 属于可选列表，显示 '+'
-                onToggleSelection={toggleHotelSelection}
-              />
-            ))}
-          </div>
-        </section>
-      </main>
 
       <BottomActionNav />
 
       <style jsx>{`
-        .page-container {
-          min-height: 100vh;
-          background-color: #ffffff;
+        /* 全局样式，确保页面不产生滚动条 */
+        :global(html),
+        :global(body) {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
         }
-        .top-section {
-          background-color: #d9d9d9;
+
+        .page-wrapper {
+          height: 100vh;
+          width: 100vw;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .scroll-container {
+        background-color: #ffffff;
+          flex-grow: 1;
+          overflow-y: auto;
+          /* 关键：为固定的底部导航留出空间 */
+          padding-bottom: ${bottomNavHeight};
+        }
+        
+        /* 关键：包裹搜索框的容器样式 */
+        .sticky-search-bar {
+          position: sticky;
+          top: 2px;
+          z-index: 10;
+          background-color: transparent; /* 背景色，防止下方内容透视 */
           padding-bottom: 5px;
         }
+
         .content-area {
           padding: 16px;
           background-color: #ffffff;

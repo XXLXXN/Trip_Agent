@@ -1,4 +1,4 @@
-// components/travel/BottomNav.tsx
+// components/traffic/BottomNav.tsx
 
 'use client'; 
 
@@ -22,8 +22,7 @@ export default function BottomNav() {
           下一步
         </button>
       </div>
-      {/* 这是一个占位元素，防止底部导航栏遮挡页面内容 */}
-      <div className="bottom-padding"></div>
+      {/* 移除了这里的 <div className="bottom-padding"></div> */}
       <style jsx>{`
         .bottom-nav {
           font-family: 'Inter', semi-bold;
@@ -38,6 +37,7 @@ export default function BottomNav() {
           border-top: 1px solid #FFFFFF;
           display: flex;
           justify-content: center;
+          z-index: 1000; /* 确保在最上层 */
         }
         .next-button {
           width: 327px;
@@ -54,9 +54,7 @@ export default function BottomNav() {
           align-items: center;
           justify-content: center;
         }
-        .bottom-padding {
-          height: 88px; 
-        }
+        /* 移除了 .bottom-padding 的样式 */
       `}</style>
     </>
   );

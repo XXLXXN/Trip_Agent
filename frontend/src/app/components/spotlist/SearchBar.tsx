@@ -36,7 +36,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
           background-color: #ffffff;
           border-radius: 24px;
           padding: 12px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .search-field {
           display: flex;

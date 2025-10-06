@@ -130,8 +130,8 @@ export default function TravelTypeSelector({ selectedType, onTypeChange }: Trave
       </div>
       <style jsx>{`
         /* --- 原有样式 --- */
-        .selector-container { background-color: #D9D9D9; padding: 0 16px; }
-        .selector-frame { background-color: #ffffff; border-radius: 24px; padding: 16px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07); }
+        .selector-container { background-color: transparent; padding: 0 16px; }
+        .selector-frame { background-color: #ffffff; border-radius: 24px; padding: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
         .selector-field { position: relative; display: flex; align-items: center; background-color: #F0F7FF; border-radius: 16px; height: 60px; padding: 0 20px; cursor: pointer; }
         .text-area { display: flex; flex-direction: column; margin-left: 12px; flex-grow: 1; }
         .label { font-size: 12px; color: #888; }
