@@ -16,9 +16,11 @@ from backend.DataDefinition.DataDefinition import (
     Budget, 
     CreateSpotsRequest,
     CreateHotelRequest,
+    CreateTrafficRequest,
     POIInfo,
     SpotDetailInfo,  # 景点推荐响应模型
-    HotelDetailInfo   # 酒店推荐响应模型
+    HotelDetailInfo,  # 酒店推荐响应模型
+    TrafficRecommendationResponse  # 交通推荐响应模型
 )
 
 # 使用DataDefinition中定义的响应模型
@@ -284,6 +286,376 @@ SAMPLE_HOTEL_RECOMMENDATIONS = [
     }
 ]
 
+# 示例数据 - 交通推荐（飞机）- 使用完整的示例数据
+SAMPLE_FLIGHT_RECOMMENDATIONS = {
+    "data": {
+        "voyage": {
+            "fromCityCode": "KRL",
+            "toCityCode": "CTU",
+            "fromCityName": "库尔勒",
+            "toCityName": "成都",
+            "fromDate": "2020-06-10",
+            "flights": [
+                {
+                    "flightNo": "CZ6925",
+                    "airlineCompany": "南方航空",
+                    "airlineCode": "CZ",
+                    "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/CZ.png",
+                    "fromAirportCode": "KRL",
+                    "toAirportCode": "CTU",
+                    "fromAirportName": "库尔勒",
+                    "toAirportName": "成都双流",
+                    "isShareFlight": False,
+                    "realFlightNo": None,
+                    "fromDateTime": "2020-06-10 09:40:00",
+                    "toDateTime": "2020-06-10 15:45:00",
+                    "fromTerminal": "--",
+                    "toTerminal": "T2",
+                    "flyDuration": "06:05",
+                    "adultTax": 50,
+                    "adultFuel": 0,
+                    "cabins": [
+                        {
+                            "cabinCode": "M",
+                            "cabinLevel": 1,
+                            "cabinName": "经济舱",
+                            "seatLeftNum": 10,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 2097
+                            }
+                        },
+                        {
+                            "cabinCode": "Y",
+                            "cabinLevel": 1,
+                            "cabinName": "经济舱",
+                            "seatLeftNum": 10,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 2494
+                            }
+                        },
+                        {
+                            "cabinCode": "J",
+                            "cabinLevel": 2,
+                            "cabinName": "商务舱",
+                            "seatLeftNum": 8,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 5735
+                            }
+                        }
+                    ],
+                    "stopNum": 1,
+                    "craftType": "波音738"
+                },
+                {
+                    "flightNo": "3U8810",
+                    "airlineCompany": "四川航空",
+                    "airlineCode": "3U",
+                    "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/3U.png",
+                    "fromAirportCode": "KRL",
+                    "toAirportCode": "CTU",
+                    "fromAirportName": "库尔勒",
+                    "toAirportName": "成都天府",
+                    "isShareFlight": False,
+                    "realFlightNo": None,
+                    "fromDateTime": "2020-06-10 10:30:00",
+                    "toDateTime": "2020-06-10 14:00:00",
+                    "fromTerminal": "--",
+                    "toTerminal": "T1",
+                    "flyDuration": "03:30",
+                    "adultTax": 50,
+                    "adultFuel": 0,
+                    "cabins": [
+                        {
+                            "cabinCode": "V",
+                            "cabinLevel": 1,
+                            "cabinName": "经济舱",
+                            "seatLeftNum": 5,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 1850
+                            }
+                        },
+                        {
+                            "cabinCode": "Y",
+                            "cabinLevel": 1,
+                            "cabinName": "经济舱",
+                            "seatLeftNum": 10,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 2350
+                            }
+                        },
+                        {
+                            "cabinCode": "C",
+                            "cabinLevel": 2,
+                            "cabinName": "公务舱",
+                            "seatLeftNum": 4,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 4880
+                            }
+                        }
+                    ],
+                    "stopNum": 0,
+                    "craftType": "空客320"
+                },
+                {
+                    "flightNo": "CA4242",
+                    "airlineCompany": "中国国航",
+                    "airlineCode": "CA",
+                    "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/CA.png",
+                    "fromAirportCode": "KRL",
+                    "toAirportCode": "CTU",
+                    "fromAirportName": "库尔勒",
+                    "toAirportName": "成都双流",
+                    "isShareFlight": True,
+                    "realFlightNo": "ZH4242",
+                    "fromDateTime": "2020-06-10 12:00:00",
+                    "toDateTime": "2020-06-10 18:30:00",
+                    "fromTerminal": "T1",
+                    "toTerminal": "T2",
+                    "flyDuration": "06:30",
+                    "adultTax": 50,
+                    "adultFuel": 0,
+                    "cabins": [
+                        {
+                            "cabinCode": "U",
+                            "cabinLevel": 1,
+                            "cabinName": "经济舱",
+                            "seatLeftNum": 2,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 2150
+                            }
+                        },
+                        {
+                            "cabinCode": "Y",
+                            "cabinLevel": 1,
+                            "cabinName": "经济舱",
+                            "seatLeftNum": 9,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 2550
+                            }
+                        }
+                    ],
+                    "stopNum": 1,
+                    "craftType": "波音737"
+                },
+                {
+                    "flightNo": "MU5488",
+                    "airlineCompany": "东方航空",
+                    "airlineCode": "MU",
+                    "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/MU.png",
+                    "fromAirportCode": "KRL",
+                    "toAirportCode": "CTU",
+                    "fromAirportName": "库尔勒",
+                    "toAirportName": "成都天府",
+                    "isShareFlight": False,
+                    "realFlightNo": None,
+                    "fromDateTime": "2020-06-10 15:10:00",
+                    "toDateTime": "2020-06-10 22:00:00",
+                    "fromTerminal": "--",
+                    "toTerminal": "T1",
+                    "flyDuration": "06:50",
+                    "adultTax": 50,
+                    "adultFuel": 0,
+                    "cabins": [
+                        {
+                            "cabinCode": "E",
+                            "cabinLevel": 1,
+                            "cabinName": "经济舱",
+                            "seatLeftNum": 10,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 2230
+                            }
+                        },
+                        {
+                            "cabinCode": "C",
+                            "cabinLevel": 2,
+                            "cabinName": "商务舱",
+                            "seatLeftNum": 6,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 5910
+                            }
+                        },
+                        {
+                            "cabinCode": "F",
+                            "cabinLevel": 3,
+                            "cabinName": "头等舱",
+                            "seatLeftNum": 3,
+                            "cabinBookPara": "...",
+                            "cabinPrice": {
+                                "adultSalePrice": 8840
+                            }
+                        }
+                    ],
+                    "stopNum": 1,
+                    "craftType": "空客321"
+                }
+            ]
+        }
+    },
+    "success": True,
+    "msg": "请求成功"
+}
+
+# 示例数据 - 交通推荐（火车）- 使用完整的示例数据
+SAMPLE_TRAIN_RECOMMENDATIONS = {
+    "data": {
+        "trainLines": [
+            {
+                "trainCode": "K289",
+                "trainNo": "760000K2920K",
+                "fromStation": "苏州",
+                "toStation": "昆山",
+                "fromTime": "04:30",
+                "toTime": "04:54",
+                "fromDateTime": "2023-12-15 04:30",
+                "toDateTime": "2023-12-15 04:54",
+                "arrive_days": "0",
+                "runTime": "00:24",
+                "trainsType": 5,
+                "trainsTypeName": "快速",
+                "beginStation": "成都西",
+                "beginTime": None,
+                "endStation": "昆山",
+                "endTime": None,
+                "isSupportChooseSleeper": True,
+                "note": "",
+                "transferQueryExtraParams": None,
+                "sequence": 0,
+                "Seats": [
+                    {
+                        "seatType": 98,
+                        "seatTypeName": "无座",
+                        "ticketPrice": 9.0,
+                        "leftTicketNum": 0,
+                        "otherSeats": None
+                    },
+                    {
+                        "seatType": 10,
+                        "seatTypeName": "硬座",
+                        "ticketPrice": 9.0,
+                        "leftTicketNum": 183,
+                        "otherSeats": None
+                    },
+                    {
+                        "seatType": 8,
+                        "seatTypeName": "硬卧",
+                        "ticketPrice": 55.0,
+                        "leftTicketNum": 108,
+                        "otherSeats": [
+                            {
+                                "sleeperType": 3,
+                                "sleeperTypeName": "上铺",
+                                "ticketPrice": 55.0
+                            },
+                            {
+                                "sleeperType": 2,
+                                "sleeperTypeName": "中铺",
+                                "ticketPrice": 60.0
+                            },
+                            {
+                                "sleeperType": 1,
+                                "sleeperTypeName": "下铺",
+                                "ticketPrice": 63.0
+                            }
+                        ]
+                    },
+                    {
+                        "seatType": 6,
+                        "seatTypeName": "软卧",
+                        "ticketPrice": 81.5,
+                        "leftTicketNum": 4,
+                        "otherSeats": [
+                            {
+                                "sleeperType": 3,
+                                "sleeperTypeName": "上铺",
+                                "ticketPrice": 81.5
+                            },
+                            {
+                                "sleeperType": 1,
+                                "sleeperTypeName": "下铺",
+                                "ticketPrice": 87.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "trainCode": "G8293",
+                "trainNo": "5f000G829601",
+                "fromStation": "苏州",
+                "toStation": "昆山南",
+                "fromTime": "22:20",
+                "toTime": "22:33",
+                "fromDateTime": "2023-12-15 22:20",
+                "toDateTime": "2023-12-15 22:33",
+                "arrive_days": "0",
+                "runTime": "00:13",
+                "trainsType": 1,
+                "trainsTypeName": "高铁",
+                "beginStation": "盐城",
+                "beginTime": None,
+                "endStation": "上海",
+                "endTime": None,
+                "isSupportChooseSleeper": False,
+                "note": "",
+                "transferQueryExtraParams": None,
+                "sequence": 0,
+                "Seats": [
+                    {
+                        "seatType": 98,
+                        "seatTypeName": "无座",
+                        "ticketPrice": 14.0,
+                        "leftTicketNum": 0,
+                        "otherSeats": None
+                    },
+                    {
+                        "seatType": 4,
+                        "seatTypeName": "二等座",
+                        "ticketPrice": 14.0,
+                        "leftTicketNum": 186,
+                        "otherSeats": None
+                    },
+                    {
+                        "seatType": 3,
+                        "seatTypeName": "一等座",
+                        "ticketPrice": 23.0,
+                        "leftTicketNum": 0,
+                        "otherSeats": None
+                    },
+                    {
+                        "seatType": 1,
+                        "seatTypeName": "商务座",
+                        "ticketPrice": 49.0,
+                        "leftTicketNum": 0,
+                        "otherSeats": None
+                    }
+                ]
+            }
+        ]
+    },
+    "success": True,
+    "msg": "请求成功"
+}
+
+# 示例数据 - 交通推荐（合并飞机和火车数据）
+SAMPLE_TRAFFIC_RECOMMENDATIONS = {
+    "data": {
+        "voyage": SAMPLE_FLIGHT_RECOMMENDATIONS["data"]["voyage"],
+        "trainLines": SAMPLE_TRAIN_RECOMMENDATIONS["data"]["trainLines"]
+    },
+    "success": True,
+    "msg": "请求成功"
+}
+
 # 统一的请求模型
 class UnifiedRequest(BaseModel):
     # 旅行基本信息
@@ -345,10 +717,48 @@ async def get_hotel_recommendations():
     """
     return SAMPLE_HOTEL_RECOMMENDATIONS
 
+# 交通推荐端点
+@app.post("/api/traffic-recommendation")
+async def post_traffic_recommendations(request: CreateTrafficRequest):
+    """
+    交通推荐端点（POST方式）
+    返回合并的飞机和火车数据
+    """
+    print("Received traffic recommendation request")
+    print(f"From: {request.departure_city} to: {request.destination_city}")
+    
+    # 返回合并的飞机和火车数据
+    return SAMPLE_TRAFFIC_RECOMMENDATIONS
+
+@app.get("/api/traffic-recommendation")
+async def get_traffic_recommendations():
+    """
+    GET方式获取交通推荐
+    返回合并的飞机和火车数据
+    """
+    return SAMPLE_TRAFFIC_RECOMMENDATIONS
+
+@app.get("/api/traffic-recommendation/train")
+async def get_train_recommendations():
+    """
+    GET方式获取火车推荐
+    """
+    return SAMPLE_TRAIN_RECOMMENDATIONS
+
+@app.get("/api/traffic-recommendation/flight")
+async def get_flight_recommendations():
+    """
+    GET方式获取飞机推荐
+    """
+    return SAMPLE_FLIGHT_RECOMMENDATIONS
+
 if __name__ == "__main__":
     print("Starting Trip Agent Unified API server...")
     print("Unified endpoint: http://127.0.0.1:8002/api/trip-recommendations")
     print("Spot endpoint: http://127.0.0.1:8002/api/trip-planning")
     print("Hotel endpoint: http://127.0.0.1:8002/api/hotel-recommendation")
+    print("Traffic endpoint: http://127.0.0.1:8002/api/traffic-recommendation")
+    print("Train endpoint: http://127.0.0.1:8002/api/traffic-recommendation/train")
+    print("Flight endpoint: http://127.0.0.1:8002/api/traffic-recommendation/flight")
     print("Health check: http://127.0.0.1:8002/health")
     uvicorn.run(app, host="127.0.0.1", port=8002)

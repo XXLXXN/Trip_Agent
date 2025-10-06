@@ -1,5 +1,5 @@
 from symtable import Class
-from typing import List, Union, Optional, Literal
+from typing import List, Union, Optional, Literal, Any
 
 from pydantic import BaseModel, Field
 from datetime import date, time, datetime, timedelta
@@ -211,8 +211,10 @@ class HotelDetailInfo(BaseModel):
 
 #创建交通方式推荐输入的数据
 class CreateTrafficRequest(BaseModel):
-    traffic_budget:int
-    traffic_level:str
+    departure_date: date
+    return_date: date
+    traffic_budget:Optional[Budget] = None
+    traffic_level:Optional[str] = None
     travellers_count:TravellerCount
     departure_city:str
     destination_city:str
@@ -228,7 +230,6 @@ class BaseTrafficDetails(BaseModel):
     arrival_time: datetime = Field(..., description="到达时间")
     departure_location: str = Field(..., description="出发地点（机场或车站名称）")
     arrival_location: str = Field(..., description="到达地点（机场或车站名称）")
-    price: float = Field(..., description="价格（人民币）")
     duration: timedelta = Field(..., description="预计交通所需时间")
 
 
@@ -239,19 +240,36 @@ class FlightDetails(BaseTrafficDetails):
     示例数据 (JSON格式):
     {
         "traffic_type": "flight",
-        "departure_time": "2025-10-01T08:00:00",
-        "arrival_time": "2025-10-01T10:30:00",
-        "departure_location": "北京大兴国际机场",
-        "arrival_location": "上海虹桥国际机场",
-        "price": 850.50,
-        "flight_number": "CA1234",
-        "airline": "中国国际航空",
-        "duration": "2:30:00"
+        "flightNo": "CZ6925",
+        "airlineCompany": "南方航空",
+        "fromAirportName": "库尔勒",
+        "toAirportName": "成都双流",
+        "fromDateTime": "2020-06-10 09:40:00",
+        "toDateTime": "2020-06-10 15:45:00",
+        "flyDuration": "06:05",
+        "cabins": [
+            {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                    "adultSalePrice": 2097
+                }
+            }
+        ]
     }
     """
     traffic_type: Literal["flight"] = "flight"
-    flight_number: str = Field(..., description="航班号")
-    airline: str = Field(..., description="航空公司")
+    flight_number: str = Field(..., alias="flightNo", description="航班号")
+    airline: str = Field(..., alias="airlineCompany", description="航空公司")
+    from_airport_name: str = Field(..., alias="fromAirportName", description="出发机场名称")
+    to_airport_name: str = Field(..., alias="toAirportName", description="到达机场名称")
+    fly_duration: str = Field(..., alias="flyDuration", description="飞行时长")
+    
+    class CabinInfo(BaseModel):
+        """舱位信息"""
+        cabin_name: str = Field(..., alias="cabinName", description="舱位名称")
+        cabin_price: dict = Field(..., alias="cabinPrice", description="舱位价格信息")
+    
+    cabins: List[CabinInfo] = Field(..., description="可用舱位列表")
 
 
 class TrainDetails(BaseTrafficDetails):
@@ -261,20 +279,34 @@ class TrainDetails(BaseTrafficDetails):
     示例数据 (JSON格式):
     {
         "traffic_type": "train",
-        "departure_time": "2025-10-02T14:00:00",
-        "arrival_time": "2025-10-02T18:50:00",
-        "departure_location": "广州南站",
-        "arrival_location": "深圳北站",
-        "price": 180.00,
-        "train_number": "G8801",
-        "seat_class": "二等座",
-        "duration": "00:50:00"
+        "trainCode": "K289",
+        "fromStation": "苏州",
+        "toStation": "昆山",
+        "fromDateTime": "2023-12-15 04:30",
+        "toDateTime": "2023-12-15 04:54",
+        "runTime": "00:24",
+        "trainsTypeName": "快速",
+        "Seats": [
+            {
+                "seatTypeName": "硬座",
+                "ticketPrice": 9.0
+            }
+        ]
     }
     """
     traffic_type: Literal["train"] = "train"
-    train_number: str = Field(..., description="车次号")
-    seat_class: str = Field(..., description="席别（如：一等座、硬卧）")
-
+    train_code: str = Field(..., alias="trainCode", description="车次号")
+    from_station: str = Field(..., alias="fromStation", description="出发车站")
+    to_station: str = Field(..., alias="toStation", description="到达车站")
+    run_time: str = Field(..., alias="runTime", description="运行时间")
+    train_type_name: str = Field(..., alias="trainsTypeName", description="列车类型名称")
+    
+    class SeatInfo(BaseModel):
+        """座位信息"""
+        seat_type_name: str = Field(..., alias="seatTypeName", description="座位类型名称")
+        ticket_price: float = Field(..., alias="ticketPrice", description="票价")
+    
+    seats: List[SeatInfo] = Field(..., alias="Seats", description="可用座位列表")
 
 
 class SelfArrange(BaseModel):
@@ -306,6 +338,30 @@ class TrafficRecInfo(BaseModel):
     """
 
     traffic_details: TrafficDetails = Field(..., description="具体的交通方式推荐详情")
+
+
+# 交通推荐响应包装类，匹配示例数据结构
+class TrafficRecommendationResponse(BaseModel):
+    """
+    交通推荐API的响应格式，匹配示例数据的结构。
+    
+    示例数据格式:
+    {
+        "data": {
+            "voyage": {  # 对于飞机
+                "fromCityName": "库尔勒",
+                "toCityName": "成都",
+                "flights": [...]
+            },
+            "trainLines": [...]  # 对于火车
+        },
+        "success": true,
+        "msg": "请求成功"
+    }
+    """
+    data: Dict[str, Any] = Field(..., description="交通数据，包含voyage或trainLines")
+    success: bool = Field(..., description="请求是否成功")
+    msg: str = Field(..., description="消息")
 
 
 #创建行程表推荐输如的数据

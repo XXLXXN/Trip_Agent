@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { formatDateForBackend } from "../../lib/formatters";
 
 export async function POST(request: NextRequest) {
   try {
@@ -75,18 +76,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// 辅助函数：将前端日期格式转换为后端期望的格式
-function formatDateForBackend(dateString: string): string {
-  // 前端格式：2025.8.24，后端期望：YYYY-MM-DD
-  const parts = dateString.split(".");
-  if (parts.length === 3) {
-    const year = parts[0];
-    const month = parts[1].padStart(2, "0");
-    const day = parts[2].padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-  // 如果已经是标准格式，直接返回
-  return dateString;
 }

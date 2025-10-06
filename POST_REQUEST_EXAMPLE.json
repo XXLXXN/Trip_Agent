@@ -10,3 +10,24 @@
   "selectedTransport": "plane",
   "selectedAccommodation": "hotel",
   "selectedStyles": ["文艺", "美食"]
+}
+
+{
+  "departure_city": "苏州",
+  "destination_city": "昆山",
+  "departure_date": "2023-12-15",
+  "return_date": "2023-12-15",
+  "traffic_budget": {
+    "min": 500,
+    "max": 2000
+  },
+  "traffic_level": "standard",
+  "travellers_count": {
+    "travellers": {
+      "成人": 2,
+      "老人": 0,
+      "儿童": 0,
+      "学生": 0
+    }
+  }
+}

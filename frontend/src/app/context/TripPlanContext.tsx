@@ -37,6 +37,60 @@ export interface HotelRecommendation {
   cost: number;
 }
 
+// 交通推荐数据类型
+export interface TrafficRecommendation {
+  // 火车相关字段
+  trainCode?: string;
+  trainNo?: string;
+  fromStation?: string;
+  toStation?: string;
+  fromTime?: string;
+  toTime?: string;
+  fromDateTime?: string;
+  toDateTime?: string;
+  runTime?: string;
+  trainsType?: number;
+  trainsTypeName?: string;
+  Seats?: Seat[];
+
+  // 飞机相关字段
+  flightNo?: string;
+  airlineCompany?: string;
+  airlineCode?: string;
+  fromAirportName?: string;
+  toAirportName?: string;
+  flyDuration?: string;
+  cabins?: Cabin[];
+
+  // 通用字段
+  type: "train" | "flight"; // 交通方式类型
+}
+
+export interface Seat {
+  seatType: number;
+  seatTypeName: string;
+  ticketPrice: number;
+  leftTicketNum: number;
+  otherSeats?: SleeperSeat[];
+}
+
+export interface SleeperSeat {
+  sleeperType: number;
+  sleeperTypeName: string;
+  ticketPrice: number;
+}
+
+export interface Cabin {
+  cabinCode: string;
+  cabinLevel: number;
+  cabinName: string;
+  seatLeftNum: number;
+  cabinBookPara: string;
+  cabinPrice: {
+    adultSalePrice: number;
+  };
+}
+
 // 旅行规划数据类型
 export interface TripPlanData {
   departure: string;
@@ -59,6 +113,10 @@ export interface TripPlanData {
   hotelRecommendations?: HotelRecommendation[];
   // 用户选择的酒店信息（完整信息）
   selectedHotels?: HotelRecommendation[];
+  // 后端返回的交通推荐数据
+  trafficRecommendations?: TrafficRecommendation[];
+  // 用户选择的交通信息
+  selectedTraffic?: TrafficRecommendation[];
   // 其他后端返回的数据
   backendData?: any;
 }
@@ -79,6 +137,8 @@ type TripPlanAction =
   | { type: "SET_SELECTED_SPOTS"; payload: SpotRecommendation[] }
   | { type: "SET_HOTEL_RECOMMENDATIONS"; payload: HotelRecommendation[] }
   | { type: "SET_SELECTED_HOTELS"; payload: HotelRecommendation[] }
+  | { type: "SET_TRAFFIC_RECOMMENDATIONS"; payload: TrafficRecommendation[] }
+  | { type: "SET_SELECTED_TRAFFIC"; payload: TrafficRecommendation[] }
   | { type: "CLEAR_DATA" };
 
 // 初始状态
@@ -148,6 +208,30 @@ function tripPlanReducer(
         isLoading: false,
         error: null,
       };
+    case "SET_TRAFFIC_RECOMMENDATIONS":
+      return {
+        ...state,
+        data: state.data
+          ? {
+              ...state.data,
+              trafficRecommendations: action.payload,
+            }
+          : null,
+        isLoading: false,
+        error: null,
+      };
+    case "SET_SELECTED_TRAFFIC":
+      return {
+        ...state,
+        data: state.data
+          ? {
+              ...state.data,
+              selectedTraffic: action.payload,
+            }
+          : null,
+        isLoading: false,
+        error: null,
+      };
     case "CLEAR_DATA":
       return { ...initialState };
     default:
@@ -164,12 +248,18 @@ const TripPlanContext = createContext<{
   saveSelectedSpots: (selectedSpots: SpotRecommendation[]) => void;
   saveHotelRecommendations: (recommendations: HotelRecommendation[]) => void;
   saveSelectedHotels: (selectedHotels: HotelRecommendation[]) => void;
+  saveTrafficRecommendations: (
+    recommendations: TrafficRecommendation[]
+  ) => void;
+  saveSelectedTraffic: (selectedTraffic: TrafficRecommendation[]) => void;
   clearTripPlan: () => void;
   getTripPlan: () => TripPlanData | null;
   getSpotRecommendations: () => SpotRecommendation[] | null;
   getSelectedSpots: () => SpotRecommendation[] | null;
   getHotelRecommendations: () => HotelRecommendation[] | null;
   getSelectedHotels: () => HotelRecommendation[] | null;
+  getTrafficRecommendations: () => TrafficRecommendation[] | null;
+  getSelectedTraffic: () => TrafficRecommendation[] | null;
 } | null>(null);
 
 // Provider组件
@@ -318,6 +408,59 @@ export function TripPlanProvider({ children }: { children: ReactNode }) {
     return state.data?.selectedHotels || null;
   };
 
+  // 保存交通推荐数据
+  const saveTrafficRecommendations = (
+    recommendations: TrafficRecommendation[]
+  ) => {
+    try {
+      // 获取当前数据
+      const currentData = getTripPlan();
+      const updatedData = {
+        ...(currentData || {}),
+        trafficRecommendations: recommendations,
+      } as TripPlanData;
+
+      // 保存到sessionStorage和状态
+      sessionStorage.setItem("tripPlanData", JSON.stringify(updatedData));
+      dispatch({
+        type: "SET_TRAFFIC_RECOMMENDATIONS",
+        payload: recommendations,
+      });
+    } catch (error) {
+      console.error("Failed to save traffic recommendations:", error);
+      dispatch({ type: "SET_ERROR", payload: "保存交通推荐数据失败" });
+    }
+  };
+
+  // 保存用户选择的交通信息
+  const saveSelectedTraffic = (selectedTraffic: TrafficRecommendation[]) => {
+    try {
+      // 获取当前数据
+      const currentData = getTripPlan();
+      const updatedData = {
+        ...(currentData || {}),
+        selectedTraffic: selectedTraffic,
+      } as TripPlanData;
+
+      // 保存到sessionStorage和状态
+      sessionStorage.setItem("tripPlanData", JSON.stringify(updatedData));
+      dispatch({ type: "SET_SELECTED_TRAFFIC", payload: selectedTraffic });
+    } catch (error) {
+      console.error("Failed to save selected traffic:", error);
+      dispatch({ type: "SET_ERROR", payload: "保存选择的交通信息失败" });
+    }
+  };
+
+  // 获取交通推荐数据
+  const getTrafficRecommendations = (): TrafficRecommendation[] | null => {
+    return state.data?.trafficRecommendations || null;
+  };
+
+  // 获取用户选择的交通信息
+  const getSelectedTraffic = (): TrafficRecommendation[] | null => {
+    return state.data?.selectedTraffic || null;
+  };
+
   return (
     <TripPlanContext.Provider
       value={{
@@ -328,12 +471,16 @@ export function TripPlanProvider({ children }: { children: ReactNode }) {
         saveSelectedSpots,
         saveHotelRecommendations,
         saveSelectedHotels,
+        saveTrafficRecommendations,
+        saveSelectedTraffic,
         clearTripPlan,
         getTripPlan,
         getSpotRecommendations,
         getSelectedSpots,
         getHotelRecommendations,
         getSelectedHotels,
+        getTrafficRecommendations,
+        getSelectedTraffic,
       }}
     >
       {children}

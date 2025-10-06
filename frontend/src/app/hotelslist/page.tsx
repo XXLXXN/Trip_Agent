@@ -35,6 +35,7 @@ export default function HotelSelectionPage() {
     getSelectedSpots,
     saveHotelRecommendations,
     getHotelRecommendations,
+    saveTrafficRecommendations,
   } = useTripPlan();
 
   // State: 跟踪已选择酒店的ID列表
@@ -204,6 +205,84 @@ export default function HotelSelectionPage() {
   const handleBackClick = () => router.push("/spotslist");
   const handleSkipClick = () => router.push("/trafficlist");
 
+  // 处理下一步按钮点击事件
+  const handleNextClick = async () => {
+    // 获取旅行规划数据
+    const tripPlan = getTripPlan();
+    if (!tripPlan) {
+      throw new Error("缺少旅行规划数据");
+    }
+
+    // 构建交通推荐请求数据 - 保持与现有API路由兼容
+    const trafficRequestData = {
+      departure: tripPlan.departure,
+      destination: tripPlan.destination,
+      departureTime: tripPlan.startDate, // 使用出发日期作为出发时间
+    };
+
+    console.log("发送交通推荐请求:", trafficRequestData);
+
+    // 调用交通推荐API
+    const response = await fetch("/api/traffic-recommendation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(trafficRequestData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`交通推荐API请求失败: ${response.status} - ${errorText}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || "交通推荐API返回错误");
+    }
+
+    console.log("交通推荐API返回结果:", result);
+
+    // API路由已经将数据转换为TrafficRecommendation[]格式，直接使用
+    const trafficRecommendations = result.data;
+
+    console.log(
+      "API返回的交通推荐数据总数:",
+      trafficRecommendations?.length || 0
+    );
+    console.log(
+      "火车数据:",
+      trafficRecommendations?.filter((item: any) => item.type === "train")
+        .length || 0
+    );
+    console.log(
+      "飞机数据:",
+      trafficRecommendations?.filter((item: any) => item.type === "flight")
+        .length || 0
+    );
+
+    if (trafficRecommendations && trafficRecommendations.length > 0) {
+      // 保存交通推荐数据到TripPlanContext
+      saveTrafficRecommendations(trafficRecommendations);
+      console.log(
+        "交通推荐数据已保存到context，数量:",
+        trafficRecommendations.length
+      );
+      console.log(
+        "保存到context的数据示例:",
+        JSON.stringify(trafficRecommendations[0], null, 2)
+      );
+
+      // 导航到交通列表页面
+      router.push("/trafficlist");
+    } else {
+      console.warn("没有找到有效的交通推荐数据");
+      // 即使没有数据也导航到交通列表页面，让用户看到空状态
+      router.push("/trafficlist");
+    }
+  };
+
   // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
   const bottomNavHeight = "88px";
 
@@ -284,7 +363,7 @@ export default function HotelSelectionPage() {
         </main>
       </div>
 
-      <BottomActionNav />
+      <BottomActionNav onNextClick={handleNextClick} />
 
       <style jsx>{`
         /* 全局样式，确保页面不产生滚动条 */
@@ -305,13 +384,13 @@ export default function HotelSelectionPage() {
         }
 
         .scroll-container {
-        background-color: #ffffff;
+          background-color: #ffffff;
           flex-grow: 1;
           overflow-y: auto;
           /* 关键：为固定的底部导航留出空间 */
           padding-bottom: ${bottomNavHeight};
         }
-        
+
         /* 关键：包裹搜索框的容器样式 */
         .sticky-search-bar {
           position: sticky;

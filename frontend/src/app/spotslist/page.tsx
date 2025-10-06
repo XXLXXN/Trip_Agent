@@ -11,6 +11,7 @@ import SpotCard from "@/components/spotlist/spotcard";
 import BottomNav from "@/components/spotlist/BottomNav";
 
 import { useTripPlan } from "../context/TripPlanContext";
+import { convertSpotData } from "../lib/formatters";
 
 export default function TravelSelectionPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,18 +24,7 @@ export default function TravelSelectionPage() {
 
   // 使用useMemo缓存转换后的数据，避免无限循环
   const convertedSpots = React.useMemo(() => {
-    return (
-      backendSpots?.map((spot, index) => ({
-        id: index + 1,
-        name: spot.SpotName,
-        image: spot.photos?.[0]?.url || "/placeholder-spot.jpg",
-        path: `/spotdetails/${spot.POIId}`,
-        recommendationReason: spot.RecReason,
-        poiId: spot.POIId,
-        address: spot.address,
-        isPlan: true, // 默认全部都是推荐方案
-      })) || []
-    );
+    return convertSpotData(backendSpots || []);
   }, [backendSpots]);
 
   // 初始化选择状态 - 默认选择所有景点
@@ -82,7 +72,7 @@ export default function TravelSelectionPage() {
   const handleSkipClick = () => router.push("/traffic");
 
   // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
-  const bottomNavHeight = "88px"; 
+  const bottomNavHeight = "88px";
 
   return (
     <div className="page-wrapper">
@@ -158,7 +148,7 @@ export default function TravelSelectionPage() {
         }
 
         .scroll-container {
-        background-color: #ffffff;
+          background-color: #ffffff;
           flex-grow: 1;
           overflow-y: auto;
           padding-bottom: ${bottomNavHeight};
@@ -171,7 +161,6 @@ export default function TravelSelectionPage() {
           z-index: 10; /* 确保它在内容区域之上 */
           background-color: transparent; /* 背景色，防止下方内容透视 */
           padding-bottom: 5px; /* 保持与原设计一致的底部间距 */
-          
         }
 
         .content-area {
@@ -181,7 +170,7 @@ export default function TravelSelectionPage() {
           flex-direction: column;
           gap: 24px;
         }
-        
+
         .section-header {
           display: flex;
           align-items: center;

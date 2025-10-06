@@ -1,0 +1,139 @@
+{
+  "data": {
+    "trainLines": [
+      {
+        "trainCode": "K289",
+        "trainNo": "760000K2920K",
+        "fromStation": "苏州",
+        "toStation": "昆山",
+        "fromTime": "04:30",
+        "toTime": "04:54",
+        "fromDateTime": "2023-12-15 04:30",
+        "toDateTime": "2023-12-15 04:54",
+        "arrive_days": "0",
+        "runTime": "00:24",
+        "trainsType": 5,
+        "trainsTypeName": "快速",
+        "beginStation": "成都西",
+        "beginTime": null,
+        "endStation": "昆山",
+        "endTime": null,
+        "isSupportChooseSleeper": true,
+        "note": "",
+        "transferQueryExtraParams": null,
+        "sequence": 0,
+        "Seats": [
+          {
+            "seatType": 98,
+            "seatTypeName": "无座",
+            "ticketPrice": 9.0,
+            "leftTicketNum": 0,
+            "otherSeats": null
+          },
+          {
+            "seatType": 10,
+            "seatTypeName": "硬座",
+            "ticketPrice": 9.0,
+            "leftTicketNum": 183,
+            "otherSeats": null
+          },
+          {
+            "seatType": 8,
+            "seatTypeName": "硬卧",
+            "ticketPrice": 55.0,
+            "leftTicketNum": 108,
+            "otherSeats": [
+              {
+                "sleeperType": 3,
+                "sleeperTypeName": "上铺",
+                "ticketPrice": 55.0
+              },
+              {
+                "sleeperType": 2,
+                "sleeperTypeName": "中铺",
+                "ticketPrice": 60.0
+              },
+              {
+                "sleeperType": 1,
+                "sleeperTypeName": "下铺",
+                "ticketPrice": 63.0
+              }
+            ]
+          },
+          {
+            "seatType": 6,
+            "seatTypeName": "软卧",
+            "ticketPrice": 81.5,
+            "leftTicketNum": 4,
+            "otherSeats": [
+              {
+                "sleeperType": 3,
+                "sleeperTypeName": "上铺",
+                "ticketPrice": 81.5
+              },
+              {
+                "sleeperType": 1,
+                "sleeperTypeName": "下铺",
+                "ticketPrice": 87.5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "trainCode": "G8293",
+        "trainNo": "5f000G829601",
+        "fromStation": "苏州",
+        "toStation": "昆山南",
+        "fromTime": "22:20",
+        "toTime": "22:33",
+        "fromDateTime": "2023-12-15 22:20",
+        "toDateTime": "2023-12-15 22:33",
+        "arrive_days": "0",
+        "runTime": "00:13",
+        "trainsType": 1,
+        "trainsTypeName": "高铁",
+        "beginStation": "盐城",
+        "beginTime": null,
+        "endStation": "上海",
+        "endTime": null,
+        "isSupportChooseSleeper": false,
+        "note": "",
+        "transferQueryExtraParams": null,
+        "sequence": 0,
+        "Seats": [
+          {
+            "seatType": 98,
+            "seatTypeName": "无座",
+            "ticketPrice": 14.0,
+            "leftTicketNum": 0,
+            "otherSeats": null
+          },
+          {
+            "seatType": 4,
+            "seatTypeName": "二等座",
+            "ticketPrice": 14.0,
+            "leftTicketNum": 186,
+            "otherSeats": null
+          },
+          {
+            "seatType": 3,
+            "seatTypeName": "一等座",
+            "ticketPrice": 23.0,
+            "leftTicketNum": 0,
+            "otherSeats": null
+          },
+          {
+            "seatType": 1,
+            "seatTypeName": "商务座",
+            "ticketPrice": 49.0,
+            "leftTicketNum": 0,
+            "otherSeats": null
+          }
+        ]
+      }
+    ]
+  },
+  "success": true,
+  "msg": "请求成功"
+}
