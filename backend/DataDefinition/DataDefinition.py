@@ -125,6 +125,7 @@ class Trip(BaseModel):
     user_id: str
     trip_id: str
     trip_name: str
+    origin: str
     destination: str
     start_date: date
     end_date: date

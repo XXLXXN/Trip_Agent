@@ -3,6 +3,7 @@ from datetime import date, time
 SAMPLE_TRIP_DATA_1 = {
   "trip_id": "beijing_shanghai_trip_001",
   "trip_name": "北京到上海三日游",
+  "origin": "北京",
   "destination": "上海",
   "start_date": "2025-11-15",
   "end_date": "2025-11-17",
