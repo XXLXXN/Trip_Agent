@@ -221,7 +221,7 @@ export default function TravelInfoCard() {
 
           {/* CTA Button */}
           <div className="pb-8">
-            <Link href="/fireflyx_parts/payment/details">
+            <Link href="/fireflyx_parts/trip_payment/details">
               <Button className="w-full bg-[#0768fd] hover:bg-[#074ee8] text-white py-4 rounded-2xl text-lg font-medium">
                 开始规划
               </Button>
