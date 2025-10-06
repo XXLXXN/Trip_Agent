@@ -1,0 +1,696 @@
+{
+  "trip_id": "shanghai_complex_trip_001",
+  "trip_name": "上海两日游",
+  "origin":"北京",
+  "destination": "上海",
+  "start_date": "2025-01-15",
+  "end_date": "2025-01-16",
+  "days": [
+    {
+      "date": "2025-01-15",
+      "day_of_week": "星期三",
+      "day_index": 1,
+      "total_cost": 0.0,
+      "activities": [
+        {
+          "id": "transport_0",
+          "type": "transportation",
+          "mode": "plane",
+          "start_time": "07:30",
+          "end_time": "10:00",
+          "origin": {
+            "name": "北京首都国际机场 (PEK)",
+            "address": "中国北京市顺义区机场南路",
+            "coordinates":None
+          },
+          "destination": {
+            "name": "上海虹桥国际机场 (SHA)",
+            "address": "长宁区虹桥路2550号",
+            "coordinates": None
+          },
+          "description": "乘坐东方航空MU5179航班，从北京飞往上海。",
+          "notes": "请提前2小时到达机场办理登机手续，并预留时间通过安检。",
+          "cost": 1200,
+          "ticket_info": {
+            "price": 1200,
+            "url": "https://example.com/mu5179-ticket",
+            "description": "东方航空 MU5179 航班电子票"
+          }
+        },
+        {
+          "id": "activity_1",
+          "start_time": "10:00:00",
+          "end_time": "10:30:00",
+          "description": "到达虹桥机场，办理入境手续",
+          "notes": "请提前准备好身份证件",
+          "cost": 0.0,
+          "type": "activity",
+          "mode":"interim",
+          "title": "到达虹桥机场",
+          "location": {
+            "name": "虹桥机场",
+            "address": "长宁区虹桥路2550号",
+            "coordinates": null
+          },
+          "recommended_products": []
+        },
+        {
+          "id": "transportation_activity_1_activity_2_1",
+          "start_time": "10:30:00",
+          "end_time": "12:24:26",
+          "description": "在虹桥2号航站楼站乘坐虹桥枢纽4路(紫竹科学园区--虹桥东交通中心)到虹桥东交通中心站 → 在虹桥东交通中心站乘坐316路/316路(夜宵线)(虹桥东交通中心--延安东路中山东一路)到天山路芙蓉江路站 → 在天山路芙蓉江路站乘坐311路(双流路天山路--延安东路中山东一路)到天山路娄山关路站 → 步行2061米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 5.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "虹桥机场",
+            "address": "长宁区虹桥路2550号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_1_activity_2_2",
+          "start_time": "10:30:00",
+          "end_time": "12:26:30",
+          "description": "步行约116分钟（距离8.7公里）",
+          "notes": "🚶 步行时间较长，建议考虑其他交通方式",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "虹桥机场",
+            "address": "长宁区虹桥路2550号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_1_activity_2_3",
+          "start_time": "10:30:00",
+          "end_time": "11:22:00",
+          "description": "骑行约52分钟（距离9.6公里）",
+          "notes": "🚴 共享单车费用约4.5元，请遵守交通规则",
+          "cost": 4.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "虹桥机场",
+            "address": "长宁区虹桥路2550号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_1_activity_2_4",
+          "start_time": "10:30:00",
+          "end_time": "10:45:52",
+          "description": "驾车约15分钟（距离11.7公里）",
+          "notes": "🚗 自驾出行",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "虹桥机场",
+            "address": "长宁区虹桥路2550号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "activity_2",
+          "start_time": "11:30:00",
+          "end_time": "13:00:00",
+          "description": "参观华东师范大学普陀校区，体验校园文化",
+          "notes": "可以参观图书馆、教学楼等标志性建筑",
+          "cost": 0.0,
+          "type": "activity",
+          "mode":"visit",
+          "title": "华东师范大学普陀校区游玩",
+          "location": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "recommended_products": []
+        },
+        {
+          "id": "transportation_activity_2_activity_3_1",
+          "start_time": "13:00:00",
+          "end_time": "14:25:27",
+          "description": "在兰溪路梅岭北路站乘坐319路(上海西站--北海宁路吴淞路)到天目中路晋元路站 → 步行1577米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 2.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_2_activity_3_2",
+          "start_time": "13:00:00",
+          "end_time": "14:56:27",
+          "description": "步行约116分钟（距离8.7公里）",
+          "notes": "🚶 步行时间较长，建议考虑其他交通方式",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_2_activity_3_3",
+          "start_time": "13:00:00",
+          "end_time": "13:54:41",
+          "description": "骑行约54分钟（距离9.3公里）",
+          "notes": "🚴 共享单车费用约4.5元，请遵守交通规则",
+          "cost": 4.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_2_activity_3_4",
+          "start_time": "13:00:00",
+          "end_time": "13:19:40",
+          "description": "驾车约19分钟（距离11.2公里）",
+          "notes": "🚗 自驾出行",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "华东师范大学普陀校区",
+            "address": "中山北路3663号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "activity_3",
+          "start_time": "14:00:00",
+          "end_time": "16:00:00",
+          "description": "游览南京路步行街，体验上海商业文化",
+          "notes": "可以购物、品尝小吃，感受上海风情",
+          "cost": 0.0,
+          "type": "activity",
+          "mode":"visit",
+          "title": "南京路步行街游览",
+          "location": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "recommended_products": []
+        },
+        {
+          "id": "transportation_activity_3_activity_4_1",
+          "start_time": "16:00:00",
+          "end_time": "16:58:26",
+          "description": "在金陵东路江西南路站乘坐320路(延安东路中山东一路--虹桥西交通中心)到徐家汇(华山路)站 → 步行194米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 2.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_3_activity_4_2",
+          "start_time": "16:00:00",
+          "end_time": "17:33:30",
+          "description": "步行约93分钟（距离7.0公里）",
+          "notes": "🚶 步行时间较长，建议考虑其他交通方式",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_3_activity_4_3",
+          "start_time": "16:00:00",
+          "end_time": "16:53:41",
+          "description": "骑行约53分钟（距离8.1公里）",
+          "notes": "🚴 共享单车费用约4.5元，请遵守交通规则",
+          "cost": 4.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_3_activity_4_4",
+          "start_time": "16:00:00",
+          "end_time": "16:19:14",
+          "description": "驾车约19分钟（距离8.5公里）",
+          "notes": "🚗 自驾出行",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "南京路步行街",
+            "address": "上海市黄浦区南京路步行街",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "activity_4",
+          "start_time": "16:30:00",
+          "end_time": "18:00:00",
+          "description": "参观上海交通大学徐汇校区，了解百年学府历史",
+          "notes": "可以参观老图书馆、工程馆等历史建筑",
+          "cost": 0.0,
+          "type": "activity",
+          "mode":"visit",
+          "title": "上海交通大学徐汇校区游玩",
+          "location": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "recommended_products": []
+        },
+        {
+          "id": "transportation_activity_4_activity_5_1",
+          "start_time": "18:00:00",
+          "end_time": "18:05:50",
+          "description": "步行约5分钟（距离0.4公里）",
+          "notes": "🚶 建议穿舒适的鞋子，注意天气情况",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "秋果酒店交通大学地铁站店",
+            "address": "长宁区新华路24号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_4_activity_5_2",
+          "start_time": "18:00:00",
+          "end_time": "18:04:15",
+          "description": "骑行约4分钟（距离0.8公里）",
+          "notes": "🚴 共享单车费用约1.5元，请遵守交通规则",
+          "cost": 1.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "秋果酒店交通大学地铁站店",
+            "address": "长宁区新华路24号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_4_activity_5_3",
+          "start_time": "18:00:00",
+          "end_time": "18:03:52",
+          "description": "驾车约3分钟（距离0.9公里）",
+          "notes": "🚗 自驾出行",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "上海交通大学徐汇校区",
+            "address": "徐汇区华山路1954号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "秋果酒店交通大学地铁站店",
+            "address": "长宁区新华路24号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "activity_5",
+          "start_time": "18:30:00",
+          "end_time": "19:00:00",
+          "description": "入住秋果酒店交通大学地铁站店",
+          "notes": "办理入住手续，稍作休息",
+          "cost": 300,
+          "type": "activity",
+          "mode": "hotel",
+          "title": "入住秋果酒店",
+          "location": {
+            "name": "秋果酒店交通大学地铁站店",
+            "address": "长宁区新华路24号",
+            "coordinates": null
+          },
+          "recommended_products": []
+        }
+      ]
+    },
+    {
+      "date": "2025-01-16",
+      "day_of_week": "星期四",
+      "day_index": 2,
+      "total_cost": 0.0,
+      "activities": [
+        {
+          "id": "activity_6",
+          "start_time": "09:00:00",
+          "end_time": "11:00:00",
+          "description": "参观上海交通大学闵行校区，体验现代化校园",
+          "notes": "可以参观新图书馆、体育馆等现代化设施",
+          "cost": 100,
+          "type": "activity",
+          "mode":"visit",
+          "title": "上海交通大学闵行校区游玩",
+          "location": {
+            "name": "上海交通大学闵行校区",
+            "address": "闵行区东川路800号",
+            "coordinates": null
+          },
+          "recommended_products": []
+        },
+        {
+          "id": "transportation_activity_6_activity_7_1",
+          "start_time": "11:00:00",
+          "end_time": "11:27:26",
+          "description": "步行约27分钟（距离2.1公里）",
+          "notes": "🚶 建议穿舒适的鞋子，注意天气情况",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "上海交通大学闵行校区",
+            "address": "闵行区东川路800号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_6_activity_7_2",
+          "start_time": "11:00:00",
+          "end_time": "11:11:51",
+          "description": "骑行约11分钟（距离2.3公里）",
+          "notes": "🚴 共享单车费用约1.5元，请遵守交通规则",
+          "cost": 1.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "上海交通大学闵行校区",
+            "address": "闵行区东川路800号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_6_activity_7_3",
+          "start_time": "11:00:00",
+          "end_time": "11:10:24",
+          "description": "驾车约10分钟（距离3.5公里）",
+          "notes": "🚗 自驾出行",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "上海交通大学闵行校区",
+            "address": "闵行区东川路800号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "activity_7",
+          "start_time": "11:30:00",
+          "end_time": "13:00:00",
+          "description": "参观华东师范大学闵行校区，体验校园生活",
+          "notes": "可以参观教学楼、学生活动中心等",
+          "cost": 0.0,
+          "type": "activity",
+          "mode":"visit",
+          "title": "华东师范大学闵行校区游玩",
+          "location": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "recommended_products": []
+        },
+        {
+          "id": "transportation_activity_7_activity_8_1",
+          "start_time": "13:00:00",
+          "end_time": "14:23:35",
+          "description": "在紫竹高新区站乘坐地铁15号线(紫竹高新区--顾村公园)到景洪路站 → 在景洪路站乘坐市域机场线(虹桥2号航站楼--浦东1号2号航站楼)到浦东1号2号航站楼站 → 步行264米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 21.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "浦东国际机场",
+            "address": "浦东新区浦东国际机场",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_7_activity_8_2",
+          "start_time": "13:00:00",
+          "end_time": "22:49:36",
+          "description": "步行约589分钟（距离44.2公里）",
+          "notes": "🚶 步行时间较长，建议考虑其他交通方式",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "浦东国际机场",
+            "address": "浦东新区浦东国际机场",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_7_activity_8_3",
+          "start_time": "13:00:00",
+          "end_time": "16:51:05",
+          "description": "骑行约231分钟（距离46.0公里）",
+          "notes": "🚴 共享单车费用约16.5元，请遵守交通规则",
+          "cost": 16.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "浦东国际机场",
+            "address": "浦东新区浦东国际机场",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_7_activity_8_4",
+          "start_time": "13:00:00",
+          "end_time": "13:45:05",
+          "description": "驾车约45分钟（距离51.3公里）",
+          "notes": "🚗 自驾出行",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "华东师范大学闵行校区",
+            "address": "东川路500号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "浦东国际机场",
+            "address": "浦东新区浦东国际机场",
+            "coordinates": null
+          },
+          "route_points": null,
+          "ticket_info": null
+        },
+        {
+          "id": "activity_8",
+          "start_time": "14:00:00",
+          "end_time": "14:30:00",
+          "description": "前往浦东国际机场，办理登机手续",
+          "notes": "请提前2小时到达机场，准备好登机证件",
+          "cost": 0.0,
+          "type": "activity",
+          "mode":"interim",
+          "title": "前往浦东国际机场",
+          "location": {
+            "name": "浦东国际机场",
+            "address": "浦东新区浦东国际机场",
+            "coordinates": null
+          },
+          "recommended_products": []
+        },
+        {
+          "id": "transport_8",
+          "type": "transportation",
+          "mode": "plane",
+          "start_time": "15:00",
+          "end_time": "18:00",
+          "origin": {
+            "name": "上海浦东国际机场 (PVG)",
+            "address": "中国上海市浦东新区迎宾大道",
+            "coordinates": None
+          },
+          "destination": {
+            "name": "北京首都国际机场 (PEK)",
+            "address": "中国北京市顺义区机场南路",
+            "coordinates": None
+          },
+          "description": "乘坐国航CA1832航班，从上海返回北京。",
+          "notes": "回程航班，请再次检查行李。",
+          "cost": 900,
+          "ticket_info": {
+            "price": 900,
+            "url": "https://example.com/ca1832-ticket",
+            "description": "国航 CA1832 航班电子票"
+          }
+        }
+      ]
+    }
+  ]
+}
