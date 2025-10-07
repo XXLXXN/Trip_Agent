@@ -30,7 +30,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { zhCN } from "date-fns/locale";
 
 export default function TravelPlanningPage() {
-  const [priceRange, setPriceRange] = useState([200, 30000]);
+  const [priceRange, setPriceRange] = useState([100, 10000]);
   const [adultCount, setAdultCount] = useState(2);
   const [studentCount, setStudentCount] = useState(1);
   const [selectedTransport, setSelectedTransport] = useState("plane");
@@ -271,12 +271,12 @@ export default function TravelPlanningPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f8fb] max-w-sm mx-auto relative">
-      {/* 顶部1/4蓝色背景 */}
+    <div className="min-h-screen bg-[#f6f8fb] mx-auto relative">
+      {/* 顶部1/5蓝色背景 */}
       <div
         className="absolute top-0 left-0 w-full"
         style={{
-          height: "25vh",
+          height: "20vh",
           background: "#0768fd",
           zIndex: 0,
         }}
@@ -292,15 +292,15 @@ export default function TravelPlanningPage() {
         </div>
 
         {/* Main Content */}
-        <div className="px-4 space-y-6">
-          <div className="bg-[#ffffff] rounded-2xl p-6 shadow-sm border-0">
-            <div className="space-y-6">
+        <div className="px-3 space-y-4">
+          <div className="bg-[#ffffff] rounded-3xl p-4 border-0">
+            <div className="space-y-4">
               {/* Location Selection */}
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-2 bg-[#f6f8fb] rounded-3xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                      <img src="/location_on.svg" alt="出发图标" className="h-12 w-12" />
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center">
+                      <img src="/location_on.svg" alt="出发图标" className="h-12 w-12 ml-2" />
                     </div>
                     <div>
                       <p className="text-sm text-[#808080]">出发地</p>
@@ -310,7 +310,7 @@ export default function TravelPlanningPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-[#0768fd]"
+                    className="text-[#0768fd] mr-2"
                     onClick={() => handleLocationEdit("departure")}
                   >
                     <div className="w-8 h-8 flex items-center justify-center">
@@ -322,10 +322,10 @@ export default function TravelPlanningPage() {
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                      <img src="/Vector.svg" alt="目的地图标" className="h-12 w-12" />
+                <div className="flex items-center justify-between p-2 bg-[#f6f8fb] rounded-3xl">
+                  <div className="flex items-center gap-4">
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center">
+                      <img src="/Vector.svg" alt="目的地图标" className="h-12 w-12 ml-3" />
                     </div>
                     <div>
                       <p className="text-sm text-[#808080]">目的地</p>
@@ -337,7 +337,7 @@ export default function TravelPlanningPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-[#0768fd]"
+                    className="text-[#0768fd] mr-2"
                     onClick={() => handleLocationEdit("destination")}
                   >
                     <div className="w-8 h-8 flex items-center justify-center">
@@ -351,10 +351,10 @@ export default function TravelPlanningPage() {
               </div>
 
               {/* Date Selection */}
-              <div className="bg-[#f6f8fb] rounded-2xl overflow-hidden">
+              <div className="bg-[#f6f8fb] rounded-3xl overflow-hidden">
                 <div className="flex">
                   {/* 共享的图标区域 - 与地点卡片对齐 */}
-                  <div className="flex items-center justify-center pl-4 pr-3">
+                  <div className="flex items-center justify-center pl-2 pr-2">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center">
                       <img src="/date_range.svg" alt="日历图标" className="h-12 w-12" />
                     </div>
@@ -363,7 +363,7 @@ export default function TravelPlanningPage() {
                   {/* 右侧内容区域 */}
                   <div className="flex-1">
                     {/* 启程日期 */}
-                    <div className="flex items-center justify-between py-4 pr-4">
+                    <div className="flex items-center justify-between py-1 pr-4">
                       <div className="flex-1">
                         <p className="text-sm text-[#808080]">启程日期</p>
                         <p className="font-medium text-[#000000]">{startDate}</p>
@@ -374,7 +374,7 @@ export default function TravelPlanningPage() {
                         className="text-[#0768fd]"
                         onClick={() => handleDateEdit("startDate")}
                       >
-                        <div className="w-8 h-8 flex items-center justify-center">
+                        <div className="w-7 h-7 flex items-center justify-center">
                           <img
                             src="_ form action2.svg"
                             className="w-8 h-8 object-contain"
@@ -387,7 +387,7 @@ export default function TravelPlanningPage() {
                     <div className="border-t border-[#e0e0e0] mr-3"></div>
 
                     {/* 返程日期 */}
-                    <div className="flex items-center justify-between py-4 pr-4">
+                    <div className="flex items-center justify-between py-1 pr-4">
                       <div className="flex-1">
                         <p className="text-sm text-[#808080]">返程日期</p>
                         <p className="font-medium text-[#000000]">{endDate}</p>
@@ -398,7 +398,7 @@ export default function TravelPlanningPage() {
                         className="text-[#0768fd]"
                         onClick={() => handleDateEdit("endDate")}
                       >
-                        <div className="w-8 h-8 flex items-center justify-center">
+                        <div className="w-7 h-7 flex items-center justify-center">
                           <img
                             src="_ form action2.svg"
                             className="w-8 h-8 object-contain"
@@ -411,10 +411,10 @@ export default function TravelPlanningPage() {
               </div>
 
               {/* Traveler Count */}
-              <div className="flex items-center justify-between p-4 bg-[#f6f8fb] rounded-2xl">
+              <div className="flex items-center justify-between p-2 bg-[#f6f8fb] rounded-3xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                    <img src="/supervisor_account.svg" alt="人数图标" className="h-12 w-12" />
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center">
+                    <img src="/supervisor_account.svg" alt="人数图标" className="h-12 w-12 ml-2" />
                   </div>
                   <div>
                     <p className="text-sm text-[#808080]">出行人数</p>
@@ -426,7 +426,7 @@ export default function TravelPlanningPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[#0768fd]"
+                  className="text-[#0768fd] mr-2"
                   onClick={() => setShowTravelerModal(true)}
                 >
                   <div className="w-8 h-8 flex items-center justify-center">
@@ -446,12 +446,22 @@ export default function TravelPlanningPage() {
                       type="number"
                       value={priceRange[0]}
                       onChange={(e) => {
-                        const value = parseInt(e.target.value) || 100;
-                        setPriceRange([value, Math.max(value, priceRange[1])]);
+                        const value = parseInt(e.target.value) || 0;
+                        setPriceRange([value, priceRange[1]]);
                       }}
-                      onBlur={() => setEditingField(null)}
+                      onBlur={() => {
+                        // 输入完成后进行大小判断
+                        const minValue = Math.min(priceRange[0], priceRange[1]);
+                        const maxValue = Math.max(priceRange[0], priceRange[1]);
+                        setPriceRange([minValue, maxValue]);
+                        setEditingField(null);
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
+                          // 输入完成后进行大小判断
+                          const minValue = Math.min(priceRange[0], priceRange[1]);
+                          const maxValue = Math.max(priceRange[0], priceRange[1]);
+                          setPriceRange([minValue, maxValue]);
                           setEditingField(null);
                         }
                       }}
@@ -468,18 +478,28 @@ export default function TravelPlanningPage() {
                       {formatPrice(priceRange[0])}
                     </button>
                   )}
-                  
+
                   {editingField === "maxPrice" ? (
                     <Input
                       type="number"
                       value={priceRange[1]}
                       onChange={(e) => {
-                        const value = parseInt(e.target.value) || 100;
-                        setPriceRange([Math.min(priceRange[0], value), value]);
+                        const value = parseInt(e.target.value) || 0;
+                        setPriceRange([priceRange[0], value]);
                       }}
-                      onBlur={() => setEditingField(null)}
+                      onBlur={() => {
+                        // 输入完成后进行大小判断
+                        const minValue = Math.min(priceRange[0], priceRange[1]);
+                        const maxValue = Math.max(priceRange[0], priceRange[1]);
+                        setPriceRange([minValue, maxValue]);
+                        setEditingField(null);
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
+                          // 输入完成后进行大小判断
+                          const minValue = Math.min(priceRange[0], priceRange[1]);
+                          const maxValue = Math.max(priceRange[0], priceRange[1]);
+                          setPriceRange([minValue, maxValue]);
                           setEditingField(null);
                         }
                       }}
@@ -506,51 +526,57 @@ export default function TravelPlanningPage() {
                   className="w-full"
                 />
               </div>
+            </div>
+          </div>
+        </div>
 
+        <div className="px-3 py-3 space-y-4">
+          <div className="border-0">
+            <div className="space-y-4">
               {/* Transportation Preferences */}
               <div className="space-y-3">
-                <h3 className="font-medium text-[#000000]">交通偏好</h3>
+                <h3 className="font-medium text-[#000000] ml-2">交通偏好</h3>
                 <div className="flex gap-3">
                   <Button
                     variant={
                       selectedTransport === "train" ? "default" : "outline"
                     }
-                    className={`flex-1 flex items-center gap-2 py-3 border-2 ${
+                    className={`flex-1 flex items-center gap-2 py-6 rounded-2xl border-2 ${
                       selectedTransport === "train"
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
                     onClick={() => toggleTransport("train")}
                   >
-                    <img src="/Train.svg" alt="火车图标" className="h-8 w-8" />
+                    <img src="/Train.svg" alt="火车图标" className="h-10 w-10" />
                     火车
                   </Button>
                   <Button
                     variant={
                       selectedTransport === "bus" ? "default" : "outline"
                     }
-                    className={`flex-1 flex items-center gap-2 py-3 border-2 ${
+                    className={`flex-1 flex items-center gap-2 py-6 rounded-2xl border-2 ${
                       selectedTransport === "bus"
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
                     onClick={() => toggleTransport("bus")}
                   >
-                    <img src="/Bus.svg" alt="汽车图标" className="h-8 w-8" />
+                    <img src="/Bus.svg" alt="汽车图标" className="h-10 w-10" />
                     汽车
                   </Button>
                   <Button
                     variant={
                       selectedTransport === "plane" ? "default" : "outline"
                     }
-                    className={`flex-1 flex items-center gap-2 py-3 border-2 ${
+                    className={`flex-1 flex items-center gap-2 py-6 rounded-2xl border-2 ${
                       selectedTransport === "plane"
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
                     onClick={() => toggleTransport("plane")}
                   >
-                    <img src="/Flight.svg" alt="飞机图标" className="h-8 w-8" />
+                    <img src="/Flight.svg" alt="飞机图标" className="h-10 w-10" />
                     飞机
                   </Button>
                 </div>
@@ -558,20 +584,20 @@ export default function TravelPlanningPage() {
 
               {/* Booking Preferences */}
               <div className="space-y-3">
-                <h3 className="font-medium text-[#000000]">预算偏好</h3>
+                <h3 className="font-medium text-[#000000] ml-2">预算偏好</h3>
                 <div className="flex gap-3">
                   <Button
                     variant={
                       selectedAccommodation.includes("hotel") ? "default" : "outline"
                     }
-                    className={`flex-1 flex items-center gap-2 py-3 border-2 ${
+                    className={`flex-1 flex items-center gap-2 py-6 rounded-2xl border-2 ${
                       selectedAccommodation.includes("hotel")
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
                     }`}
                     onClick={() => toggleAccommodation("hotel")}
                   >
-                    <img src="/Hotel.svg" alt="酒店图标" className="h-8 w-8" />
+                    <img src="/Hotel.svg" alt="酒店图标" className="h-10 w-10" />
                     住宿
                   </Button>
                   <Button
@@ -580,7 +606,7 @@ export default function TravelPlanningPage() {
                         ? "default"
                         : "outline"
                     }
-                    className={`flex-1 flex items-center gap-2 py-3 border-2 ${
+                    className={`flex-1 flex items-center gap-2 py-6 rounded-2xl border-2 ${
                       selectedAccommodation.includes("attractions")
                         ? "border-[#0768fd] text-[#000000] bg-white hover:bg-gray-50"
                         : "border-transparent bg-white text-[#000000] hover:border-gray-300"
@@ -590,16 +616,16 @@ export default function TravelPlanningPage() {
                     <img
                       src="/Attraction.svg"
                       alt="景点图标"
-                      className="h-8 w-8"
+                      className="h-10 w-10"
                     />
                     景点
                   </Button>
                   <Button
                     variant="outline"
-                    className="flex-1 flex items-center gap-2 py-3 border-2 border-transparent bg-white text-[#000000] hover:border-gray-300"
+                    className="flex-1 flex items-center gap-2 py-6 rounded-2xl border-2 border-transparent bg-white text-[#000000] hover:border-gray-300"
                     onClick={() => setShowMoreModal(true)}
                   >
-                    <img src="/More.svg" alt="更多图标" className="h-8 w-8" />
+                    <img src="/More.svg" alt="更多图标" className="h-10 w-10" />
                     更多
                   </Button>
                 </div>
@@ -607,13 +633,13 @@ export default function TravelPlanningPage() {
 
               {/* Travel Style */}
               <div className="space-y-3">
-                <h3 className="font-medium text-[#000000]">旅行风格</h3>
+                <h3 className="font-medium text-[#000000] ml-2">旅行风格</h3>
                 <div className="flex gap-3">
                   {["文艺", "美食", "自然"].map((style) => (
                     <Button
                       key={style}
                       variant="outline"
-                      className={`px-6 py-2 ${
+                      className={`px-6 py-2 rounded-2xl ${
                         selectedStyles.includes(style)
                           ? "bg-[#0768fd] text-white border-[#0768fd] hover:bg-[#074ee8]"
                           : "bg-white border-[#dddddd] text-[#000000]"
@@ -628,10 +654,10 @@ export default function TravelPlanningPage() {
 
               {/* Additional Requirements */}
               <div className="space-y-3">
-                <h3 className="font-medium text-[#000000]">其他需求</h3>
+                <h3 className="font-medium text-[#000000] ml-2">其他需求</h3>
                 <Textarea
                   placeholder="请在此输入您其他任何需求"
-                  className="min-h-[60px] bg-[#f6f8fb] border-0 resize-none text-[#000000]"
+                  className="min-h-[32px] bg-white border-0 resize-none text-[#000000]"
                   value={additionalRequirements}
                   onChange={(e) => setAdditionalRequirements(e.target.value)}
                 />

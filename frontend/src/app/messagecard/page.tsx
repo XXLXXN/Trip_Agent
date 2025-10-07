@@ -109,11 +109,11 @@ export default function TravelInfoCard() {
   }
   return (
     <div className="min-h-screen bg-[#f6f8fb] max-w-sm mx-auto relative">
-      {/* 顶部1/4蓝色背景 */}
+      {/* 顶部白色背景 */}
       <div
         className="absolute top-0 left-0 w-full"
         style={{
-          height: "25vh",
+          height: "10vh",
           background: "#FFFFFF",
           zIndex: 0,
         }}
@@ -134,63 +134,68 @@ export default function TravelInfoCard() {
         {/* Main Content */}
         <div className="px-4 space-y-6">
           {/* Route Card */}
-          <Card className="bg-[#ffffff] p-5 rounded-2xl shadow-sm border-0">
+          <Card className="bg-[#ffffff] p-4 rounded-3xl border-0">
             <div className="space-y-0">
               <h2 className="text-xl font-semibold text-[#000000]">{travelParams.departure}→{travelParams.destination}</h2>
               <p className="text-[#808080] text-sm tracking-wider">SUPERIOR TWIN BED</p>
             </div>
-            {/* Category Icons */}
-            <div className="flex justify-center gap-6 mt-1">
-              {travelParams.selectedStyles.map((style, index) => (
-                <div key={index} className="flex flex-col items-center gap-1">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-                    {style === '文艺' && (
-                      <img src="/wenyi.svg" alt="文艺图标" className="h-6 w-6" />
-                    )}
-                    {style === '美食' && (
-                      <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.20-1.10-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z" />
-                      </svg>
-                    )}{/* 后续要替换 */}
-                    {style === '自然' && (
-                      <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </svg>
-                    )}{/* 后续要替换 */}
+            <Card className="bg-[#ffffff] p-2 rounded-3xl border-0 gap-2">
+              {/* Category Icons */}
+              <div className="flex justify-center gap-4">
+                {travelParams.selectedStyles.map((style, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-lg flex items-center justify-center">
+                      {style === '文艺' && (
+                        <img src="/wenyi.svg" alt="文艺图标" className="h-6 w-6" />
+                      )}
+                      {style === '美食' && (
+                        <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.20-1.10-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z" />
+                        </svg>
+                      )}{/* 后续要替换 */}
+                      {style === '自然' && (
+                        <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                      )}{/* 后续要替换 */}
+                    </div>
+                    <span className="text-[#000000] text-xs">{style}</span>
                   </div>
-                  <span className="text-[#000000] text-sm">{style}</span>
-                </div>
-              ))}
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-                  {getTransportIcon(travelParams.selectedTransport)}
-                </div>
-                <span className="text-[#000000] text-sm">{getTransportName(travelParams.selectedTransport)}</span>
-              </div>
-            </div>
-
-            {/* Date Section */}
-            <div className="border-t border-[#dddddd] mt-1 pt-4">
-              <div className="flex justify-between items-center relative">
-                <div className="flex-1">
-                  <p className="text-[#808080] text-sm mb-1">启程时间</p>
-                  <p className="text-[#000000] font-medium mt-1">{travelParams.startDate} {getWeekday(travelParams.startDate)}</p>
-                </div>
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#0768fd] text-white px-3 py-1 rounded-full text-sm font-medium">
-                  {travelDays}天
-                </div>
-                <div className="flex-1 text-right">
-                  <p className="text-[#808080] text-sm mb-1">返程时间</p>
-                  <p className="text-[#000000] font-medium mt-1">{travelParams.endDate} {getWeekday(travelParams.endDate)}</p>
+                ))}
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 rounded-lg flex items-center justify-center">
+                    {getTransportIcon(travelParams.selectedTransport)}
+                  </div>
+                  <span className="text-[#000000] text-xs">{getTransportName(travelParams.selectedTransport)}</span>
                 </div>
               </div>
-            </div>
+              
+              {/* Date Section */}
+              <div className="border-t border-[#dddddd] pt-4">
+                <div className="flex justify-between items-center relative">
+                  <div className="flex-1">
+                    <p className="text-[#808080] text-sm mb-1">启程时间</p>
+                    <p className="text-[#000000] font-medium mt-1">{travelParams.startDate} {getWeekday(travelParams.startDate)}</p>
+                  </div>
+                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-[#0768fd] px-3 py-1 rounded-full text-sm font-medium border-1 flex items-center gap-2">
+                    <img src="moon.svg" alt="月亮" />
+                    <span>{travelDays}天</span>
+                  </div>
+                  <div className="flex-1 text-right">
+                    <p className="text-[#808080] text-sm mb-1">返程时间</p>
+                    <p className="text-[#000000] font-medium mt-1">{travelParams.endDate} {getWeekday(travelParams.endDate)}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Special Requirements */}
+              <div className="mt-1 text-center border-t border-[#dddddd] pt-2">
+                <p className="text-[#808080] text-sm mb-1">特殊需求</p>
+                <p className="text-[#000000]">酒店定无烟房，有轮椅</p>
+              </div>
+            </Card>
 
-            {/* Special Requirements */}
-            <div className="mt-1 text-center">
-              <p className="text-[#808080] text-sm mb-1">特殊需求</p>
-              <p className="text-[#000000]">酒店定无烟房，有轮椅</p>
-            </div>
+            
 
             {/* User Profile */}
             <div className="flex items-center justify-between mt-1 pt-4 border-t border-[#dddddd]">
@@ -220,7 +225,7 @@ export default function TravelInfoCard() {
           
 
           {/* CTA Button */}
-          <div className="pb-8">
+          <div className="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 bg-[#f6f8fb]">
             <Link href="/fireflyx_parts/trip_payment/details">
               <Button className="w-full bg-[#0768fd] hover:bg-[#074ee8] text-white py-4 rounded-2xl text-lg font-medium">
                 开始规划
