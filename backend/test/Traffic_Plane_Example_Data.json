@@ -1,81 +1,28 @@
 {
   "data": {
     "voyage": {
-      "fromCityCode": "KRL",
-      "toCityCode": "CTU",
-      "fromCityName": "库尔勒",
-      "toCityName": "成都",
-      "fromDate": "2020-06-10",
+      "fromCityCode": "SHA",
+      "toCityCode": "PEK",
+      "fromCityName": "上海",
+      "toCityName": "北京",
+      "fromDate": "2020-07-15",
       "flights": [
         {
-          "flightNo": "CZ6925",
-          "airlineCompany": "南方航空",
-          "airlineCode": "CZ",
-          "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/CZ.png",
-          "fromAirportCode": "KRL",
-          "toAirportCode": "CTU",
-          "fromAirportName": "库尔勒",
-          "toAirportName": "成都双流",
+          "flightNo": "MU5101",
+          "airlineCompany": "东方航空",
+          "airlineCode": "MU",
+          "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/MU.png",
+          "fromAirportCode": "PVG",
+          "toAirportCode": "PEK",
+          "fromAirportName": "上海浦东",
+          "toAirportName": "北京首都",
           "isShareFlight": false,
           "realFlightNo": null,
-          "fromDateTime": "2020-06-10 09:40:00",
-          "toDateTime": "2020-06-10 15:45:00",
-          "fromTerminal": "--",
+          "fromDateTime": "2020-07-15 08:00:00",
+          "toDateTime": "2020-07-15 10:20:00",
+          "fromTerminal": "T1",
           "toTerminal": "T2",
-          "flyDuration": "06:05",
-          "adultTax": 50,
-          "adultFuel": 0,
-          "cabins": [
-            {
-              "cabinCode": "M",
-              "cabinLevel": 1,
-              "cabinName": "经济舱",
-              "seatLeftNum": 10,
-              "cabinBookPara": "...",
-              "cabinPrice": {
-                "adultSalePrice": 2097
-              }
-            },
-            {
-              "cabinCode": "Y",
-              "cabinLevel": 1,
-              "cabinName": "经济舱",
-              "seatLeftNum": 10,
-              "cabinBookPara": "...",
-              "cabinPrice": {
-                "adultSalePrice": 2494
-              }
-            },
-            {
-              "cabinCode": "J",
-              "cabinLevel": 2,
-              "cabinName": "商务舱",
-              "seatLeftNum": 8,
-              "cabinBookPara": "...",
-              "cabinPrice": {
-                "adultSalePrice": 5735
-              }
-            }
-          ],
-          "stopNum": 1,
-          "craftType": "波音738"
-        },
-        {
-          "flightNo": "3U8810",
-          "airlineCompany": "四川航空",
-          "airlineCode": "3U",
-          "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/3U.png",
-          "fromAirportCode": "KRL",
-          "toAirportCode": "CTU",
-          "fromAirportName": "库尔勒",
-          "toAirportName": "成都天府",
-          "isShareFlight": false,
-          "realFlightNo": null,
-          "fromDateTime": "2020-06-10 10:30:00",
-          "toDateTime": "2020-06-10 14:00:00",
-          "fromTerminal": "--",
-          "toTerminal": "T1",
-          "flyDuration": "03:30",
+          "flyDuration": "02:20",
           "adultTax": 50,
           "adultFuel": 0,
           "cabins": [
@@ -83,10 +30,10 @@
               "cabinCode": "V",
               "cabinLevel": 1,
               "cabinName": "经济舱",
-              "seatLeftNum": 5,
+              "seatLeftNum": 9,
               "cabinBookPara": "...",
               "cabinPrice": {
-                "adultSalePrice": 1850
+                "adultSalePrice": 1250
               }
             },
             {
@@ -96,120 +43,79 @@
               "seatLeftNum": 10,
               "cabinBookPara": "...",
               "cabinPrice": {
-                "adultSalePrice": 2350
+                "adultSalePrice": 1500
               }
             },
             {
               "cabinCode": "C",
               "cabinLevel": 2,
               "cabinName": "公务舱",
-              "seatLeftNum": 4,
+              "seatLeftNum": 5,
               "cabinBookPara": "...",
               "cabinPrice": {
-                "adultSalePrice": 4880
+                "adultSalePrice": 3500
               }
             }
           ],
           "stopNum": 0,
-          "craftType": "空客320"
+          "craftType": "空客330"
         },
         {
-          "flightNo": "CA4242",
+          "flightNo": "CA1502",
           "airlineCompany": "中国国航",
           "airlineCode": "CA",
           "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/CA.png",
-          "fromAirportCode": "KRL",
-          "toAirportCode": "CTU",
-          "fromAirportName": "库尔勒",
-          "toAirportName": "成都双流",
-          "isShareFlight": true,
-          "realFlightNo": "ZH4242",
-          "fromDateTime": "2020-06-10 12:00:00",
-          "toDateTime": "2020-06-10 18:30:00",
-          "fromTerminal": "T1",
-          "toTerminal": "T2",
-          "flyDuration": "06:30",
-          "adultTax": 50,
-          "adultFuel": 0,
-          "cabins": [
-            {
-              "cabinCode": "U",
-              "cabinLevel": 1,
-              "cabinName": "经济舱",
-              "seatLeftNum": 2,
-              "cabinBookPara": "...",
-              "cabinPrice": {
-                "adultSalePrice": 2150
-              }
-            },
-            {
-              "cabinCode": "Y",
-              "cabinLevel": 1,
-              "cabinName": "经济舱",
-              "seatLeftNum": 9,
-              "cabinBookPara": "...",
-              "cabinPrice": {
-                "adultSalePrice": 2550
-              }
-            }
-          ],
-          "stopNum": 1,
-          "craftType": "波音737"
-        },
-        {
-          "flightNo": "MU5488",
-          "airlineCompany": "东方航空",
-          "airlineCode": "MU",
-          "airlineLogoUrl": "http://api.panhe.net/Content/Images/AirLineLogo/MU.png",
-          "fromAirportCode": "KRL",
-          "toAirportCode": "CTU",
-          "fromAirportName": "库尔勒",
-          "toAirportName": "成都天府",
+          "fromAirportCode": "SHA",
+          "toAirportCode": "PEK",
+          "fromAirportName": "上海虹桥",
+          "toAirportName": "北京首都",
           "isShareFlight": false,
           "realFlightNo": null,
-          "fromDateTime": "2020-06-10 15:10:00",
-          "toDateTime": "2020-06-10 22:00:00",
-          "fromTerminal": "--",
-          "toTerminal": "T1",
-          "flyDuration": "06:50",
+          "fromDateTime": "2020-07-15 14:30:00",
+          "toDateTime": "2020-07-15 16:55:00",
+          "fromTerminal": "T2",
+          "toTerminal": "T3",
+          "flyDuration": "02:25",
           "adultTax": 50,
           "adultFuel": 0,
           "cabins": [
             {
-              "cabinCode": "E",
+              "cabinCode": "M",
               "cabinLevel": 1,
               "cabinName": "经济舱",
-              "seatLeftNum": 10,
+              "seatLeftNum": 7,
               "cabinBookPara": "...",
               "cabinPrice": {
-                "adultSalePrice": 2230
+                "adultSalePrice": 1380
               }
             },
             {
-              "cabinCode": "C",
+              "cabinCode": "J",
               "cabinLevel": 2,
-              "cabinName": "商务舱",
-              "seatLeftNum": 6,
+              "cabinName": "公务舱",
+              "seatLeftNum": 8,
               "cabinBookPara": "...",
               "cabinPrice": {
-                "adultSalePrice": 5910
+                "adultSalePrice": 3800
               }
             },
             {
               "cabinCode": "F",
               "cabinLevel": 3,
               "cabinName": "头等舱",
-              "seatLeftNum": 3,
+              "seatLeftNum": 2,
               "cabinBookPara": "...",
               "cabinPrice": {
-                "adultSalePrice": 8840
+                "adultSalePrice": 5000
               }
             }
           ],
-          "stopNum": 1,
-          "craftType": "空客321"
+          "stopNum": 0,
+          "craftType": "波音777"
         }
       ]
     }
-  }
+  },
+  "success": true,
+  "msg": "请求成功"
 }

@@ -1,0 +1,267 @@
+{
+  "trip_id": "beijing_shanghai_trip_001",
+  "trip_name": "北京到上海三日游",
+  "origin": "北京",
+  "destination": "上海",
+  "start_date": "2025-11-15",
+  "end_date": "2025-11-17",
+  "days": [
+    {
+      "date": "2025-11-15",
+      "day_of_week": "星期六",
+      "day_index": 1,
+      "total_cost": 2100,
+      "activities": [
+        {
+          "id": "transport_1",
+          "type": "large_transportation",
+          "start_time": "08:30",
+          "end_time": "11:00",
+          "description": "乘坐东方航空MU5179航班，从北京飞往上海。",
+          "notes": "请提前2小时到达机场办理登机手续，并预留时间通过安检。",
+          "cost": 1200,
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "MU5179",
+            "airlineCompany": "东方航空",
+            "fromAirportName": "北京首都国际机场",
+            "toAirportName": "上海浦东国际机场",
+            "fromDateTime": "2025-11-15 08:30:00",
+            "toDateTime": "2025-11-15 11:00:00",
+            "flyDuration": "02:30",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1200
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "transport_2",
+          "type": "transportation",
+          "mode": "maglev_train",
+          "start_time": "11:45",
+          "end_time": "12:15",
+          "origin": {
+            "name": "上海浦东国际机场 (PVG)",
+            "address": "中国上海市浦东新区迎宾大道"
+          },
+          "destination": {
+            "name": "龙阳路地铁站",
+            "address": "中国上海市浦东新区龙阳路"
+          },
+          "description": "乘坐上海磁悬浮列车，从浦东机场快速前往市区。",
+          "notes": "磁悬浮列车速度极快，注意站稳扶好。",
+          "cost": 50,
+          "ticket_info": {
+            "price": 50,
+            "url": null,
+            "description": "磁悬浮单程票"
+          }
+        },
+        {
+          "id": "activity_1",
+          "type": "activity",
+          "start_time": "13:30",
+          "end_time": "15:00",
+          "description": "抵达酒店办理入住，稍作休息，为下午的行程做准备。",
+          "notes": "入住时请出示所有住客的身份证件。",
+          "cost": 0,
+          "poi_details": {
+            "name": "办理酒店入住",
+            "rec_reason": "抵达酒店办理入住手续",
+            "POIId": "hotel_checkin_001",
+            "description": "在酒店办理入住手续，安顿行李",
+            "address": "中国上海市黄浦区浙江中路",
+            "poi_type": "hotel"
+          }
+        },
+        {
+          "id": "activity_2",
+          "type": "activity",
+          "start_time": "15:30",
+          "end_time": "18:00",
+          "description": "在南京路步行街购物和观光，感受上海的繁华都市氛围。",
+          "notes": "人流较大，注意保管好个人财物。",
+          "cost": 0,
+          "poi_details": {
+            "name": "南京路步行街",
+            "rec_reason": "上海最繁华的商业步行街",
+            "POIId": "nanjing_road_001",
+            "description": "上海著名的商业步行街，汇集众多品牌商店和美食",
+            "address": "中国上海市黄浦区南京路",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "activity_3",
+          "type": "activity",
+          "start_time": "18:30",
+          "end_time": "20:00",
+          "description": "品尝上海地道的小笼包，体验本地风味。",
+          "notes": "可能需要排队，建议错峰用餐。",
+          "cost": 80,
+          "poi_details": {
+            "name": "南翔馒头店",
+            "rec_reason": "上海著名的小笼包老字号",
+            "POIId": "nanxiang_restaurant_001",
+            "description": "百年老字号，以正宗上海小笼包闻名",
+            "address": "中国上海市黄浦区豫园路85号",
+            "poi_type": "spot"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2025-11-16",
+      "day_of_week": "星期日",
+      "day_index": 2,
+      "total_cost": 500,
+      "activities": [
+        {
+          "id": "activity_4",
+          "type": "activity",
+          "start_time": "10:00",
+          "end_time": "12:00",
+          "description": "游览古典园林，感受江南园林的精致。",
+          "notes": "豫园门票可在现场购买，园内有很多传统小吃和纪念品店。",
+          "cost": 40,
+          "poi_details": {
+            "name": "豫园",
+            "rec_reason": "上海著名的古典园林",
+            "POIId": "yuyuan_001",
+            "description": "明代园林，典型的江南园林建筑风格",
+            "address": "中国上海市黄浦区安仁街218号",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transport_3",
+          "type": "transportation",
+          "mode": "subway",
+          "start_time": "12:30",
+          "end_time": "13:00",
+          "origin": {
+            "name": "豫园地铁站",
+            "address": "中国上海市黄浦区人民路"
+          },
+          "destination": {
+            "name": "陆家嘴地铁站",
+            "address": "中国上海市浦东新区陆家嘴环路"
+          },
+          "description": "乘坐上海地铁10号线，转2号线，前往陆家嘴。",
+          "notes": "使用上海交通卡或手机支付会更便捷。",
+          "cost": 4,
+          "ticket_info": null
+        },
+        {
+          "id": "activity_5",
+          "type": "activity",
+          "start_time": "13:00",
+          "end_time": "14:00",
+          "description": "在国金中心商场内用餐，选择多样。",
+          "notes": null,
+          "cost": 100,
+          "poi_details": {
+            "name": "国金中心商场",
+            "rec_reason": "陆家嘴高端购物中心",
+            "POIId": "ifc_mall_001",
+            "description": "高端购物中心，汇集国际一线品牌",
+            "address": "中国上海市浦东新区世纪大道8号",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "activity_6",
+          "type": "activity",
+          "start_time": "14:30",
+          "end_time": "17:00",
+          "description": "从高空俯瞰上海全景，观赏黄浦江两岸的壮丽景色。",
+          "notes": "建议提前网上购票，以免排队时间过长。",
+          "cost": 220,
+          "poi_details": {
+            "name": "东方明珠广播电视塔",
+            "rec_reason": "上海地标性建筑",
+            "POIId": "oriental_pearl_001",
+            "description": "上海标志性建筑，可俯瞰黄浦江两岸景色",
+            "address": "中国上海市浦东新区世纪大道1号",
+            "poi_type": "spot"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2025-11-17",
+      "day_of_week": "星期一",
+      "day_index": 3,
+      "total_cost": 0,
+      "activities": [
+        {
+          "id": "activity_7",
+          "type": "activity",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "description": "在酒店办理退房手续。",
+          "notes": "请确保没有遗漏个人物品。",
+          "cost": 0,
+          "poi_details": {
+            "name": "酒店退房",
+            "rec_reason": "办理退房手续",
+            "POIId": "hotel_checkout_001",
+            "description": "在酒店前台办理退房",
+            "address": "中国上海市黄浦区浙江中路",
+            "poi_type": "hotel"
+          }
+        },
+        {
+          "id": "transport_4",
+          "type": "transportation",
+          "mode": "subway",
+          "start_time": "10:30",
+          "end_time": "11:30",
+          "origin": {
+            "name": "人民广场地铁站",
+            "address": "中国上海市黄浦区人民广场"
+          },
+          "destination": {
+            "name": "上海虹桥国际机场 (SHA)",
+            "address": "中国上海市长宁区虹桥路"
+          },
+          "description": "乘坐上海地铁2号线，从人民广场前往虹桥国际机场。",
+          "notes": "地铁站到航站楼步行距离较长，请预留足够时间。",
+          "cost": 5
+        },
+        {
+          "id": "transport_5",
+          "type": "large_transportation",
+          "start_time": "13:30",
+          "end_time": "16:00",
+          "description": "乘坐国航CA1832航班，从上海返回北京。",
+          "notes": "回程航班，请再次检查行李。",
+          "cost": 900,
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "CA1832",
+            "airlineCompany": "中国国际航空",
+            "fromAirportName": "上海虹桥国际机场",
+            "toAirportName": "北京首都国际机场",
+            "fromDateTime": "2025-11-17 13:30:00",
+            "toDateTime": "2025-11-17 16:00:00",
+            "flyDuration": "02:30",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 900
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
