@@ -9,7 +9,7 @@ export async function GET() {
     const jsonFilePath = path.join(
       process.cwd(),
       "..",
-      "backend/DataDefinition/SAMPLE_TRIP_DATA_2.json"
+      "backend/DataDefinition/SAMPLE_TRIP_DATA_3.json"
     );
     console.log("Looking for file at:", jsonFilePath);
 

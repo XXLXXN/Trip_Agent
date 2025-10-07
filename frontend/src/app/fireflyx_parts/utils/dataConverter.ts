@@ -210,7 +210,7 @@ export const convertToSpotCardData = (
     id: id,
     name: name,
     image: image,
-    path: showNavigation ? `/spotdetails/${activity.id}` : "", // 根据参数决定是否显示跳转
+    path: `/spotdetails?spotId=${id}&spotName=${encodeURIComponent(name)}`, // 总是返回跳转路径
     recommendationReason: description,
     isPlan: true,
   };

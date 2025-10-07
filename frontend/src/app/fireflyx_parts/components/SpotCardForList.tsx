@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Spot } from "@/mockData/travelcarddata";
 
 interface SpotCardForListProps {
@@ -16,10 +17,15 @@ export const SpotCardForList: React.FC<SpotCardForListProps> = ({
   onButtonClick,
   onClick,
 }) => {
-  // 处理整个卡片的点击
+  const router = useRouter();
+
+  // 处理整个卡片的点击，跳转到详情页面
   const handleCardClick = () => {
     if (onClick) {
       onClick(); // 调用自定义点击处理函数
+    } else {
+      // 默认跳转到schedule详情页面，使用活动ID
+      router.push(`/spotdetails/schedule/${spot.id}`);
     }
   };
 
@@ -50,19 +56,18 @@ export const SpotCardForList: React.FC<SpotCardForListProps> = ({
         </div>
       </div>
       <style jsx>{`
-        /* 主卡片容器 */
+        /* 主卡片容器 - 与spotslist保持一致 */
         .spot-card {
-          width: 100%;
-          min-height: 114px;
+          width: 343px;
+          height: 114px;
           background-color: white;
           border-radius: 16px;
-          border: 1px solid rgba(1, 34, 118, 0.05);
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          border: 1px solid #f3f4f6;
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
           display: flex;
           overflow: hidden;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
           position: relative; /* 为按钮定位提供上下文 */
         }
         .spot-card:hover {
