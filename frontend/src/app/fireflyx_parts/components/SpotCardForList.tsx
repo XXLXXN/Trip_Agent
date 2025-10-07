@@ -39,7 +39,7 @@ export const SpotCardForList: React.FC<SpotCardForListProps> = ({
             className="spot-image"
             onError={(e) => {
               // 图片加载失败时使用默认图片
-              e.currentTarget.src = "/placeholder-spot.jpg";
+              e.currentTarget.src = "/placeholder.jpg";
             }}
           />
         </div>
@@ -57,7 +57,8 @@ export const SpotCardForList: React.FC<SpotCardForListProps> = ({
           background-color: white;
           border-radius: 16px;
           border: 1px solid rgba(1, 34, 118, 0.05);
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
           display: flex;
           overflow: hidden;
           cursor: pointer;

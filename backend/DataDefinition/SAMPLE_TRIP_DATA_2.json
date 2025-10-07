@@ -1,7 +1,7 @@
 {
   "trip_id": "shanghai_complex_trip_001",
   "trip_name": "上海两日游",
-  "origin":"北京",
+  "origin": "北京",
   "destination": "上海",
   "start_date": "2025-01-15",
   "end_date": "2025-01-16",
@@ -14,27 +14,26 @@
       "activities": [
         {
           "id": "transport_0",
-          "type": "transportation",
-          "mode": "plane",
+          "type": "large_transportation",
           "start_time": "07:30",
           "end_time": "10:00",
-          "origin": {
-            "name": "北京首都国际机场 (PEK)",
-            "address": "中国北京市顺义区机场南路",
-            "coordinates":None
-          },
-          "destination": {
-            "name": "上海虹桥国际机场 (SHA)",
-            "address": "长宁区虹桥路2550号",
-            "coordinates": None
-          },
-          "description": "乘坐东方航空MU5179航班，从北京飞往上海。",
-          "notes": "请提前2小时到达机场办理登机手续，并预留时间通过安检。",
-          "cost": 1200,
-          "ticket_info": {
-            "price": 1200,
-            "url": "https://example.com/mu5179-ticket",
-            "description": "东方航空 MU5179 航班电子票"
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "MU5179",
+            "airlineCompany": "东方航空",
+            "fromAirportName": "北京首都国际机场",
+            "toAirportName": "上海虹桥国际机场",
+            "fromDateTime": "2025-01-15 07:30:00",
+            "toDateTime": "2025-01-15 10:00:00",
+            "flyDuration": "02:30",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1200
+                }
+              }
+            ]
           }
         },
         {
@@ -45,14 +44,14 @@
           "notes": "请提前准备好身份证件",
           "cost": 0.0,
           "type": "activity",
-          "mode":"interim",
-          "title": "到达虹桥机场",
-          "location": {
+          "poi_details": {
             "name": "虹桥机场",
+            "rec_reason": "到达上海的第一站，办理入境手续",
+            "POIId": "airport_sha_001",
+            "description": "上海虹桥国际机场是上海的主要机场之一",
             "address": "长宁区虹桥路2550号",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "spot"
+          }
         },
         {
           "id": "transportation_activity_1_activity_2_1",
@@ -150,14 +149,14 @@
           "notes": "可以参观图书馆、教学楼等标志性建筑",
           "cost": 0.0,
           "type": "activity",
-          "mode":"visit",
-          "title": "华东师范大学普陀校区游玩",
-          "location": {
+          "poi_details": {
             "name": "华东师范大学普陀校区",
+            "rec_reason": "体验百年名校的校园文化氛围",
+            "POIId": "ecnu_putuo_001",
+            "description": "华东师范大学普陀校区是学校的主校区，拥有悠久的历史和美丽的校园环境",
             "address": "中山北路3663号",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "spot"
+          }
         },
         {
           "id": "transportation_activity_2_activity_3_1",
@@ -255,14 +254,14 @@
           "notes": "可以购物、品尝小吃，感受上海风情",
           "cost": 0.0,
           "type": "activity",
-          "mode":"visit",
-          "title": "南京路步行街游览",
-          "location": {
+          "poi_details": {
             "name": "南京路步行街",
+            "rec_reason": "上海最具代表性的商业街，感受都市繁华",
+            "POIId": "nanjing_road_001",
+            "description": "南京路步行街是上海最著名的商业街之一，汇集了众多购物中心和特色小吃",
             "address": "上海市黄浦区南京路步行街",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "spot"
+          }
         },
         {
           "id": "transportation_activity_3_activity_4_1",
@@ -360,14 +359,14 @@
           "notes": "可以参观老图书馆、工程馆等历史建筑",
           "cost": 0.0,
           "type": "activity",
-          "mode":"visit",
-          "title": "上海交通大学徐汇校区游玩",
-          "location": {
+          "poi_details": {
             "name": "上海交通大学徐汇校区",
+            "rec_reason": "百年名校的历史底蕴与现代教育理念",
+            "POIId": "sjtu_xuhui_001",
+            "description": "上海交通大学徐汇校区是学校的发源地，拥有众多历史建筑和文化底蕴",
             "address": "徐汇区华山路1954号",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "spot"
+          }
         },
         {
           "id": "transportation_activity_4_activity_5_1",
@@ -443,14 +442,14 @@
           "notes": "办理入住手续，稍作休息",
           "cost": 300,
           "type": "activity",
-          "mode": "hotel",
-          "title": "入住秋果酒店",
-          "location": {
+          "poi_details": {
             "name": "秋果酒店交通大学地铁站店",
+            "rec_reason": "地理位置优越，交通便利，舒适住宿环境",
+            "POIId": "hotel_qiuguo_001",
+            "description": "秋果酒店是一家舒适型酒店，靠近交通大学地铁站，出行方便",
             "address": "长宁区新华路24号",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "hotel"
+          }
         }
       ]
     },
@@ -468,14 +467,14 @@
           "notes": "可以参观新图书馆、体育馆等现代化设施",
           "cost": 100,
           "type": "activity",
-          "mode":"visit",
-          "title": "上海交通大学闵行校区游玩",
-          "location": {
+          "poi_details": {
             "name": "上海交通大学闵行校区",
+            "rec_reason": "现代化校园设施和先进的科研环境",
+            "POIId": "sjtu_minhang_001",
+            "description": "上海交通大学闵行校区是学校的主要校区，拥有现代化的教学和科研设施",
             "address": "闵行区东川路800号",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "spot"
+          }
         },
         {
           "id": "transportation_activity_6_activity_7_1",
@@ -551,14 +550,14 @@
           "notes": "可以参观教学楼、学生活动中心等",
           "cost": 0.0,
           "type": "activity",
-          "mode":"visit",
-          "title": "华东师范大学闵行校区游玩",
-          "location": {
+          "poi_details": {
             "name": "华东师范大学闵行校区",
+            "rec_reason": "现代化校园环境和丰富的学术氛围",
+            "POIId": "ecnu_minhang_001",
+            "description": "华东师范大学闵行校区是学校的新校区，拥有现代化的教学设施和优美的校园环境",
             "address": "东川路500号",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "spot"
+          }
         },
         {
           "id": "transportation_activity_7_activity_8_1",
@@ -656,38 +655,37 @@
           "notes": "请提前2小时到达机场，准备好登机证件",
           "cost": 0.0,
           "type": "activity",
-          "mode":"interim",
-          "title": "前往浦东国际机场",
-          "location": {
+          "poi_details": {
             "name": "浦东国际机场",
+            "rec_reason": "上海的主要国际机场，设施完善",
+            "POIId": "airport_pvg_001",
+            "description": "上海浦东国际机场是中国重要的国际航空枢纽",
             "address": "浦东新区浦东国际机场",
-            "coordinates": null
-          },
-          "recommended_products": []
+            "poi_type": "spot"
+          }
         },
         {
           "id": "transport_8",
-          "type": "transportation",
-          "mode": "plane",
+          "type": "large_transportation",
           "start_time": "15:00",
           "end_time": "18:00",
-          "origin": {
-            "name": "上海浦东国际机场 (PVG)",
-            "address": "中国上海市浦东新区迎宾大道",
-            "coordinates": None
-          },
-          "destination": {
-            "name": "北京首都国际机场 (PEK)",
-            "address": "中国北京市顺义区机场南路",
-            "coordinates": None
-          },
-          "description": "乘坐国航CA1832航班，从上海返回北京。",
-          "notes": "回程航班，请再次检查行李。",
-          "cost": 900,
-          "ticket_info": {
-            "price": 900,
-            "url": "https://example.com/ca1832-ticket",
-            "description": "国航 CA1832 航班电子票"
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "CA1832",
+            "airlineCompany": "中国国航",
+            "fromAirportName": "上海浦东国际机场",
+            "toAirportName": "北京首都国际机场",
+            "fromDateTime": "2025-01-16 15:00:00",
+            "toDateTime": "2025-01-16 18:00:00",
+            "flyDuration": "03:00",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 900
+                }
+              }
+            ]
           }
         }
       ]

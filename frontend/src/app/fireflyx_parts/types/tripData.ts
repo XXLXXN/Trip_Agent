@@ -21,8 +21,25 @@ export interface DayData {
 
 export interface ActivityData {
   id: string;
-  type: "transportation" | "activity" | "food" | "shopping";
-  mode?: "plane" | "train" | "maglev_train" | "subway" | "taxi" | "bus" | "walking" | "walk" | "cycling" | "driving" | "hotel" | "attraction";
+  type:
+    | "transportation"
+    | "activity"
+    | "large_transportation"
+    | "food"
+    | "shopping";
+  mode?:
+    | "plane"
+    | "train"
+    | "maglev_train"
+    | "subway"
+    | "taxi"
+    | "bus"
+    | "walking"
+    | "walk"
+    | "cycling"
+    | "driving"
+    | "hotel"
+    | "attraction";
   start_time: string;
   end_time: string;
   title?: string;
@@ -34,6 +51,51 @@ export interface ActivityData {
   cost: number;
   ticket_info?: TicketInfo;
   recommended_products?: ProductData[];
+  traffic_details?: TrafficDetails; // 添加大型交通详情
+  poi_details?: POIDetails; // 添加POI详情信息
+}
+
+export interface POIDetails {
+  name: string;
+  rec_reason: string;
+  POIId: string;
+  description: string;
+  address: string;
+  photos?: Array<{ url: string; title?: string }>;
+  rating?: string;
+  cost?: number;
+  poi_type: "spot" | "hotel";
+}
+
+export interface TrafficDetails {
+  traffic_type: "flight" | "train" | "self_arrange";
+  flightNo?: string;
+  airlineCompany?: string;
+  fromAirportName?: string;
+  toAirportName?: string;
+  fromDateTime?: string;
+  toDateTime?: string;
+  flyDuration?: string;
+  cabins?: CabinInfo[];
+  trainCode?: string;
+  fromStation?: string;
+  toStation?: string;
+  runTime?: string;
+  trainsTypeName?: string;
+  Seats?: SeatInfo[];
+  note?: string;
+}
+
+export interface CabinInfo {
+  cabinName: string;
+  cabinPrice: {
+    adultSalePrice: number;
+  };
+}
+
+export interface SeatInfo {
+  seatTypeName: string;
+  ticketPrice: number;
 }
 
 export interface LocationData {

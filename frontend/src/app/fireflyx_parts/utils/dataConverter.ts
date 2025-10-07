@@ -31,6 +31,76 @@ export const convertToItineraryData = (
     };
   }
 
+  if (activity.type === "large_transportation") {
+    // 处理大型交通（飞机、火车等）
+    if (activity.traffic_details?.traffic_type === "flight") {
+      const flight = activity.traffic_details;
+      return {
+        type: "transport",
+        data: {
+          from: flight.fromAirportName || "",
+          to: flight.toAirportName || "",
+          time: activity.start_time,
+          duration:
+            flight.flyDuration ||
+            calculateDuration(activity.start_time, activity.end_time),
+          mode: "plane",
+          cost: flight.cabins?.[0]?.cabinPrice?.adultSalePrice || 0,
+          description: `${flight.airlineCompany} ${flight.flightNo}航班`,
+          flightDetails: {
+            airline: flight.airlineCompany,
+            flightNumber: flight.flightNo,
+            departureAirport: flight.fromAirportName,
+            arrivalAirport: flight.toAirportName,
+            duration: flight.flyDuration,
+            cabin: flight.cabins?.[0]?.cabinName || "经济舱",
+          },
+        },
+      };
+    }
+
+    if (activity.traffic_details?.traffic_type === "train") {
+      const train = activity.traffic_details;
+      return {
+        type: "transport",
+        data: {
+          from: train.fromStation || "",
+          to: train.toStation || "",
+          time: activity.start_time,
+          duration:
+            train.runTime ||
+            calculateDuration(activity.start_time, activity.end_time),
+          mode: "train",
+          cost: train.Seats?.[0]?.ticketPrice || 0,
+          description: `${train.trainsTypeName} ${train.trainCode}次列车`,
+          trainDetails: {
+            trainType: train.trainsTypeName,
+            trainNumber: train.trainCode,
+            departureStation: train.fromStation,
+            arrivalStation: train.toStation,
+            duration: train.runTime,
+            seatType: train.Seats?.[0]?.seatTypeName || "硬座",
+          },
+        },
+      };
+    }
+
+    if (activity.traffic_details?.traffic_type === "self_arrange") {
+      return {
+        type: "transport",
+        data: {
+          from: "自行安排",
+          to: "自行安排",
+          time: activity.start_time,
+          duration: calculateDuration(activity.start_time, activity.end_time),
+          mode: "self_arrange",
+          cost: 0,
+          description: activity.traffic_details.note || "用户自行安排交通",
+        },
+      };
+    }
+  }
+
   if (activity.type === "activity") {
     return {
       type: "attraction",
@@ -53,7 +123,10 @@ export const convertToItineraryData = (
 };
 
 // 计算时间差
-export const calculateDuration = (startTime: string, endTime: string): string => {
+export const calculateDuration = (
+  startTime: string,
+  endTime: string
+): string => {
   try {
     // 处理 "HH:MM" 或 "HH:MM:SS" 格式
     const formatTime = (time: string) => {
@@ -62,12 +135,12 @@ export const calculateDuration = (startTime: string, endTime: string): string =>
       }
       return time;
     };
-    
+
     const start = new Date(`2000-01-01 ${formatTime(startTime)}`);
     const end = new Date(`2000-01-01 ${formatTime(endTime)}`);
     const diffMs = end.getTime() - start.getTime();
     const diffMinutes = Math.round(diffMs / (1000 * 60));
-    
+
     if (diffMinutes < 60) {
       return `${diffMinutes}分钟`;
     } else {
@@ -84,16 +157,16 @@ export const calculateDuration = (startTime: string, endTime: string): string =>
 export const formatTime = (timeString: string): string => {
   try {
     // 处理 "HH:MM" 或 "HH:MM:SS" 格式
-    const timeParts = timeString.split(':');
+    const timeParts = timeString.split(":");
     const hour = parseInt(timeParts[0]);
     const minute = parseInt(timeParts[1]);
-    
+
     if (hour < 12) {
-      return `上午${hour}:${minute.toString().padStart(2, '0')}`;
+      return `上午${hour}:${minute.toString().padStart(2, "0")}`;
     } else if (hour === 12) {
-      return `中午${hour}:${minute.toString().padStart(2, '0')}`;
+      return `中午${hour}:${minute.toString().padStart(2, "0")}`;
     } else {
-      return `下午${hour - 12}:${minute.toString().padStart(2, '0')}`;
+      return `下午${hour - 12}:${minute.toString().padStart(2, "0")}`;
     }
   } catch (error) {
     return timeString;
@@ -102,14 +175,20 @@ export const formatTime = (timeString: string): string => {
 
 // 获取第一天第一个活动的时间
 export const getFirstActivityTime = (activities: ActivityData[]): string => {
-  const firstActivity = activities.find(activity => 
-    activity.type === "transportation" || activity.type === "activity"
+  const firstActivity = activities.find(
+    (activity) =>
+      activity.type === "transportation" ||
+      activity.type === "activity" ||
+      activity.type === "large_transportation"
   );
   return firstActivity ? formatTime(firstActivity.start_time) : "";
 };
 
 // 将 activity 数据转换为 SpotCard 需要的格式
-export const convertToSpotCardData = (activity: ActivityData, showNavigation: boolean = true) => {
+export const convertToSpotCardData = (
+  activity: ActivityData,
+  showNavigation: boolean = true
+) => {
   // 处理不同的 ID 格式
   let id = 1;
   if (activity.id.includes("activity_")) {
@@ -117,16 +196,23 @@ export const convertToSpotCardData = (activity: ActivityData, showNavigation: bo
   } else if (activity.id.includes("transport_")) {
     id = parseInt(activity.id.replace("transport_", "")) || 1;
   } else {
-    id = parseInt(activity.id.replace(/\D/g, '')) || 1;
+    id = parseInt(activity.id.replace(/\D/g, "")) || 1;
   }
-  
+
+  // 优先使用 poi_details 中的信息，如果没有则使用 activity 的基本信息
+  const name = activity.poi_details?.name || activity.title || "景点";
+  const description =
+    activity.poi_details?.rec_reason || activity.description || "";
+  const image =
+    activity.poi_details?.photos?.[0]?.url || "/placeholder-spot.jpg";
+
   return {
     id: id,
-    name: activity.title || "",
-    image: "/placeholder-spot.jpg", // 默认图片
+    name: name,
+    image: image,
     path: showNavigation ? `/spotdetails/${activity.id}` : "", // 根据参数决定是否显示跳转
-    recommendationReason: activity.description || "",
-    isPlan: true
+    recommendationReason: description,
+    isPlan: true,
   };
 };
 
@@ -134,7 +220,7 @@ export const convertToSpotCardData = (activity: ActivityData, showNavigation: bo
 export const getTransportOptions = (mode: string) => {
   // 固定的四个选项：公交、步行、骑行、驾车
   const transportOptions = ["公交", "步行", "骑行", "驾车"];
-  
+
   // 根据 mode 返回不同的选项
   switch (mode) {
     case "plane":

@@ -14,6 +14,15 @@ class TravellerType(str, Enum):
     SENIOR = "老人"
     STUDENT = "学生"
 
+# 定义交通方式枚举
+class TransportationMode(str, Enum):
+    BUS = "bus"
+    DRIVING = "driving"
+    WALK = "walk"
+    CYCLING = "cycling"
+    FLIGHT = "flight"
+    TRAIN = "train"
+
 # 定义人数数据结构
 class TravellerCount(BaseModel):
     # 使用字典来存储乘客类型和数量
@@ -60,77 +69,6 @@ class Shopping(BaseModel):
 RecommendedProduct = Union[Food, Shopping]
 
 
-class TicketInfo(BaseModel):
-    """票务信息"""
-    price: float
-    url: Optional[str] = None
-    description: Optional[str] = None
-
-
-class TripItem(BaseModel):
-    """所有行程项的基类"""
-    id: str
-    start_time: time
-    end_time: time
-    description: Optional[str] = None
-    notes: Optional[str] = None
-    cost: Optional[float] = None
-
-    class Config:
-        use_enum_values = True
-        json_schema_extra = {
-            "example": {
-                "id": "item_1",
-                "start_time": "09:00",
-                "end_time": "12:00",
-                "description": "行程描述",
-                "notes": "注意保暖",
-                "cost": 100
-            }
-        }
-
-
-class Activity(TripItem):
-    """游玩活动模型"""
-    type: str = Field(default="activity", frozen=True)
-    title: str
-    location: Location
-    recommended_products: Optional[List[RecommendedProduct]] = None
-
-
-
-class Transportation(TripItem):
-    """交通模型"""
-    type: str = Field(default="transportation", frozen=True)
-    mode: str
-    origin: Location
-    destination: Location
-    route_points: Optional[List[Location]] = None
-    ticket_info: Optional[TicketInfo] = None
-
-
-# 使用 Union 来定义一个项目可以是 Activity 或 Transportation
-DayActivity = Union[Activity, Transportation]
-
-class Day(BaseModel):
-    """每日行程模型"""
-    date: date
-    day_of_week: str
-    day_index: int
-    total_cost: Optional[float] = None
-    activities: List[DayActivity] = []
-
-class Trip(BaseModel):
-    """整个行程模型"""
-    user_id: str
-    trip_id: str
-    trip_name: str
-    origin: str
-    destination: str
-    start_date: date
-    end_date: date
-    days: List[Day] = []
-
 class POIInfo(BaseModel):
     name: str
     id: str
@@ -168,14 +106,61 @@ class SpotNameAndRecReason(BaseModel):
     POIId:str
     description: Optional[str] = None
 
-class SpotDetailInfo(BaseModel):
-    SpotName: str
-    RecReason: str
-    POIId:str
-    description: str
-    address:str
-    photos:Optional[List[Dict]] #每个dict里有url和title
-    rating:Optional[str] 
+class POIDetailType(str, Enum):
+    """POI类型枚举"""
+    SPOT = "spot"
+    HOTEL = "hotel"
+
+class POIDetailInfo(BaseModel):
+    """统一的POI详情信息类"""
+    name: str = Field(..., description="POI名称")
+    rec_reason: str = Field(..., description="推荐理由")
+    POIId: str = Field(..., description="POI ID")
+    description: str = Field(..., description="描述信息")
+    address: str = Field(..., description="地址")
+    photos: Optional[List[Dict]] = Field(None, description="图片列表，每个dict包含url和title")
+    rating: Optional[str] = Field(None, description="评分")
+    cost: Optional[float] = Field(None, description="费用")
+    poi_type: POIDetailType = Field(..., description="POI类型")
+
+# 向后兼容的别名类
+class SpotDetailInfo(POIDetailInfo):
+    """景点详情信息类（兼容性别名）"""
+    SpotName: str = Field(..., alias="name")
+    RecReason: str = Field(..., alias="rec_reason")
+    
+    def __init__(self, **data):
+        # 创建字段映射的副本
+        mapped_data = data.copy()
+        
+        # 转换字段名以匹配基础类的字段名
+        if 'SpotName' in mapped_data:
+            mapped_data['name'] = mapped_data.pop('SpotName')
+        if 'RecReason' in mapped_data:
+            mapped_data['rec_reason'] = mapped_data.pop('RecReason')
+        
+        # 确保设置正确的POI类型
+        mapped_data['poi_type'] = POIDetailType.SPOT
+        super().__init__(**mapped_data)
+
+class HotelDetailInfo(POIDetailInfo):
+    """酒店详情信息类（兼容性别名）"""
+    hotel_name: str = Field(..., alias="name")
+    rec_reason: str = Field(..., alias="rec_reason")
+    
+    def __init__(self, **data):
+        # 创建字段映射的副本
+        mapped_data = data.copy()
+        
+        # 转换字段名以匹配基础类的字段名
+        if 'hotel_name' in mapped_data:
+            mapped_data['name'] = mapped_data.pop('hotel_name')
+        if 'rec_reason' in mapped_data:
+            mapped_data['rec_reason'] = mapped_data.pop('rec_reason')
+        
+        # 确保设置正确的POI类型
+        mapped_data['poi_type'] = POIDetailType.HOTEL
+        super().__init__(**mapped_data)
 
 #创建酒店推荐输入的数据
 class CreateHotelRequest(BaseModel):
@@ -198,17 +183,6 @@ class HotelNameAndRecReason(BaseModel):
     rec_reason: str
     POIId: str
     description: Optional[str] = None
-
-
-class HotelDetailInfo(BaseModel):
-    hotel_name: str
-    rec_reason: str
-    POIId:str
-    description: str
-    address:str
-    photos:Optional[List[Dict]] #每个dict里有url和title
-    rating:Optional[str] 
-    cost:Optional[float]
 
 #创建交通方式推荐输入的数据
 class CreateTrafficRequest(BaseModel):
@@ -380,6 +354,84 @@ class CreateItineraryRequest(BaseModel):
 
 #创建行程表推荐输出的数据
 #Trip类型
+
+class TicketInfo(BaseModel):
+    """票务信息"""
+    price: float
+    url: Optional[str] = None
+    description: Optional[str] = None
+
+
+class TripItem(BaseModel):
+    """所有行程项的基类"""
+    id: str
+    start_time: time
+    end_time: time
+  
+
+    class Config:
+        use_enum_values = True
+        json_schema_extra = {
+            "example": {
+                "id": "item_1",
+                "start_time": "09:00",
+                "end_time": "12:00",
+                "description": "行程描述",
+                "notes": "注意保暖",
+                "cost": 100
+            }
+        }
+
+
+class Activity(TripItem):
+    """游玩活动模型"""
+    type: str = Field(default="activity", frozen=True)
+    poi_details:POIDetailInfo
+
+
+
+class Transportation(TripItem):
+    """小型交通模型（短途、市内交通）"""
+    type: str = Field(default="transportation", frozen=True)
+    description: Optional[str] = None
+    notes: Optional[str] = None
+    cost: Optional[float] = None
+    mode: TransportationMode
+    origin: Location
+    destination: Location
+    route_points: Optional[List[Location]] = None
+    ticket_info: Optional[TicketInfo] = None
+
+
+class LargeTransportation(BaseModel):
+    """大型交通模型（长途、跨城市交通）"""
+    type: str = Field(default="large_transportation", frozen=True)
+    description: Optional[str] = None
+    traffic_details: TrafficDetails = Field(..., description="具体的交通方式详情（飞机/火车/自行安排）")
+
+
+# 使用 Union 来定义一个项目可以是 Activity、Transportation 或 LargeTransportation
+DayActivity = Union[Activity, Transportation, LargeTransportation]
+
+class Day(BaseModel):
+    """每日行程模型"""
+    date: date
+    day_of_week: str
+    day_index: int
+    total_cost: Optional[float] = None
+    activities: List[DayActivity] = []
+
+class Trip(BaseModel):
+    """整个行程模型"""
+    user_id: str
+    trip_id: str
+    trip_name: str
+    origin: str
+    destination: str
+    start_date: date
+    end_date: date
+    days: List[Day] = []
+
 
 #扫描所需商品和支付链接的输出数据
 class Goods(BaseModel):
