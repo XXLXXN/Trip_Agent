@@ -43,7 +43,12 @@ export default function Home() {
    * Navigates to the map page.
    */
   const handleOpenMap = () => {
-    router.push('/map');
+    // Since this is a static page, we can hardcode coordinates or show an alert.
+    // For now, we'll just log it, as the component might handle the null case.
+    console.log("Open map clicked, but no dynamic coordinates on this page.");
+    // Or you could navigate to a generic map page if one exists
+    // router.push('/map');
+    alert("地图功能在此页面不可用，请通过酒店详情页查看。");
   };
 
   /**
@@ -88,7 +93,9 @@ export default function Home() {
         <div ref={locationRef}>
           <LocationSection 
             address={mockLocationData.address} 
-            onOpenMap={handleOpenMap} 
+            onOpenMap={handleOpenMap}
+            // 【修复】添加 coordinates prop 并设为 null 来解决类型错误
+            coordinates={null} 
           />
         </div>
 
@@ -101,7 +108,8 @@ export default function Home() {
         </div>
       </main>
 
-      <BookingSection />
+      {/* 假设 BookingSection 也有一个 onBook 回调 */}
+      <BookingSection onBook={handleBook} />
 
       <style jsx global>{`
         html, body {

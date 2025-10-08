@@ -69,6 +69,7 @@ export default function Home() {
           <LocationSection
             address={mockLocationData.address}
             onOpenMap={handleOpenMap}
+            coordinates={null} 
           />
         </div>
 
