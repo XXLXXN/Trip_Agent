@@ -13,6 +13,42 @@
       "total_cost": 0.0,
       "activities": [
         {
+          "id": "transport_0",
+          "type": "large_transportation",
+          "start_time": "08:00",
+          "end_time": "10:20",
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "MU5101",
+            "airlineCompany": "东方航空",
+            "fromAirportName": "上海浦东",
+            "toAirportName": "北京首都",
+            "fromDateTime": "2025-03-15 08:00:00",
+            "toDateTime": "2025-03-15 10:20:00",
+            "flyDuration": "02:20",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1250
+                }
+              },
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1500
+                }
+              },
+              {
+                "cabinName": "公务舱",
+                "cabinPrice": {
+                  "adultSalePrice": 3500
+                }
+              }
+            ]
+          }
+        },
+        {
           "id": "activity_1",
           "start_time": "10:30:00",
           "end_time": "11:00:00",
@@ -1083,6 +1119,42 @@
             "description": "北京首都国际机场是北京的主要机场之一",
             "address": "北京市顺义区首都机场路",
             "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transport_10",
+          "type": "large_transportation",
+          "start_time": "18:00",
+          "end_time": "20:25",
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "CA1502",
+            "airlineCompany": "中国国航",
+            "fromAirportName": "北京首都",
+            "toAirportName": "上海虹桥",
+            "fromDateTime": "2025-03-16 18:00:00",
+            "toDateTime": "2025-03-16 20:25:00",
+            "flyDuration": "02:25",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1380
+                }
+              },
+              {
+                "cabinName": "公务舱",
+                "cabinPrice": {
+                  "adultSalePrice": 3800
+                }
+              },
+              {
+                "cabinName": "头等舱",
+                "cabinPrice": {
+                  "adultSalePrice": 5000
+                }
+              }
+            ]
           }
         }
       ]
