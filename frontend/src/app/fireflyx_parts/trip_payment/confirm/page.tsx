@@ -71,6 +71,7 @@ export default function PaymentConfirm() {
         }
         // 大型交通费用：large_transportation + 从第一个adultSalePrice获取价格
         else if (activity.type === "large_transportation" && activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice) {
+          // 这里是安全的，因为 if 条件已经检查过
           total += activity.traffic_details.cabins[0].cabinPrice.adultSalePrice;
         }
         // 票务费用：activity + 非hotel
@@ -249,7 +250,10 @@ export default function PaymentConfirm() {
                 // 大型交通费用：large_transportation + 从第一个adultSalePrice获取价格
                 totalTransportCost += day.activities
                   .filter(activity => activity.type === "large_transportation" && activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice)
-                  .reduce((activityTotal, activity) => activityTotal + (activity.traffic_details.cabins[0].cabinPrice.adultSalePrice || 0), 0);
+                  // --- 修改开始 ---
+                  // 在 reduce 中也使用可选链来保证类型安全
+                  .reduce((activityTotal, activity) => activityTotal + (activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice || 0), 0);
+                // --- 修改结束 ---
                 
                 return dayTotal + totalTransportCost;
               }, 0);
@@ -277,8 +281,15 @@ export default function PaymentConfirm() {
                       day.activities
                         .filter(activity => activity.type === "large_transportation" && activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice)
                         .map(activity => {
+                          // --- 修改开始 ---
+                          // 同样地，在这里安全地访问属性
                           const trafficDetails = activity.traffic_details;
-                          const price = trafficDetails.cabins[0].cabinPrice.adultSalePrice;
+                          // 增加保护，如果 price 不存在则不渲染此项
+                          const price = trafficDetails?.cabins?.[0]?.cabinPrice?.adultSalePrice;
+                          if (!trafficDetails || price === undefined) {
+                            return null;
+                          }
+                          
                           const transportType = trafficDetails.traffic_type === "flight" ? "飞机" : 
                                                trafficDetails.traffic_type === "train" ? "火车" : "交通";
                           const route = trafficDetails.traffic_type === "flight" ? 
@@ -297,6 +308,7 @@ export default function PaymentConfirm() {
                               type="expense"
                             />
                           );
+                          // --- 修改结束 ---
                         })
                     )}
                   </TransactionGroup>
