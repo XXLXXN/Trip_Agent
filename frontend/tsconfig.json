@@ -20,7 +20,9 @@
     ],
     "paths": {
       "@/*": ["./src/app/*"]
-    }
+    },
+    // --- 在这里添加下面的 "types" 数组 ---
+    "types": ["node", "@amap/amap-jsapi-types"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

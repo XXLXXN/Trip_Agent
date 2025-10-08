@@ -63,6 +63,7 @@
     "zod": "3.25.67"
   },
   "devDependencies": {
+    "@amap/amap-jsapi-types": "^0.0.15",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^19",
