@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TripPlanProvider } from "./context/TripPlanContext";
+import { AuthProvider } from "./context/AuthContext";
+import AuthGuard from "./components/AuthGuard";
 import TransitionProvider from "./TransitionProvider";
 
 const geistSans = Geist({
@@ -42,9 +44,13 @@ export default function RootLayout({
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <TripPlanProvider>
-          <TransitionProvider>{children}</TransitionProvider>
-        </TripPlanProvider>
+        <AuthProvider>
+          <AuthGuard>
+            <TripPlanProvider>
+              <TransitionProvider>{children}</TransitionProvider>
+            </TripPlanProvider>
+          </AuthGuard>
+        </AuthProvider>
       </body>
     </html>
   );

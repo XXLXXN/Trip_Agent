@@ -1,9 +1,24 @@
 "use client";
 import React from "react";
 import BottomNav from "../components/BottomNav";
-import Link from "next/link"
+import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
+import { Button } from "@/components/ui/button";
 
 const ProfilePage: React.FC = () => {
+  const { user, logout } = useAuth();
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">加载中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white pb-20 font-inter">
       {/* 顶部状态栏和导航栏 */}
@@ -44,8 +59,18 @@ const ProfilePage: React.FC = () => {
             {/* 圆形虚线边框 */}
             <div className="w-24 h-24 rounded-full border-2 border-dashed border-blue-100 flex items-center justify-center">
               {/* 头像 */}
-              <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center">
-                <span className="text-2xl font-semibold text-gray-600">星</span>
+              <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.username}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-2xl font-semibold text-gray-600">
+                    {user.username.charAt(0).toUpperCase()}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -86,9 +111,9 @@ const ProfilePage: React.FC = () => {
           {/* 用户信息 */}
           <div className="text-center">
             <h2 className="text-[18px] font-semibold text-[#1B1446] mb-1">
-              星韦沪
+              {user.username}
             </h2>
-            <p className="text-[12px] text-gray-500">pamungkas17@gmail.com</p>
+            <p className="text-[12px] text-gray-500">{user.email}</p>
           </div>
         </div>
       </div>
@@ -186,7 +211,10 @@ const ProfilePage: React.FC = () => {
         </div>
 
         {/* 登出账户菜单项 */}
-        <div className="flex items-center justify-between py-4 px-3 bg-white rounded-xl border border-gray-100">
+        <button 
+          onClick={logout}
+          className="w-full flex items-center justify-between py-4 px-3 bg-white rounded-xl border border-gray-100 hover:bg-red-50 transition-colors"
+        >
           <span className="text-sm font-semibold text-red-500">登出账户</span>
           <svg
             width="20"
@@ -200,7 +228,7 @@ const ProfilePage: React.FC = () => {
               fill="#0768FD"
             />
           </svg>
-        </div>
+        </button>
       </div>
 
       {/* 底部导航栏 */}

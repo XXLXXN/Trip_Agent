@@ -51,21 +51,30 @@ export default function TravelPlanningPage() {
   const [endDate, setEndDate] = useState("2025.9.15");
   const [dateError, setDateError] = useState<string | null>(null);
   const [tempSelectedDate, setTempSelectedDate] = useState<Date | undefined>(undefined);
+  const [tempStartDate, setTempStartDate] = useState<Date | undefined>(undefined);
+  const [tempEndDate, setTempEndDate] = useState<Date | undefined>(undefined);
+  const [currentDisplayMonth, setCurrentDisplayMonth] = useState<Date>(new Date());
+  const [showYearDropdown, setShowYearDropdown] = useState(false);
 
-  // 打开日期卡片时禁用页面滚动，关闭时恢复
+  // 点击外部关闭年份下拉菜单
   useEffect(() => {
-    if (showDateModal) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = originalOverflow;
-      };
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showYearDropdown && !target.closest('[data-year-dropdown]')) {
+        setShowYearDropdown(false);
+      }
+    };
+
+    if (showYearDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [showDateModal]);
+  }, [showYearDropdown]);
 
   const [adults, setAdults] = useState(2);
   const [elderly, setElderly] = useState(0);
   const [children, setChildren] = useState(1);
+  const [students, setStudents] = useState(0);
   const [additionalRequirements, setAdditionalRequirements] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -179,8 +188,10 @@ export default function TravelPlanningPage() {
   const handleDateEdit = (field: "startDate" | "endDate") => {
     setEditingField(field);
     // 预选中当前值
-    const current = field === "startDate" ? startDate : endDate;
-    setTempSelectedDate(parseDateString(current));
+    const start = parseDateString(startDate);
+    const end = parseDateString(endDate);
+    setTempStartDate(start);
+    setTempEndDate(end);
     setDateError(null);
     setShowDateModal(true);
   };
@@ -196,20 +207,15 @@ export default function TravelPlanningPage() {
   };
 
   const handleDateSave = () => {
-    if (!tempSelectedDate) return;
-    const formatted = formatDate(tempSelectedDate);
-    if (editingField === "startDate") {
-      setStartDate(formatted);
-      // 新规则：返程日期不能早于启程日期 => 若返程 < 启程，则将返程对齐为启程
-      const end = parseDateString(endDate);
-      if (end && end.getTime() < tempSelectedDate.getTime()) {
-        setEndDate(formatted);
-      }
-    } else if (editingField === "endDate") {
-      setEndDate(formatted);
-    }
+    if (!tempStartDate || !tempEndDate) return;
+    const startFormatted = formatDate(tempStartDate);
+    const endFormatted = formatDate(tempEndDate);
+    
+    setStartDate(startFormatted);
+    setEndDate(endFormatted);
     setShowDateModal(false);
-    setEditingField(null);
+    setTempStartDate(undefined);
+    setTempEndDate(undefined);
   };
 
   function parseDateString(input: string): Date | undefined {
@@ -267,6 +273,7 @@ export default function TravelPlanningPage() {
     if (adults > 0) parts.push(`${adults}成人`);
     if (elderly > 0) parts.push(`${elderly}老人`);
     if (children > 0) parts.push(`${children}儿童`);
+    if (students > 0) parts.push(`${students}学生`);
     return parts.join("，");
   };
 
@@ -634,15 +641,18 @@ export default function TravelPlanningPage() {
               {/* Travel Style */}
               <div className="space-y-3">
                 <h3 className="font-medium text-[#000000] ml-2">旅行风格</h3>
-                <div className="flex gap-3">
-                  {["文艺", "美食", "自然"].map((style) => (
+                <div className="grid grid-cols-5 gap-3">
+                  {[
+                    "文艺", "美食", "自然", "历史", "冒险", "休闲", 
+                    "购物", "摄影", "运动", "文化", "浪漫", "家庭"
+                  ].map((style) => (
                     <Button
                       key={style}
                       variant="outline"
-                      className={`px-6 py-2 rounded-2xl ${
+                      className={`px-3 py-2 rounded-2xl text-sm ${
                         selectedStyles.includes(style)
                           ? "bg-[#0768fd] text-white border-[#0768fd] hover:bg-[#074ee8]"
-                          : "bg-white border-[#dddddd] text-[#000000]"
+                          : "bg-white border-[#dddddd] text-[#000000] hover:bg-gray-50"
                       }`}
                       onClick={() => toggleStyle(style)}
                     >
@@ -762,105 +772,218 @@ export default function TravelPlanningPage() {
             />
             <motion.div
               key="date-sheet"
-              className="fixed left-0 right-0 bottom-0 z-50"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 28 }}
             >
-              <div className="bg-white rounded-t-2xl p-3 pb-4 shadow-2xl max-w-sm w-full mx-auto h-[100vh]" style={{ paddingBottom: "6px" }}>
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-base font-medium text-[#111111]">
-                    {editingField === "startDate" ? "选择启程日期" : "选择返程日期"}
-                  </h3>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setShowDateModal(false)}
-                  >
-                    <X className="h-5 w-5 text-[#808080]" />
-                  </Button>
+              <motion.div
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col"
+                style={{ 
+                  height: '600px',
+                  maxHeight: '90vh'
+                }}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 260, damping: 28 }}
+              >
+                {/* 头部 */}
+                <div className="px-6 pt-6 pb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-xl font-bold text-gray-900">选择日期</h2>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="w-8 h-8 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                      onClick={() => setShowDateModal(false)}
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    {tempStartDate && tempEndDate 
+                      ? `${formatDate(tempStartDate)} - ${formatDate(tempEndDate)}`
+                      : tempStartDate 
+                      ? formatDate(tempStartDate)
+                      : startDate && endDate 
+                      ? `${startDate} - ${endDate}`
+                      : '请选择启程和返程日期'
+                    }
+                  </p>
                 </div>
 
-                <div className="bg-[#f6f8fb] rounded-xl p-2 flex justify-center">
-                  <DayPicker
-                    mode="single"
-                    selected={tempSelectedDate}
-                    onSelect={(d) => {
-                      setDateError(null);
-                      if (!d) {
-                        setTempSelectedDate(undefined);
-                        return;
+                {/* 月份导航 */}
+                <div className="flex items-center justify-center px-6 pb-4">
+                  <button 
+                    className="text-blue-600 text-lg font-medium"
+                    onClick={() => {
+                      const newDate = new Date(currentDisplayMonth);
+                      newDate.setMonth(newDate.getMonth() - 1);
+                      setCurrentDisplayMonth(newDate);
+                    }}
+                  >
+                    ‹
+                  </button>
+                  <div className="flex items-center mx-4 relative">
+                    <span className="text-lg font-medium text-gray-900">
+                      {`${currentDisplayMonth.getMonth() + 1}月`}
+                    </span>
+                    <div className="relative ml-2" data-year-dropdown>
+                      <button
+                        className="flex items-center text-lg font-medium text-gray-900 hover:text-blue-600"
+                        onClick={() => setShowYearDropdown(!showYearDropdown)}
+                      >
+                        {currentDisplayMonth.getFullYear()}
+                        <svg className="w-4 h-4 ml-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      
+                      {/* 年份下拉菜单 */}
+                      {showYearDropdown && (
+                        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                          {(() => {
+                            const currentYear = new Date().getFullYear();
+                            const years = [];
+                            for (let year = currentYear - 5; year <= currentYear + 10; year++) {
+                              years.push(year);
+                            }
+                            return years.map((year) => (
+                              <button
+                                key={year}
+                                className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 ${
+                                  year === currentDisplayMonth.getFullYear() ? 'bg-blue-100 text-blue-600' : 'text-gray-900'
+                                }`}
+                                onClick={() => {
+                                  const newDate = new Date(currentDisplayMonth);
+                                  newDate.setFullYear(year);
+                                  setCurrentDisplayMonth(newDate);
+                                  setShowYearDropdown(false);
+                                }}
+                              >
+                                {year}
+                              </button>
+                            ));
+                          })()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button 
+                    className="text-blue-600 text-lg font-medium"
+                    onClick={() => {
+                      const newDate = new Date(currentDisplayMonth);
+                      newDate.setMonth(newDate.getMonth() + 1);
+                      setCurrentDisplayMonth(newDate);
+                    }}
+                  >
+                    ›
+                  </button>
+                </div>
+
+                {/* 星期标题 */}
+                <div className="px-6 pb-2">
+                  <div className="grid grid-cols-7 gap-1">
+                    {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
+                      <div key={day} className="text-center text-xs text-gray-500 font-medium py-2">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 日历网格 */}
+                <div className="px-6 pb-4 flex-1 overflow-y-auto">
+                  <div className="grid grid-cols-7 gap-1">
+                    {(() => {
+                      const year = currentDisplayMonth.getFullYear();
+                      const month = currentDisplayMonth.getMonth();
+                      const firstDay = new Date(year, month, 1);
+                      const startDate = new Date(firstDay);
+                      startDate.setDate(startDate.getDate() - firstDay.getDay() + 1);
+                      
+                      const days = [];
+                      for (let i = 0; i < 35; i++) {
+                        const date = new Date(startDate);
+                        date.setDate(startDate.getDate() + i);
+                        const isCurrentMonth = date.getMonth() === month;
+                        const isToday = date.toDateString() === new Date().toDateString();
+                        const isStartDate = tempStartDate && date.toDateString() === tempStartDate.toDateString();
+                        const isEndDate = tempEndDate && date.toDateString() === tempEndDate.toDateString();
+                        const isInRange = tempStartDate && tempEndDate && 
+                          date.getTime() >= tempStartDate.getTime() && 
+                          date.getTime() <= tempEndDate.getTime();
+                        
+                        days.push(
+                          <button
+                            key={i}
+                            className={`
+                              w-10 h-10 rounded-lg text-sm font-medium transition-colors relative
+                              ${!isCurrentMonth ? 'text-gray-300' : 'text-gray-900 hover:bg-gray-100'}
+                              ${isToday ? 'border border-blue-600' : ''}
+                              ${isStartDate || isEndDate ? 'bg-blue-600 text-white' : ''}
+                              ${isInRange && !isStartDate && !isEndDate ? 'bg-blue-100 text-blue-600' : ''}
+                            `}
+                            onClick={() => {
+                              setDateError(null);
+                              const picked = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                              
+                              if (picked.getTime() < today.getTime()) {
+                                setDateError("日期不能早于今天");
+                                return;
+                              }
+                              
+                              if (!tempStartDate) {
+                                // 选择启程日期
+                                setTempStartDate(picked);
+                                setTempEndDate(undefined);
+                              } else if (!tempEndDate) {
+                                // 选择返程日期
+                                if (picked.getTime() < tempStartDate.getTime()) {
+                                  // 如果选择的日期早于启程日期，交换它们
+                                  setTempEndDate(tempStartDate);
+                                  setTempStartDate(picked);
+                                } else {
+                                  setTempEndDate(picked);
+                                }
+                              } else {
+                                // 重新选择启程日期
+                                setTempStartDate(picked);
+                                setTempEndDate(undefined);
+                              }
+                            }}
+                          >
+                            {date.getDate()}
+                            {isInRange && !isStartDate && !isEndDate && (
+                              <div className="absolute inset-0 bg-blue-100 rounded-lg -z-10"></div>
+                            )}
+                          </button>
+                        );
                       }
-                      // 归零时分
-                      const picked = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-                      if (editingField === "startDate") {
-                        // 规则：启程日期不能早于今天 => picked >= today
-                        if (picked.getTime() < today.getTime()) {
-                          setDateError("启程日期不能早于今天");
-                          setTempSelectedDate(undefined);
-                          return;
-                        }
-                      } else if (editingField === "endDate") {
-                        // 规则：返程日期不能早于启程日期 => end >= start
-                        if (startDateObj && picked.getTime() < startDateObj.getTime()) {
-                          setDateError("返程日期不能早于启程日期");
-                          setTempSelectedDate(undefined);
-                          return;
-                        }
-                      }
-                      setTempSelectedDate(picked);
-                    }}
-                    // 禁用不合法日期
-                    disabled={
-                      editingField === "startDate"
-                        ? [{ before: today }]
-                        : startDateObj
-                        ? [{ before: startDateObj }]
-                        : undefined
-                    }
-                    locale={zhCN}
-                    styles={{
-                      root: { fontSize: 12.5, color: "#111111" },
-                      caption_label: { fontWeight: 600, color: "#111111" },
-                      head_cell: { color: "#333333", fontWeight: 500 },
-                      day: { color: "#111111", width: 30, height: 30, margin: 2, padding: 0 },
-                      day_selected: { backgroundColor: "#0768fd", color: "#ffffff" },
-                      day_today: { border: "1px solid #0768fd" },
-                      nav_button: { color: "#111111" },
-                      table: { margin: 0 },
-                      months: { gap: 0, justifyContent: "center", display: "flex" },
-                      month: { margin: "0 auto" },
-                    }}
-                    modifiersClassNames={{
-                      selected: "rounded-full ring-2 ring-[#0768fd] ring-offset-0",
-                      today: "rounded-full",
-                    }}
-                    weekStartsOn={1}
-                  />
+                      return days;
+                    })()}
+                  </div>
                 </div>
 
                 {dateError && (
-                  <p className="text-red-600 text-xs mt-2">{dateError}</p>
+                  <div className="px-6 pb-2">
+                    <p className="text-red-600 text-sm">{dateError}</p>
+                  </div>
                 )}
 
-                <div className="flex gap-2 mt-2">
+                {/* 确认按钮 */}
+                <div className="px-6 pb-6">
                   <Button
-                    variant="outline"
-                    className="flex-1 bg-transparent border-[#dddddd] text-[#111111]"
-                    onClick={() => setShowDateModal(false)}
-                  >
-                    取消
-                  </Button>
-                  <Button
-                    className="flex-1 bg-[#0768fd] hover:bg-[#074ee8] text-white"
-                    disabled={!tempSelectedDate}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg"
+                    disabled={!tempStartDate || !tempEndDate}
                     onClick={handleDateSave}
                   >
-                    确定
+                    确认日期
                   </Button>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </>
         )}
@@ -969,7 +1092,38 @@ export default function TravelPlanningPage() {
                   </Button>
                 </div>
               </div>
+
+              {/* Students */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-[#000000]">学生</p>
+                  <p className="text-sm text-[#808080]">13-18岁</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="w-8 h-8 bg-transparent border-[#dddddd] text-[#000000]"
+                    onClick={() => setStudents(Math.max(0, students - 1))}
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <span className="w-8 text-center font-medium text-[#000000]">
+                    {students}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="w-8 h-8 bg-transparent border-[#dddddd] text-[#000000]"
+                    onClick={() => setStudents(students + 1)}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
+
+            
 
             <div className="flex gap-2 mt-6">
               <Button
