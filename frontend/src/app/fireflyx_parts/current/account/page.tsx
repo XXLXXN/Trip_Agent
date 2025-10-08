@@ -165,6 +165,10 @@ export default function AccountPage() {
           if (activity.type === "transportation" && (activity.mode === "plane" || activity.mode === "train") && activity.cost) {
             total += activity.cost;
           }
+          // 大型交通费用：large_transportation + 从第一个adultSalePrice获取价格
+          else if (activity.type === "large_transportation" && activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice) {
+            total += activity.traffic_details.cabins[0].cabinPrice.adultSalePrice;
+          }
           // 票务费用：activity + 非hotel
           else if (activity.type === "activity" && activity.mode !== "hotel" && activity.cost) {
             total += activity.cost;
@@ -419,14 +423,24 @@ export default function AccountPage() {
               return null;
             })()}
 
-            {/* 交通 Section - transportation(plane/train) + 手动记账(transportation) */}
+            {/* 交通 Section - transportation(plane/train) + large_transportation + 手动记账(transportation) */}
             {(() => {
               // 计算行程数据中的交通费用
-              const tripTransportCost = tripData.days.reduce((dayTotal, day) => 
-                dayTotal + day.activities
+              const tripTransportCost = tripData.days.reduce((dayTotal, day) => {
+                let transportCost = 0;
+                
+                // 小型交通费用：transportation + plane/train
+                transportCost += day.activities
                   .filter(activity => activity.type === "transportation" && (activity.mode === "plane" || activity.mode === "train") && activity.cost)
-                  .reduce((activityTotal, activity) => activityTotal + (activity.cost || 0), 0), 0
-              );
+                  .reduce((activityTotal, activity) => activityTotal + (activity.cost || 0), 0);
+                
+                // 大型交通费用：large_transportation + 从第一个adultSalePrice获取价格
+                transportCost += day.activities
+                  .filter(activity => activity.type === "large_transportation" && activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice)
+                  .reduce((activityTotal, activity) => activityTotal + (activity.traffic_details.cabins[0].cabinPrice.adultSalePrice || 0), 0);
+                
+                return dayTotal + transportCost;
+              }, 0);
               
               // 计算手动记账中的交通费用
               const accountingTransportCost = accountingRecords
@@ -438,7 +452,7 @@ export default function AccountPage() {
               if (totalTransportCost > 0) {
                 return (
                   <TransactionGroup title="交通" total={`¥${totalTransportCost.toFixed(1)}`}>
-                    {/* 行程数据中的交通 */}
+                    {/* 行程数据中的小型交通 */}
                     {tripData.days.map(day => 
                       day.activities
                         .filter(activity => activity.type === "transportation" && (activity.mode === "plane" || activity.mode === "train") && activity.cost && activity.cost > 0)
@@ -452,6 +466,33 @@ export default function AccountPage() {
                             type="expense"
                           />
                         ))
+                    )}
+                    {/* 行程数据中的大型交通 */}
+                    {tripData.days.map(day => 
+                      day.activities
+                        .filter(activity => activity.type === "large_transportation" && activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice)
+                        .map(activity => {
+                          const trafficDetails = activity.traffic_details;
+                          const price = trafficDetails.cabins[0].cabinPrice.adultSalePrice;
+                          const transportType = trafficDetails.traffic_type === "flight" ? "飞机" : 
+                                               trafficDetails.traffic_type === "train" ? "火车" : "交通";
+                          const route = trafficDetails.traffic_type === "flight" ? 
+                                       `${trafficDetails.fromAirportName} → ${trafficDetails.toAirportName}` :
+                                       trafficDetails.traffic_type === "train" ?
+                                       `${trafficDetails.fromStation} → ${trafficDetails.toStation}` :
+                                       "交通路线";
+                          
+                          return (
+                            <TransactionItem
+                              key={activity.id}
+                              title={route}
+                              subtitle={transportType}
+                              amount={`¥${price.toFixed(1)}`}
+                              time={activity.start_time}
+                              type="expense"
+                            />
+                          );
+                        })
                     )}
                     {/* 手动记账中的交通 */}
                     {accountingRecords
