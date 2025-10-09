@@ -1,8 +1,8 @@
 export const nearbyPlaces = [
   {
-    image: "/HomePage//Now_Holder.jpg",
-    title: "Hotel Alana",
-    location: "SLEMAN, DIY",
+    image: "/HomePage//PVG.png",
+    title: "浦东国际机场",
+    location: "浦东新区祝桥镇",
     rating: 4.5,
     price: "¥125/晚",
   },
