@@ -34,7 +34,7 @@ export default function SelectionHeader({
           <h1 className="header-title">酒店选择</h1>
         </div>
         <button className="skip-button" onClick={onSkipClick}>
-          一件规划
+          一键规划
         </button>
       </div>
       <style jsx>{`
