@@ -3,11 +3,46 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader, PageContainer, ScrollableContent } from "../fireflyx_parts/components";
+import { useTripData } from "../fireflyx_parts/hooks/useTripData";
 
 export default function PaymentPage() {
   const router = useRouter();
+  const { tripData, loading, error } = useTripData();
   const [selectedPayment, setSelectedPayment] = useState("");
   const [timeLeft, setTimeLeft] = useState(600);
+
+  // 计算总费用 - 与confirm页面相同的逻辑
+  const calculateTotalCost = () => {
+    if (!tripData) return 0;
+    let total = 0;
+    
+    tripData.days.forEach(day => {
+      day.activities.forEach(activity => {
+        // 交通费用：transportation + plane/train
+        if (activity.type === "transportation" && (activity.mode === "plane" || activity.mode === "train") && activity.cost) {
+          total += activity.cost;
+        }
+        // 大型交通费用：large_transportation + 从第一个adultSalePrice获取价格
+        else if (activity.type === "large_transportation" && activity.traffic_details?.cabins?.[0]?.cabinPrice?.adultSalePrice) {
+          total += activity.traffic_details.cabins[0].cabinPrice.adultSalePrice;
+        }
+        // 票务费用：activity + 非hotel
+        else if (activity.type === "activity" && activity.mode !== "hotel" && activity.cost) {
+          total += activity.cost;
+        }
+        // 住宿费用：activity + hotel
+        else if (activity.type === "activity" && activity.mode === "hotel" && activity.cost) {
+          total += activity.cost;
+        }
+        // 美食费用：food
+        else if (activity.type === "food" && activity.cost) {
+          total += activity.cost;
+        }
+      });
+    });
+    
+    return total;
+  };
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -36,6 +71,34 @@ export default function PaymentPage() {
   const handleAddCard = () => alert("添加银行卡");
   const handleBack = () => router.back();
 
+  // 如果数据还在加载，显示加载状态
+  if (loading) {
+    return (
+      <PageContainer>
+        <PageHeader title="选择支付方式" />
+        <ScrollableContent className="flex items-center justify-center">
+          <div className="text-[#1B1446] text-[16px]" style={{ fontFamily: 'Inter' }}>
+            加载中...
+          </div>
+        </ScrollableContent>
+      </PageContainer>
+    );
+  }
+
+  // 如果数据加载出错，显示错误状态
+  if (error) {
+    return (
+      <PageContainer>
+        <PageHeader title="选择支付方式" />
+        <ScrollableContent className="flex items-center justify-center">
+          <div className="text-[#FF4444] text-[16px]" style={{ fontFamily: 'Inter' }}>
+            加载失败，请重试
+          </div>
+        </ScrollableContent>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <PageHeader title="选择支付方式" />
@@ -44,7 +107,7 @@ export default function PaymentPage() {
         {/* 金额部分 */}
         <div className="text-center py-8">
           <div className="text-[#1B1446] font-bold text-[32px]" style={{ fontFamily: 'Inter' }}>
-            ¥2395
+            ¥{calculateTotalCost().toFixed(0)}
           </div>
         </div>
 
