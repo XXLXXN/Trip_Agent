@@ -1,37 +1,37 @@
-// src/components/booking/FlightDetailsCard.tsx
+// src/components/booking/TrainDetailsCard.tsx
 import {
   Luggage,
   Wifi,
   Utensils,
-  Plane,
+  Train,
   Calendar,
   ChevronDown,
 } from "lucide-react";
-import type { FlightDetails } from "../../mockData/bookingData";
+import type { TrainDetails } from "../../mockData/trainBookingData";
 
 interface Props {
-  data: FlightDetails;
+  data: TrainDetails;
 }
 
-const FlightDetailsCard = ({ data }: Props) => (
+const TrainDetailsCard = ({ data }: Props) => (
   <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 bg-gray-200 rounded-md"></div>
         <div>
-          <p className="font-bold text-gray-800">{data.airline}</p>
+          <p className="font-bold text-gray-800">{data.trainType} {data.trainNumber}</p>
           <p className="text-xs text-gray-500">{data.date}</p>
         </div>
       </div>
       <div className="flex items-center gap-3 text-xs text-gray-600">
         <span className="flex items-center gap-1">
           <Luggage size={14} className="text-orange-400" />{" "}
-          {data.amenities.baggage}
+          {data.amenities.seatType}
         </span>
         {data.amenities.wifi && (
-        <span className="flex items-center gap-1">
-          <Wifi size={14} className="text-orange-400" /> 无线网络
-        </span>
+          <span className="flex items-center gap-1">
+            <Wifi size={14} className="text-orange-400" /> 无线网络
+          </span>
         )}
         {data.amenities.food && (
           <span className="flex items-center gap-1">
@@ -43,7 +43,7 @@ const FlightDetailsCard = ({ data }: Props) => (
 
     <div className="flex items-center justify-between mb-4">
       <div className="text-center">
-        <p className="text-xs text-gray-500">{data.departure.city}</p>
+        <p className="text-xs text-gray-500">{data.departure.station}</p>
         <p className="text-2xl font-bold text-gray-800">
           {data.departure.time}
         </p>
@@ -56,9 +56,9 @@ const FlightDetailsCard = ({ data }: Props) => (
           <div className="relative flex justify-center">
             <div className="bg-white px-2">
               <div className="bg-blue-100 rounded-full p-1">
-                <Plane
+                <Train
                   size={16}
-                  className="text-blue-500 transform -rotate-45"
+                  className="text-blue-500"
                 />
               </div>
             </div>
@@ -67,7 +67,7 @@ const FlightDetailsCard = ({ data }: Props) => (
         <p className="text-xs text-gray-500 mt-1">{data.duration}</p>
       </div>
       <div className="text-center">
-        <p className="text-xs text-gray-500">{data.arrival.city}</p>
+        <p className="text-xs text-gray-500">{data.arrival.station}</p>
         <p className="text-2xl font-bold text-gray-800">{data.arrival.time}</p>
       </div>
     </div>
@@ -75,10 +75,10 @@ const FlightDetailsCard = ({ data }: Props) => (
     <div className="border-t border-gray-100 pt-3 flex justify-between items-center text-sm text-gray-600">
       <div className="flex items-center gap-2">
         <Calendar size={16} />
-        <span>选择航班</span>
+        <span>选择车次</span>
       </div>
       <ChevronDown size={20} className="text-blue-500" />
     </div>
   </div>
 );
-export default FlightDetailsCard;
+export default TrainDetailsCard;

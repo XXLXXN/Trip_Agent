@@ -1,4 +1,4 @@
-// src/app/page.tsx
+// src/app/trainbooking/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,20 +6,20 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/navigation';
 
 // Data Imports
-import { flightData, passengerData as initialPassengerData, insuranceData, totalAmount, PassengerInfo } from '@/mockData/bookingData';
+import { trainData, passengerData as initialPassengerData, insuranceData, totalAmount, PassengerInfo } from '@/mockData/trainBookingData';
 
 // Component Imports
 import SectionHeader from '@/components/booking/SectionHeader';
-import FlightDetailsCard from '@/components/booking/FlightDetailsCard';
+import TrainDetailsCard from '@/components/booking/TrainDetailsCard';
 import PassengerInfoCard from '@/components/booking/PassengerInfoCard';
 import BaggageCard from '@/components/booking/BaggageCard';
 import InsuranceCard from '@/components/booking/InsuranceCard';
 import BookingFooter from '@/components/booking/BookingFooter';
 
 // Define a unique key for localStorage to avoid conflicts.
-const PASSENGER_STORAGE_KEY = 'passengerData';
+const PASSENGER_STORAGE_KEY = 'trainPassengerData';
 
-const BookingPage: NextPage = () => {
+const TrainBookingPage: NextPage = () => {
   const router = useRouter();
   
   // 1. Initialize state with default data imported from the file.
@@ -66,13 +66,13 @@ const BookingPage: NextPage = () => {
         <button onClick={() => router.back()}>
           <img src="/BackButton.svg" alt="后退图标" className="h-12 w-12" />
         </button>
-        <h1 className="ml-2 text-lg font-medium text-[#FFFFFF]">飞机预订</h1>
+        <h1 className="ml-2 text-lg font-medium text-[#FFFFFF]">火车预订</h1>
       </div>
 
       {/* 主内容区域 */}
       <div className="relative z-10 bg-slate-50 rounded-t-3xl -mt-4 flex-1">
         <main className="mx-auto w-full max-w-[375px] px-4 pt-6 pb-28">
-          <FlightDetailsCard data={flightData} />
+          <TrainDetailsCard data={trainData} />
           <SectionHeader title="乘客信息" />
           <PassengerInfoCard data={passenger} onSave={handlePassengerUpdate} />
           <SectionHeader title="行李" />
@@ -86,4 +86,4 @@ const BookingPage: NextPage = () => {
   );
 };
 
-export default BookingPage;
+export default TrainBookingPage;
