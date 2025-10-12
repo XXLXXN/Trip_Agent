@@ -7,6 +7,31 @@ import { useAccountingData } from "../../hooks/useAccountingData";
 import { PageHeader, PageContainer, ScrollableContent } from "../../components";
 import { getAutoClearConfig } from "../../config/accounting";
 
+// 时间格式化函数
+const formatTimeWithDate = (timeStr: string, dayDate: string) => {
+  // 如果时间字符串包含日期信息，直接使用
+  if (timeStr.includes('-') || timeStr.includes('/')) {
+    return timeStr;
+  }
+  
+  // 如果只是时间格式（如 "08:00" 或 "10:30:00"），需要结合日期
+  const timeOnly = timeStr.split(' ')[0]; // 处理 "10:30:00" 格式
+  return `${dayDate} ${timeOnly}`;
+};
+
+// 格式化ISO时间戳为年月日时分秒
+const formatISOTimestamp = (isoString: string) => {
+  const date = new Date(isoString);
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+};
+
 const CATEGORIES = [
   { id: 'tickets', name: '票务' },
   { id: 'accommodation', name: '住宿' },
@@ -240,7 +265,7 @@ export default function AccountPage() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -252,9 +277,9 @@ export default function AccountPage() {
                         <TransactionItem
                           key={record.id}
                           title={record.name}
-                          subtitle={record.description || new Date(record.timestamp).toLocaleString()}
+                          subtitle={record.description || formatISOTimestamp(record.timestamp)}
                           amount={`¥${record.amount.toFixed(1)}`}
-                          time={new Date(record.timestamp).toLocaleTimeString()}
+                          time={formatISOTimestamp(record.timestamp)}
                           type="expense"
                         />
                       ))}
@@ -293,7 +318,7 @@ export default function AccountPage() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -305,9 +330,9 @@ export default function AccountPage() {
                         <TransactionItem
                           key={record.id}
                           title={record.name}
-                          subtitle={record.description || new Date(record.timestamp).toLocaleString()}
+                          subtitle={record.description || formatISOTimestamp(record.timestamp)}
                           amount={`¥${record.amount.toFixed(1)}`}
-                          time={new Date(record.timestamp).toLocaleTimeString()}
+                          time={formatISOTimestamp(record.timestamp)}
                           type="expense"
                         />
                       ))}
@@ -346,7 +371,7 @@ export default function AccountPage() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -358,9 +383,9 @@ export default function AccountPage() {
                         <TransactionItem
                           key={record.id}
                           title={record.name}
-                          subtitle={record.description || new Date(record.timestamp).toLocaleString()}
+                          subtitle={record.description || formatISOTimestamp(record.timestamp)}
                           amount={`¥${record.amount.toFixed(1)}`}
-                          time={new Date(record.timestamp).toLocaleTimeString()}
+                          time={formatISOTimestamp(record.timestamp)}
                           type="expense"
                         />
                       ))}
@@ -399,7 +424,7 @@ export default function AccountPage() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -411,9 +436,9 @@ export default function AccountPage() {
                         <TransactionItem
                           key={record.id}
                           title={record.name}
-                          subtitle={record.description || new Date(record.timestamp).toLocaleString()}
+                          subtitle={record.description || formatISOTimestamp(record.timestamp)}
                           amount={`¥${record.amount.toFixed(1)}`}
-                          time={new Date(record.timestamp).toLocaleTimeString()}
+                          time={formatISOTimestamp(record.timestamp)}
                           type="expense"
                         />
                       ))}
@@ -465,7 +490,7 @@ export default function AccountPage() {
                             title={`${activity.origin?.name} → ${activity.destination?.name}`}
                             subtitle={`${activity.mode === 'plane' ? '飞机' : '火车'}`}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -498,7 +523,7 @@ export default function AccountPage() {
                               title={route}
                               subtitle={transportType}
                               amount={`¥${price.toFixed(1)}`}
-                              time={activity.start_time}
+                              time={formatTimeWithDate(activity.start_time, day.date)}
                               type="expense"
                             />
                           );
@@ -512,9 +537,9 @@ export default function AccountPage() {
                         <TransactionItem
                           key={record.id}
                           title={record.name}
-                          subtitle={record.description || new Date(record.timestamp).toLocaleString()}
+                          subtitle={record.description || formatISOTimestamp(record.timestamp)}
                           amount={`¥${record.amount.toFixed(1)}`}
-                          time={new Date(record.timestamp).toLocaleTimeString()}
+                          time={formatISOTimestamp(record.timestamp)}
                           type="expense"
                         />
                       ))}

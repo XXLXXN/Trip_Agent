@@ -6,6 +6,18 @@ import { useNavigation } from "../../../context/NavigationContext";
 import { PageHeader, PageContainer, ScrollableContent } from "../../components";
 import { useTripData } from "../../hooks/useTripData";
 
+// 时间格式化函数
+const formatTimeWithDate = (timeStr: string, dayDate: string) => {
+  // 如果时间字符串包含日期信息，直接使用
+  if (timeStr.includes('-') || timeStr.includes('/')) {
+    return timeStr;
+  }
+  
+  // 如果只是时间格式（如 "08:00" 或 "10:30:00"），需要结合日期
+  const timeOnly = timeStr.split(' ')[0]; // 处理 "10:30:00" 格式
+  return `${dayDate} ${timeOnly}`;
+};
+
 // 统一的交易记录组件
 const TransactionItem = ({ title, subtitle, amount, time, type }: {
   title: string;
@@ -135,7 +147,7 @@ export default function PaymentConfirm() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -166,7 +178,7 @@ export default function PaymentConfirm() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -197,7 +209,7 @@ export default function PaymentConfirm() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -228,7 +240,7 @@ export default function PaymentConfirm() {
                             title={activity.title || ""}
                             subtitle={activity.description || ""}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -273,7 +285,7 @@ export default function PaymentConfirm() {
                             title={`${activity.origin?.name} → ${activity.destination?.name}`}
                             subtitle={`${activity.mode === 'plane' ? '飞机' : '火车'}`}
                             amount={`¥${activity.cost?.toFixed(1)}`}
-                            time={activity.start_time}
+                            time={formatTimeWithDate(activity.start_time, day.date)}
                             type="expense"
                           />
                         ))
@@ -306,7 +318,7 @@ export default function PaymentConfirm() {
                               title={route}
                               subtitle={transportType}
                               amount={`¥${price.toFixed(1)}`}
-                              time={activity.start_time}
+                              time={formatTimeWithDate(activity.start_time, day.date)}
                               type="expense"
                             />
                           );
