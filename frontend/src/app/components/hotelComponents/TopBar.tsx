@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useNavigation } from '@/app/context/NavigationContext';
+import { useNavigation } from '../../context/NavigationContext';
 
 /**
  * Props for the TopBar component.
