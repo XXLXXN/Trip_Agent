@@ -2,17 +2,37 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useNavigation } from "../context/NavigationContext";
 
 const BottomNav: React.FC = () => {
   const pathname = usePathname();
+  const navigation = useNavigation();
   const isHome = pathname === "/";
   const isProfile = pathname?.startsWith("/profile") ?? false;
+
+  // 判断点击首页时是前进还是返回
+  const handleHomeClick = () => {
+    // 如果当前不在首页，返回首页应该是返回动画
+    if (!isHome) {
+      navigation.push("/", "backward");
+    }
+  };
+
+  // 点击 Profile 是前进
+  const handleProfileClick = () => {
+    if (!isProfile) {
+      navigation.push("/profile", "forward");
+    }
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-20 pt-4 px-2">
       <div className="flex justify-around items-center">
         {/* 首页 */}
-        <Link href="/" className="flex flex-col items-center justify-center">
+        <div 
+          className="flex flex-col items-center justify-center cursor-pointer"
+          onClick={handleHomeClick}
+        >
           {/* 使用蓝色表示当前选中状态 */}
           <svg
             width="25"
@@ -31,7 +51,7 @@ const BottomNav: React.FC = () => {
           <span className={`text-[12px] font-medium mt-1 ${isHome ? "text-blue-600" : "text-[#808080]"}`}>
             主页
           </span>
-        </Link>
+        </div>
 
         {/* 喜欢 */}
         <div className="flex flex-col items-center">
@@ -55,7 +75,10 @@ const BottomNav: React.FC = () => {
         </div>
 
         {/* 我的 */}
-        <Link href="/profile" className="flex flex-col items-center">
+        <div 
+          className="flex flex-col items-center cursor-pointer"
+          onClick={handleProfileClick}
+        >
           <svg
             width="25"
             height="24"
@@ -71,7 +94,7 @@ const BottomNav: React.FC = () => {
             </g>
           </svg>
           <span className={`text-[12px] mt-1 ${isProfile ? "text-blue-600" : "text-[#808080]"}`}>我的</span>
-        </Link>
+        </div>
       </div>
     </nav>
   );

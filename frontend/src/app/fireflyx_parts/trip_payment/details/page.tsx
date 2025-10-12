@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../../context/NavigationContext";
 import { PageHeader, PageContainer, ScrollableContent, ItineraryCard, FixedBottomBar, SpotCardForList } from "../../components";
 import { useTripData } from "../../hooks/useTripData";
 import { convertToItineraryData, getTransportOptions, formatTime, getFirstActivityTime, convertToSpotCardData } from "../../utils/dataConverter";
@@ -16,6 +17,7 @@ declare global {
 
 export default function PaymentDetails() {
   const router = useRouter();
+  const navigation = useNavigation();
   
   // 获取动态行程数据
   const { tripData, loading, error } = useTripData();
@@ -319,7 +321,7 @@ export default function PaymentDetails() {
               修改
             </button>
             <button 
-              onClick={() => router.push('/fireflyx_parts/trip_payment/confirm')} 
+              onClick={() => navigation.push('/fireflyx_parts/trip_payment/confirm', 'forward')} 
               className="flex-1 h-12 rounded-2xl bg-[#0768FD] text-white font-semibold text-[16px] whitespace-nowrap transition-colors hover:bg-[#0656D1]"
               style={{ fontFamily: 'Inter' }}
             >

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "../context/NavigationContext";
 import NearbyPlaceCard from "@/components/NearbyPlaceCard";
 import DestinationCard from "@/components/DestinationCard";
 import BottomNav from "@/components/BottomNav";
@@ -31,6 +32,7 @@ interface AddressData {
 }
 
 export default function Home() {
+  const navigation = useNavigation();
   const [mainLocation, setMainLocation] = useState("定位中...");
   const [currentLocation, setCurrentLocation] = useState("定位中...");
   const [latitude, setLatitude] = useState<number | null>(null);
@@ -324,24 +326,26 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <Link href="/fireflyx_parts/interactive">
-              <button className="bg-[#E4F1FF] backdrop-blur-lg rounded-full px-4 py-3 text-sm font-semibold flex items-center justify-center text-[#2065A9]">
-                联系客服
-              </button>
-            </Link>
+            <button 
+              className="bg-[#E4F1FF] backdrop-blur-lg rounded-full px-4 py-3 text-sm font-semibold flex items-center justify-center text-[#2065A9]"
+              onClick={() => navigation.push("/fireflyx_parts/interactive", "forward")}
+            >
+              联系客服
+            </button>
           </div>
         </div>
       </div>
       {/* 旅游规划提示 */}
       <section className="h-29 felx px-4">
-        <Link href="/planning">
-          <div className="bg-[url('/HomePage/TripPlan_Placeholder.jpg')] bg-cover rounded-xl h-full ">
-            <h3 className="text-base font-semibold text-[#1E1E1E] pt-4 pl-4 mb-1">
-              旅游规划
-            </h3>
-            <p className="text-xs text-[#8C8C8C] pl-4">点击开启美好旅程</p>
-          </div>
-        </Link>
+        <div 
+          className="bg-[url('/HomePage/TripPlan_Placeholder.jpg')] bg-cover rounded-xl h-full cursor-pointer"
+          onClick={() => navigation.push("/planning", "forward")}
+        >
+          <h3 className="text-base font-semibold text-[#1E1E1E] pt-4 pl-4 mb-1">
+            旅游规划
+          </h3>
+          <p className="text-xs text-[#8C8C8C] pl-4">点击开启美好旅程</p>
+        </div>
       </section>
       {/* 主要内容区域 */}
       <section className="h-116 flex flex-col gap-4">
@@ -402,13 +406,14 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <Link href="fireflyx_parts/current">
-            <div className="space-y-3">
-              {nearbyPlaces.map((place, index) => (
-                <NearbyPlaceCard key={index} {...place} />
-              ))}
-            </div>
-          </Link>
+          <div 
+            className="space-y-3 cursor-pointer"
+            onClick={() => navigation.push("/fireflyx_parts/current", "forward")}
+          >
+            {nearbyPlaces.map((place, index) => (
+              <NearbyPlaceCard key={index} {...place} />
+            ))}
+          </div>
         </section>
 
         {/* 推荐目的地区域 */}

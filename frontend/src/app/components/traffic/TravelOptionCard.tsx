@@ -3,6 +3,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useNavigation } from '../../context/NavigationContext';
 // 确保类型导入路径与你的项目结构匹配
 import type { TravelOption } from '@/mockData/trafficdata'; 
 
@@ -12,9 +13,10 @@ interface TravelOptionCardProps {
 
 export default function TravelOptionCard({ option }: TravelOptionCardProps) {
   const router = useRouter();
+  const navigation = useNavigation();
 
   const handleCardClick = () => {
-    router.push(option.path);
+    navigation.push(option.path, "forward");
   };
 
   return (

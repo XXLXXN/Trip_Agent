@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";                      // ← 新增
 import styles from "@/styles/HistoryList.module.css";
-import Link from "next/link"
+import Link from "next/link";
+import { useNavigation } from "../context/NavigationContext";
 
 type TripStatus = "completed" | "cancelled";
 
@@ -64,6 +65,7 @@ function splitDate(isoDate: string) {
 }
 
 export default function HistoryPage() {
+  const navigation = useNavigation();
   const [q, setQ] = useState("");
 
   const list = useMemo(() => {
@@ -79,23 +81,21 @@ export default function HistoryPage() {
     });
   }, [q]);
 
-  const handleBack = () => alert("返回上一页");
+  const handleBack = () => navigation.push("/profile", "backward");
 
   return (
     <div className={styles.container}>
       {/* 顶部栏 */}
       <div className={styles.header}>
         <div className={styles.headerTop}>
-          <Link href="/profile">
-            <button className={styles.backBtn} aria-label="返回">
-              <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
-                <path
-                  d="M14.8 7H3.62l4.88-4.88a1.1 1.1 0 0 0-1.56-1.56L.5 7.02a1 1 0 0 0 0 1.4l6.44 6.44a1.1 1.1 0 1 0 1.56-1.56L3.62 9h11.18a1 1 0 1 0 0-2Z"
+          <button className={styles.backBtn} aria-label="返回" onClick={handleBack}>
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+              <path
+                d="M14.8 7H3.62l4.88-4.88a1.1 1.1 0 0 0-1.56-1.56L.5 7.02a1 1 0 0 0 0 1.4l6.44 6.44a1.1 1.1 0 1 0 1.56-1.56L3.62 9h11.18a1 1 0 1 0 0-2Z"
                   fill="#0768FD"
                 />
               </svg>
             </button>
-          </Link>
           <h1 className={styles.headerTitle}>历史记录</h1>
         </div>
 

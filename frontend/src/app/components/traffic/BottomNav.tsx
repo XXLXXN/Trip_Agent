@@ -2,17 +2,19 @@
 
 'use client'; 
 
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
+import { useNavigation } from '../../context/NavigationContext'; 
 
 /**
  * 页面底部的固定导航栏，包含一个“下一步”按钮。
  */
 export default function BottomNav() {
-  const router = useRouter(); 
+  const router = useRouter();
+  const navigation = useNavigation(); 
 
   const handleNextClick = () => {
     // 点击后导航至 /hotel 页面
-    router.push('/messagecard'); 
+    navigation.push('/messagecard', 'forward'); 
   };
 
   return (

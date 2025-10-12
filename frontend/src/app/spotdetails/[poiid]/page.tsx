@@ -4,6 +4,7 @@
 import Head from "next/head";
 import { useRef, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { useNavigation } from "../../context/NavigationContext";
 
 // 导入模拟数据和所有页面组件
 import { mockLocationData, LocationData } from "@/mockData/spotdetailsdata";
@@ -18,6 +19,7 @@ import { useTripPlan } from "../../context/TripPlanContext";
 
 export default function SpotDetailsPage() {
   const router = useRouter();
+  const navigation = useNavigation();
   const params = useParams();
   const poiid = params.poiid as string;
 
@@ -100,8 +102,8 @@ export default function SpotDetailsPage() {
     }
   };
 
-  const handleViewAllReviews = () => router.push("/reviews");
-  const handleBook = () => router.push("/jiudiantuijian");
+  const handleViewAllReviews = () => navigation.push("/reviews", "forward");
+  const handleBook = () => navigation.push("/jiudiantuijian", "forward");
 
   if (isLoading) {
     // ... loading UI ... (不变)

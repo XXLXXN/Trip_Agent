@@ -24,10 +24,13 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTripPlan, TripPlanData } from "../context/TripPlanContext";
+import { useNavigation } from "../context/NavigationContext";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { AnimatePresence, motion } from "framer-motion";
 import { zhCN } from "date-fns/locale";
+import { FixedBottomBar } from "../fireflyx_parts/components/FixedBottomBar";
+import { PageContainer, ScrollableContent } from "../fireflyx_parts/components/PageContainer";
 
 export default function TravelPlanningPage() {
   const [priceRange, setPriceRange] = useState([100, 10000]);
@@ -41,6 +44,7 @@ export default function TravelPlanningPage() {
   const [showDateModal, setShowDateModal] = useState(false);
   const [showTravelerModal, setShowTravelerModal] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingField, setEditingField] = useState<
     "departure" | "destination" | "startDate" | "endDate" | "minPrice" | "maxPrice" | null
   >(null);
@@ -79,6 +83,7 @@ export default function TravelPlanningPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const navigation = useNavigation();
   const { saveTripPlan } = useTripPlan();
 
   const toggleStyle = (style: string) => {
@@ -168,7 +173,7 @@ export default function TravelPlanningPage() {
         };
 
         saveTripPlan(tripPlanData);
-        router.push("/spotslist"); // 跳转到结果页面
+        navigation.push("/spotslist", "forward"); // 跳转到结果页面
       } else {
         throw new Error(result.message || "服务器返回数据格式不正确");
       }
@@ -183,6 +188,7 @@ export default function TravelPlanningPage() {
   const handleLocationEdit = (field: "departure" | "destination") => {
     setEditingField(field);
     setShowLocationModal(true);
+    setTimeout(() => setIsModalVisible(true), 10);
   };
 
   const handleDateEdit = (field: "startDate" | "endDate") => {
@@ -194,6 +200,7 @@ export default function TravelPlanningPage() {
     setTempEndDate(end);
     setDateError(null);
     setShowDateModal(true);
+    setTimeout(() => setIsModalVisible(true), 10);
   };
 
   const handleLocationSave = (value: string) => {
@@ -202,8 +209,19 @@ export default function TravelPlanningPage() {
     } else if (editingField === "destination") {
       setDestination(value);
     }
-    setShowLocationModal(false);
-    setEditingField(null);
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowLocationModal(false);
+      setEditingField(null);
+    }, 300);
+  };
+
+  const handleCloseLocationModal = () => {
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowLocationModal(false);
+      setEditingField(null);
+    }, 300);
   };
 
   const handleDateSave = () => {
@@ -213,9 +231,21 @@ export default function TravelPlanningPage() {
     
     setStartDate(startFormatted);
     setEndDate(endFormatted);
-    setShowDateModal(false);
-    setTempStartDate(undefined);
-    setTempEndDate(undefined);
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowDateModal(false);
+      setTempStartDate(undefined);
+      setTempEndDate(undefined);
+    }, 300);
+  };
+
+  const handleCloseDateModal = () => {
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowDateModal(false);
+      setTempStartDate(undefined);
+      setTempEndDate(undefined);
+    }, 300);
   };
 
   function parseDateString(input: string): Date | undefined {
@@ -246,7 +276,34 @@ export default function TravelPlanningPage() {
   const handleTravelerSave = () => {
     setAdultCount(adults);
     setStudentCount(children);
-    setShowTravelerModal(false);
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowTravelerModal(false);
+    }, 300);
+  };
+
+  const handleCloseTravelerModal = () => {
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowTravelerModal(false);
+    }, 300);
+  };
+
+  const handleOpenTravelerModal = () => {
+    setShowTravelerModal(true);
+    setTimeout(() => setIsModalVisible(true), 10);
+  };
+
+  const handleOpenMoreModal = () => {
+    setShowMoreModal(true);
+    setTimeout(() => setIsModalVisible(true), 10);
+  };
+
+  const handleCloseMoreModal = () => {
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowMoreModal(false);
+    }, 300);
   };
 
   const handlePriceEdit = (field: "minPrice" | "maxPrice") => {
@@ -278,8 +335,9 @@ export default function TravelPlanningPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f8fb] mx-auto relative">
-      {/* 顶部1/5蓝色背景 */}
+    <>
+    <PageContainer className="bg-[#f6f8fb] relative">
+      {/* 蓝色背景层 */}
       <div
         className="absolute top-0 left-0 w-full"
         style={{
@@ -288,19 +346,21 @@ export default function TravelPlanningPage() {
           zIndex: 0,
         }}
       />
-      {/* Header 和主内容区加上相对定位，确保在蓝色背景之上 */}
-      <div className="relative z-10">
-        {/* Header */}
-        <div className="flex items-center px-4 py-6">
-          <Link href="/">
-            <img src="/BackButton.svg" alt="后退图标" className="h-12 w-12" />
-          </Link>
-          <h1 className="ml-2 text-lg font-medium text-[#FFFFFF]">旅游规划</h1>
-        </div>
 
-        {/* Main Content */}
-        <div className="px-3 space-y-4">
-          <div className="bg-[#ffffff] rounded-3xl p-4 border-0">
+      {/* Header - 固定在顶部 */}
+      <div className="relative z-10 flex items-center px-5 pb-4 flex-shrink-0" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}>
+        <button onClick={() => navigation.push("/", "backward")}>
+          <img src="/BackButton.svg" alt="后退图标" className="h-12 w-12" />
+        </button>
+        <h1 className="ml-2 text-lg font-medium text-[#FFFFFF]">旅游规划</h1>
+      </div>
+
+      {/* 可滚动的主内容区域 */}
+      <div className="relative z-10 flex-1 overflow-hidden">
+        <div className="h-full bg-[#f6f8fb] rounded-t-3xl overflow-hidden">
+          <div className="h-full overflow-y-auto px-3 pt-4 pb-32">
+            <div className="space-y-4">
+            <div className="bg-[#ffffff] rounded-3xl p-4 border-0">
             <div className="space-y-4">
               {/* Location Selection */}
               <div className="space-y-4">
@@ -434,7 +494,7 @@ export default function TravelPlanningPage() {
                   variant="ghost"
                   size="icon"
                   className="text-[#0768fd] mr-2"
-                  onClick={() => setShowTravelerModal(true)}
+                  onClick={handleOpenTravelerModal}
                 >
                   <div className="w-8 h-8 flex items-center justify-center">
                     <img
@@ -535,11 +595,8 @@ export default function TravelPlanningPage() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="px-3 py-3 space-y-4">
-          <div className="border-0">
-            <div className="space-y-4">
+            <div className="space-y-4 py-3">
               {/* Transportation Preferences */}
               <div className="space-y-3">
                 <h3 className="font-medium text-[#000000] ml-2">交通偏好</h3>
@@ -630,7 +687,7 @@ export default function TravelPlanningPage() {
                   <Button
                     variant="outline"
                     className="flex-1 flex items-center gap-2 py-6 rounded-2xl border-2 border-transparent bg-white text-[#000000] hover:border-gray-300"
-                    onClick={() => setShowMoreModal(true)}
+                    onClick={handleOpenMoreModal}
                   >
                     <img src="/More.svg" alt="更多图标" className="h-10 w-10" />
                     更多
@@ -673,146 +730,158 @@ export default function TravelPlanningPage() {
                 />
               </div>
             </div>
-          </div>
 
-          {/* Continue Button */}
-          <div className="pb-8 space-y-4">
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
-                <p className="text-red-600 text-sm">{error}</p>
-                <Button
-                  variant="outline"
-                  className="mt-2 w-full text-red-600 border-red-200 hover:bg-red-100"
-                  onClick={() => setError(null)}
-                >
-                  重试
-                </Button>
-              </div>
-            )}
-
-            <Button
-              className="w-full bg-[#0768fd] hover:bg-[#074ee8] text-white py-4 rounded-2xl text-lg font-medium"
-              onClick={handleSubmit}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  处理中...
-                </>
-              ) : (
-                "继续"
-              )}
-            </Button>
+            {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mt-4">
+              <p className="text-red-600 text-sm">{error}</p>
+              <Button
+                variant="outline"
+                className="mt-2 w-full text-red-600 border-red-200 hover:bg-red-100"
+                onClick={() => setError(null)}
+              >
+                重试
+              </Button>
+            </div>
+          )}
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Fixed Bottom Button */}
+      <FixedBottomBar>
+        <Button
+          className="w-full bg-[#0768fd] hover:bg-[#074ee8] text-white h-12 rounded-2xl text-[16px] font-semibold"
+          style={{ fontFamily: 'Inter' }}
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              处理中...
+            </>
+          ) : (
+            "继续"
+          )}
+        </Button>
+      </FixedBottomBar>
+    </PageContainer>
+
+      {/* 地点选择弹窗 */}
       {showLocationModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-[#000000]">
-                {editingField === "departure" ? "选择出发地" : "选择目的地"}
-              </h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowLocationModal(false)}
-              >
-                <X className="h-5 w-5 text-[#808080]" />
-              </Button>
-            </div>
-            <Input
-              placeholder="请输入城市名称"
-              defaultValue={
-                editingField === "departure" ? departure : destination
-              }
-              className="mb-4 bg-[#f6f8fb] border-0 text-[#000000]"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleLocationSave(e.currentTarget.value);
-                }
-              }}
-            />
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                className="flex-1 bg-transparent border-[#dddddd] text-[#000000]"
-                onClick={() => setShowLocationModal(false)}
-              >
-                取消
-              </Button>
-              <Button
-                className="flex-1 bg-[#0768fd] hover:bg-[#074ee8] text-white"
-                onClick={() => {
-                  const input = document.querySelector(
-                    "input"
-                  ) as HTMLInputElement;
-                  handleLocationSave(input.value);
-                }}
-              >
-                确定
-              </Button>
+        <div className="fixed inset-0 z-[9999] flex items-end" onClick={handleCloseLocationModal}>
+          {/* 背景遮罩 */}
+          <div 
+            className={`absolute inset-0 transition-opacity duration-300 ${
+              isModalVisible ? 'opacity-30' : 'opacity-0'
+            }`}
+            style={{
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.5) 100%)'
+            }}
+          />
+          
+          {/* 弹窗面板 */}
+          <div 
+            className={`relative w-full bg-white rounded-t-3xl transition-transform duration-300 ${
+              isModalVisible ? 'translate-y-0' : 'translate-y-full'
+            }`} 
+            style={{ height: '40vh', minHeight: '300px' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col h-full">
+              {/* 顶部拖拽条 */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1 bg-[#E5E5E5] rounded-full"></div>
+              </div>
+              
+              {/* 标题 */}
+              <div className="px-5 pb-4">
+                <h2 className="text-[#1B1446] font-semibold text-[20px] text-center" style={{ fontFamily: 'Inter' }}>
+                  {editingField === "departure" ? "选择出发地" : "选择目的地"}
+                </h2>
+              </div>
+              
+              {/* 内容区域 */}
+              <div className="flex-1 overflow-y-auto px-5">
+                <Input
+                  id="location-input"
+                  placeholder="请输入城市名称"
+                  defaultValue={
+                    editingField === "departure" ? departure : destination
+                  }
+                  className="mb-4 h-12 px-4 rounded-2xl border border-[#E5E5E5] text-[#1B1446] text-[16px] outline-none focus:border-[#0768FD]"
+                  style={{ fontFamily: 'Inter' }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleLocationSave(e.currentTarget.value);
+                    }
+                  }}
+                />
+              </div>
+
+              {/* 底部按钮 */}
+              <div className="px-5 pb-6 pt-4">
+                <button
+                  onClick={() => {
+                    const input = document.getElementById("location-input") as HTMLInputElement;
+                    handleLocationSave(input.value);
+                  }}
+                  className="w-full h-12 rounded-2xl bg-[#0768FD] text-white font-semibold text-[16px] transition-colors"
+                  style={{ fontFamily: 'Inter' }}
+                >
+                  确定
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      <AnimatePresence>
-        {showDateModal && (
-          <>
-            <motion.div
-              key="date-backdrop"
-              className="fixed inset-0 bg-black/50 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowDateModal(false)}
-            />
-            <motion.div
-              key="date-sheet"
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 28 }}
-            >
-              <motion.div
-                className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col"
-                style={{ 
-                  height: '600px',
-                  maxHeight: '90vh'
-                }}
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 260, damping: 28 }}
-              >
-                {/* 头部 */}
-                <div className="px-6 pt-6 pb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl font-bold text-gray-900">选择日期</h2>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-8 h-8 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
-                      onClick={() => setShowDateModal(false)}
-                    >
-                      <X className="h-5 w-5" />
-                    </Button>
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {tempStartDate && tempEndDate 
-                      ? `${formatDate(tempStartDate)} - ${formatDate(tempEndDate)}`
-                      : tempStartDate 
-                      ? formatDate(tempStartDate)
-                      : startDate && endDate 
-                      ? `${startDate} - ${endDate}`
-                      : '请选择启程和返程日期'
-                    }
-                  </p>
-                </div>
+      {/* 日期选择弹窗 */}
+      {showDateModal && (
+        <div className="fixed inset-0 z-[9999] flex items-end" onClick={handleCloseDateModal}>
+          {/* 背景遮罩 */}
+          <div 
+            className={`absolute inset-0 transition-opacity duration-300 ${
+              isModalVisible ? 'opacity-30' : 'opacity-0'
+            }`}
+            style={{
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.5) 100%)'
+            }}
+          />
+          
+          {/* 弹窗面板 */}
+          <div 
+            className={`relative w-full bg-white rounded-t-3xl transition-transform duration-300 ${
+              isModalVisible ? 'translate-y-0' : 'translate-y-full'
+            }`} 
+            style={{ height: '70vh', maxHeight: '90vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col h-full">
+              {/* 顶部拖拽条 */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1 bg-[#E5E5E5] rounded-full"></div>
+              </div>
+              
+              {/* 标题 */}
+              <div className="px-5 pb-3">
+                <h2 className="text-[#1B1446] font-semibold text-[20px] text-center" style={{ fontFamily: 'Inter' }}>
+                  选择日期
+                </h2>
+                <p className="text-sm text-[#808080] text-center mt-1" style={{ fontFamily: 'Inter' }}>
+                  {tempStartDate && tempEndDate 
+                    ? `${formatDate(tempStartDate)} - ${formatDate(tempEndDate)}`
+                    : tempStartDate 
+                    ? formatDate(tempStartDate)
+                    : startDate && endDate 
+                    ? `${startDate} - ${endDate}`
+                    : '请选择启程和返程日期'
+                  }
+                </p>
+              </div>
 
                 {/* 月份导航 */}
                 <div className="flex items-center justify-center px-6 pb-4">
@@ -967,43 +1036,64 @@ export default function TravelPlanningPage() {
                   </div>
                 </div>
 
-                {dateError && (
-                  <div className="px-6 pb-2">
-                    <p className="text-red-600 text-sm">{dateError}</p>
-                  </div>
-                )}
-
-                {/* 确认按钮 */}
-                <div className="px-6 pb-6">
-                  <Button
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg"
-                    disabled={!tempStartDate || !tempEndDate}
-                    onClick={handleDateSave}
-                  >
-                    确认日期
-                  </Button>
+              {dateError && (
+                <div className="px-5 pb-2">
+                  <p className="text-red-600 text-sm text-center" style={{ fontFamily: 'Inter' }}>{dateError}</p>
                 </div>
-              </motion.div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              )}
 
-      {showTravelerModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-medium text-[#000000]">
-                选择出行人数
-              </h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowTravelerModal(false)}
-              >
-                <X className="h-5 w-5 text-[#808080]" />
-              </Button>
+              {/* 确认按钮 */}
+              <div className="px-5 pb-6 pt-4">
+                <button
+                  disabled={!tempStartDate || !tempEndDate}
+                  onClick={handleDateSave}
+                  className="w-full h-12 rounded-2xl bg-[#0768FD] text-white font-semibold text-[16px] disabled:bg-[#D9D9D9] disabled:text-[#808080] transition-colors"
+                  style={{ fontFamily: 'Inter' }}
+                >
+                  确认日期
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 出行人数选择弹窗 */}
+      {showTravelerModal && (
+        <div className="fixed inset-0 z-[9999] flex items-end" onClick={handleCloseTravelerModal}>
+          {/* 背景遮罩 */}
+          <div 
+            className={`absolute inset-0 transition-opacity duration-300 ${
+              isModalVisible ? 'opacity-30' : 'opacity-0'
+            }`}
+            style={{
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.5) 100%)'
+            }}
+          />
+          
+          {/* 弹窗面板 */}
+          <div 
+            className={`relative w-full bg-white rounded-t-3xl transition-transform duration-300 ${
+              isModalVisible ? 'translate-y-0' : 'translate-y-full'
+            }`} 
+            style={{ height: '60vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col h-full">
+              {/* 顶部拖拽条 */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1 bg-[#E5E5E5] rounded-full"></div>
+              </div>
+              
+              {/* 标题 */}
+              <div className="px-5 pb-4">
+                <h2 className="text-[#1B1446] font-semibold text-[20px] text-center" style={{ fontFamily: 'Inter' }}>
+                  选择出行人数
+                </h2>
+              </div>
+              
+              {/* 内容区域 */}
+              <div className="flex-1 overflow-y-auto px-5">
 
             <div className="space-y-4">
               {/* Adults */}
@@ -1122,44 +1212,59 @@ export default function TravelPlanningPage() {
                 </div>
               </div>
             </div>
+              </div>
 
-            
-
-            <div className="flex gap-2 mt-6">
-              <Button
-                variant="outline"
-                className="flex-1 bg-transparent border-[#dddddd] text-[#000000]"
-                onClick={() => setShowTravelerModal(false)}
-              >
-                取消
-              </Button>
-              <Button
-                className="flex-1 bg-[#0768fd] hover:bg-[#074ee8] text-white"
-                onClick={handleTravelerSave}
-              >
-                确定
-              </Button>
+              {/* 底部按钮 */}
+              <div className="px-5 pb-6 pt-4">
+                <button
+                  onClick={handleTravelerSave}
+                  className="w-full h-12 rounded-2xl bg-[#0768FD] text-white font-semibold text-[16px] transition-colors"
+                  style={{ fontFamily: 'Inter' }}
+                >
+                  确定
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* More Options Modal */}
+      {/* 更多选项弹窗 */}
       {showMoreModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-medium text-[#000000]">
-                更多预算选项
-              </h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowMoreModal(false)}
-              >
-                <X className="h-5 w-5 text-[#808080]" />
-              </Button>
-            </div>
+        <div className="fixed inset-0 z-[9999] flex items-end" onClick={handleCloseMoreModal}>
+          {/* 背景遮罩 */}
+          <div 
+            className={`absolute inset-0 transition-opacity duration-300 ${
+              isModalVisible ? 'opacity-30' : 'opacity-0'
+            }`}
+            style={{
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.5) 100%)'
+            }}
+          />
+          
+          {/* 弹窗面板 */}
+          <div 
+            className={`relative w-full bg-white rounded-t-3xl transition-transform duration-300 ${
+              isModalVisible ? 'translate-y-0' : 'translate-y-full'
+            }`} 
+            style={{ height: '60vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col h-full">
+              {/* 顶部拖拽条 */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1 bg-[#E5E5E5] rounded-full"></div>
+              </div>
+              
+              {/* 标题 */}
+              <div className="px-5 pb-4">
+                <h2 className="text-[#1B1446] font-semibold text-[20px] text-center" style={{ fontFamily: 'Inter' }}>
+                  更多预算选项
+                </h2>
+              </div>
+              
+              {/* 内容区域 */}
+              <div className="flex-1 overflow-y-auto px-5">
 
             <div className="space-y-3">
               {[
@@ -1189,20 +1294,22 @@ export default function TravelPlanningPage() {
                 </Button>
               ))}
             </div>
+              </div>
 
-            <div className="flex gap-2 mt-6">
-              <Button
-                variant="outline"
-                className="flex-1 bg-transparent border-[#dddddd] text-[#000000]"
-                onClick={() => setShowMoreModal(false)}
-              >
-                取消
-              </Button>
+              {/* 底部按钮 */}
+              <div className="px-5 pb-6 pt-4">
+                <button
+                  onClick={handleCloseMoreModal}
+                  className="w-full h-12 rounded-2xl bg-[#0768FD] text-white font-semibold text-[16px] transition-colors"
+                  style={{ fontFamily: 'Inter' }}
+                >
+                  确定
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
-
-    </div>
+    </>
   );
 }

@@ -11,10 +11,12 @@ import TravelOptionCard from "@/components/traffic/TravelOptionCard";
 import BottomNav from "@/components/traffic/BottomNav";
 
 import { useTripPlan } from "../context/TripPlanContext";
+import { useNavigation } from "../context/NavigationContext";
 import type { TravelOption } from "@/mockData/trafficdata";
 
 export default function TravelSelectionPage() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { getTrafficRecommendations } = useTripPlan();
 
   const [selectedType, setSelectedType] = useState("all"); // 默认显示所有
@@ -59,8 +61,8 @@ export default function TravelSelectionPage() {
 
   const filteredTravelOptions = getFilteredOptions();
 
-  const handleBackClick = () => router.push("/hotelslist");
-  const handleSkipClick = () => router.push("/messagecard");
+  const handleBackClick = () => navigation.push("/hotelslist", "backward");
+  const handleSkipClick = () => navigation.push("/messagecard", "forward");
 
   // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
   const bottomNavHeight = "88px";

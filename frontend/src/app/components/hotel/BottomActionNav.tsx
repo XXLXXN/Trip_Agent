@@ -3,6 +3,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../context/NavigationContext";
 import { useState } from "react";
 
 interface BottomActionNavProps {
@@ -15,6 +16,7 @@ export default function BottomActionNav({
   isLoading = false,
 }: BottomActionNavProps) {
   const router = useRouter();
+  const navigation = useNavigation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +29,7 @@ export default function BottomActionNav({
         await onNextClick();
       }
       // 只有在成功执行onNextClick后才导航
-      router.push("/trafficlist");
+      navigation.push("/trafficlist", "forward");
     } catch (error) {
       console.error("处理下一步点击时发生错误:", error);
       setError("请求失败，请重试");

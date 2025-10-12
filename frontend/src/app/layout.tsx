@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TripPlanProvider } from "./context/TripPlanContext";
 import { AuthProvider } from "./context/AuthContext";
+import { NavigationProvider } from "./context/NavigationContext";
 import AuthGuard from "./components/AuthGuard";
 import TransitionProvider from "./TransitionProvider";
 
@@ -44,13 +45,15 @@ export default function RootLayout({
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AuthProvider>
-          <AuthGuard>
-            <TripPlanProvider>
-              <TransitionProvider>{children}</TransitionProvider>
-            </TripPlanProvider>
-          </AuthGuard>
-        </AuthProvider>
+        <NavigationProvider>
+          <AuthProvider>
+            <AuthGuard>
+              <TripPlanProvider>
+                <TransitionProvider>{children}</TransitionProvider>
+              </TripPlanProvider>
+            </AuthGuard>
+          </AuthProvider>
+        </NavigationProvider>
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+import { useNavigation } from './NavigationContext';
 
 // 用户信息类型定义
 interface User {
@@ -29,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const navigation = useNavigation();
 
   // 检查是否已登录
   const isAuthenticated = !!user;
@@ -126,7 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('isLoggedIn');
-    router.push('/login');
+    navigation.push('/login', 'forward');
   };
 
   const value: AuthContextType = {

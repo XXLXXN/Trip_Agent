@@ -11,12 +11,14 @@ import SpotCard from "@/components/spotlist/spotcard";
 import BottomNav from "@/components/spotlist/BottomNav";
 
 import { useTripPlan } from "../context/TripPlanContext";
+import { useNavigation } from "../context/NavigationContext";
 import { convertSpotData } from "../lib/formatters";
 
 export default function TravelSelectionPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpotIds, setSelectedSpotIds] = useState<number[]>([]);
   const router = useRouter();
+  const navigation = useNavigation();
   const { getSpotRecommendations, saveSelectedSpots } = useTripPlan();
 
   // 获取后端返回的景点数据
@@ -68,8 +70,8 @@ export default function TravelSelectionPage() {
       spot.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleBackClick = () => router.push("/planning");
-  const handleSkipClick = () => router.push("/traffic");
+  const handleBackClick = () => navigation.push("/planning", "backward");
+  const handleSkipClick = () => navigation.push("/traffic", "forward");
 
   // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
   const bottomNavHeight = "88px";

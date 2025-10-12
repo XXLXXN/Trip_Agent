@@ -3,6 +3,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../context/NavigationContext";
 import { Spot } from "@/mockData/travelcarddata";
 
 interface SpotCardProps {
@@ -17,10 +18,11 @@ export default function SpotCard({
   onButtonClick,
 }: SpotCardProps) {
   const router = useRouter();
+  const navigation = useNavigation();
 
   // 处理整个卡片的点击，用于页面跳转
   const handleCardClick = () => {
-    router.push(spot.path);
+    navigation.push(spot.path, "forward");
   };
 
   // 处理右上角 +/- 按钮的点击

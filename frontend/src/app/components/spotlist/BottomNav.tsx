@@ -3,6 +3,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../context/NavigationContext";
 import { useTripPlan } from "../../context/TripPlanContext";
 import { useState } from "react";
 
@@ -19,6 +20,7 @@ interface SpotRecommendation {
 
 export default function BottomNav() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { getTripPlan, getSelectedSpots } = useTripPlan();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +86,7 @@ export default function BottomNav() {
       console.log("酒店推荐请求成功:", result);
 
       // 请求成功后才导航到交通页面
-      router.push("/hotelslist");
+      navigation.push("/hotelslist", "forward");
     } catch (error) {
       console.error("处理下一步点击时发生错误:", error);
       setError("网络错误，请检查网络连接后重试");

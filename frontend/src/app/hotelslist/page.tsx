@@ -23,6 +23,7 @@ import HotelCard from "@/components/hotel/HotelCard";
 import BottomActionNav from "@/components/hotel/BottomActionNav";
 
 import { useTripPlan, HotelRecommendation } from "../context/TripPlanContext";
+import { useNavigation } from "../context/NavigationContext";
 
 export default function HotelSelectionPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,6 +31,7 @@ export default function HotelSelectionPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const navigation = useNavigation();
   const {
     getTripPlan,
     getSelectedSpots,
@@ -202,8 +204,8 @@ export default function HotelSelectionPage() {
   );
 
   // Header 按钮的导航处理
-  const handleBackClick = () => router.push("/spotslist");
-  const handleSkipClick = () => router.push("/trafficlist");
+  const handleBackClick = () => navigation.push("/spotslist", "backward");
+  const handleSkipClick = () => navigation.push("/trafficlist", "forward");
 
   // 处理下一步按钮点击事件
   const handleNextClick = async () => {
@@ -275,11 +277,11 @@ export default function HotelSelectionPage() {
       );
 
       // 导航到交通列表页面
-      router.push("/trafficlist");
+      navigation.push("/trafficlist", "forward");
     } else {
       console.warn("没有找到有效的交通推荐数据");
       // 即使没有数据也导航到交通列表页面，让用户看到空状态
-      router.push("/trafficlist");
+      navigation.push("/trafficlist", "forward");
     }
   };
 

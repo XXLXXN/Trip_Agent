@@ -2,6 +2,7 @@
 
 "use client";
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../context/NavigationContext";
 import { Hotel } from "@/mockData/hoteldata"; // 建议将类型定义集中管理
 
 interface HotelCardProps {
@@ -22,10 +23,11 @@ export default function HotelCard({
   buttonVerticalOffset = 16, // 为新属性设置默认值
 }: HotelCardProps) {
   const router = useRouter();
+  const navigation = useNavigation();
 
   // 处理整个卡片的点击，用于页面跳转
   const handleCardClick = () => {
-    router.push(hotel.path);
+    navigation.push(hotel.path, "forward");
   };
 
   const handleButtonClick = (e: React.MouseEvent) => {

@@ -3,6 +3,7 @@
 import Head from "next/head";
 import { useRef, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { useNavigation } from "../../../context/NavigationContext";
 
 // 导入模拟数据和所有页面组件
 import { mockLocationData, LocationData } from "@/mockData/spotdetailsdata";
@@ -18,6 +19,7 @@ import { ActivityData } from "../../../fireflyx_parts/types/tripData";
 
 export default function ScheduleSpotDetailsPage() {
   const router = useRouter();
+  const navigation = useNavigation();
   const params = useParams();
   const activityId = params.activityId as string;
 
@@ -117,8 +119,8 @@ export default function ScheduleSpotDetailsPage() {
     }
   };
 
-  const handleViewAllReviews = () => router.push("/reviews");
-  const handleBook = () => router.push("/jiudiantuijian");
+  const handleViewAllReviews = () => navigation.push("/reviews", "forward");
+  const handleBook = () => navigation.push("/jiudiantuijian", "forward");
 
   if (isLoading) {
     return (

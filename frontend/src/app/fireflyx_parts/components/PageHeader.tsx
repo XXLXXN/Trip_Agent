@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../context/NavigationContext";
 import { ArrowLeft } from "./ArrowLeft";
 import { PillIconButton } from "./PillIconButton";
 
@@ -17,14 +18,15 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   rightElement 
 }) => {
   const router = useRouter();
+  const navigation = useNavigation();
 
   const handleBack = () => {
     if (backHref) {
       // 如果指定了 backHref，使用指定路径
-      router.push(backHref);
+      navigation.push(backHref, "backward");
     } else {
       // 否则使用浏览器历史记录返回
-      router.back();
+      navigation.back();
     }
   };
 

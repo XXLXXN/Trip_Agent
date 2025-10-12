@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useNavigation } from '@/app/context/NavigationContext';
 
 /**
  * Props for the TopBar component.
@@ -18,6 +19,7 @@ interface TopBarProps {
  */
 const TopBar = ({ featuredImage }: TopBarProps) => {
   const router = useRouter();
+  const navigation = useNavigation();
   // State to track if the item is favorited.
   const [isFavorited, setIsFavorited] = useState(false);
 
@@ -25,7 +27,7 @@ const TopBar = ({ featuredImage }: TopBarProps) => {
    * Handles the click event for the back button, navigating to the previous page.
    */
   const handleBackClick = () => {
-    router.push('/hotelslist');
+    navigation.push('/hotelslist', 'backward');
   };
 
   /**

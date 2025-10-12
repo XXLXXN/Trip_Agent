@@ -3,10 +3,12 @@ import React from "react";
 import BottomNav from "../components/BottomNav";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import { useNavigation } from "../context/NavigationContext";
 import { Button } from "@/components/ui/button";
 
 const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
+  const navigation = useNavigation();
 
   if (!user) {
     return (
@@ -29,22 +31,23 @@ const ProfilePage: React.FC = () => {
         {/* 导航栏 */}
         <div className="flex py-4 px-4 items-center gap-4 h-[69px]">
           {/* 返回按钮 */}
-          <Link href="/">
-            <button className="w-14 h-[37px] px-4 py-[6.5px] flex items-center justify-center rounded-full border border-gray-200">
-              <svg
-                width="24"
-                height="25"
-                viewBox="0 0 24 25"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18.7912 11.9552H7.62124L12.5012 7.07517C12.8912 6.68517 12.8912 6.04517 12.5012 5.65517C12.1112 5.26517 11.4812 5.26517 11.0912 5.65517L4.50124 12.2452C4.11124 12.6352 4.11124 13.2652 4.50124 13.6552L11.0912 20.2452C11.4812 20.6352 12.1112 20.6352 12.5012 20.2452C12.8912 19.8552 12.8912 19.2252 12.5012 18.8352L7.62124 13.9552H18.7912C19.3412 13.9552 19.7912 13.5052 19.7912 12.9552C19.7912 12.4052 19.3412 11.9552 18.7912 11.9552Z"
-                  fill="#0768FD"
-                />
-              </svg>
-            </button>
-          </Link>
+          <button 
+            className="w-14 h-[37px] px-4 py-[6.5px] flex items-center justify-center rounded-full border border-gray-200"
+            onClick={() => navigation.push("/", "backward")}
+          >
+            <svg
+              width="24"
+              height="25"
+              viewBox="0 0 24 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18.7912 11.9552H7.62124L12.5012 7.07517C12.8912 6.68517 12.8912 6.04517 12.5012 5.65517C12.1112 5.26517 11.4812 5.26517 11.0912 5.65517L4.50124 12.2452C4.11124 12.6352 4.11124 13.2652 4.50124 13.6552L11.0912 20.2452C11.4812 20.6352 12.1112 20.6352 12.5012 20.2452C12.8912 19.8552 12.8912 19.2252 12.5012 18.8352L7.62124 13.9552H18.7912C19.3412 13.9552 19.7912 13.5052 19.7912 12.9552C19.7912 12.4052 19.3412 11.9552 18.7912 11.9552Z"
+                fill="#0768FD"
+              />
+            </svg>
+          </button>
 
           {/* 页面标题 */}
           <h1 className="text-xl font-semibold text-[#1B1446]">我的</h1>
@@ -144,25 +147,26 @@ const ProfilePage: React.FC = () => {
         </div>
 
         {/* 历史行程记录菜单项 */}
-        <Link href="/historylist">
-          <div className="flex items-center justify-between py-4 px-3 bg-white rounded-xl border border-gray-100">
-            <span className="text-sm font-medium text-[#1B1446]">
-              历史行程记录
-            </span>
-            <svg
-              width="20"
-              height="21"
-              viewBox="0 0 20 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.49998 14.1298L10.7333 10.8965L7.49998 7.66313C7.17498 7.33813 7.17498 6.81313 7.49998 6.48813C7.82498 6.16313 8.34998 6.16313 8.67498 6.48813L12.5 10.3131C12.825 10.6381 12.825 11.1631 12.5 11.4881L8.67498 15.3131C8.34998 15.6381 7.82498 15.6381 7.49998 15.3131C7.18331 14.9881 7.17498 14.4548 7.49998 14.1298Z"
-                fill="#0768FD"
-              />
-            </svg>
-          </div>
-        </Link>
+        <div 
+          className="flex items-center justify-between py-4 px-3 bg-white rounded-xl border border-gray-100 cursor-pointer"
+          onClick={() => navigation.push("/historylist", "forward")}
+        >
+          <span className="text-sm font-medium text-[#1B1446]">
+            历史行程记录
+          </span>
+          <svg
+            width="20"
+            height="21"
+            viewBox="0 0 20 21"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.49998 14.1298L10.7333 10.8965L7.49998 7.66313C7.17498 7.33813 7.17498 6.81313 7.49998 6.48813C7.82498 6.16313 8.34998 6.16313 8.67498 6.48813L12.5 10.3131C12.825 10.6381 12.825 11.1631 12.5 11.4881L8.67498 15.3131C8.34998 15.6381 7.82498 15.6381 7.49998 15.3131C7.18331 14.9881 7.17498 14.4548 7.49998 14.1298Z"
+              fill="#0768FD"
+            />
+          </svg>
+        </div>
       </div>
 
       {/* 分隔线 */}

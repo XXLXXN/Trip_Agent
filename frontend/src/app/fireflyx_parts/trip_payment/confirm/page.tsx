@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../../context/NavigationContext";
 import { PageHeader, PageContainer, ScrollableContent } from "../../components";
 import { useTripData } from "../../hooks/useTripData";
 
@@ -56,6 +57,7 @@ const TransactionGroup = ({ title, total, children }: {
 
 export default function PaymentConfirm() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { tripData, loading, error } = useTripData();
 
   // 计算总费用 - 只计算分类中显示的费用
@@ -283,7 +285,7 @@ export default function PaymentConfirm() {
             <div className="text-[#1B1446] font-bold text-[24px]" style={{ fontFamily: 'Inter' }}>¥{totalCost.toFixed(1)}</div>
           </div>
           <button 
-            onClick={() => router.push('/payment')} 
+            onClick={() => navigation.push('/payment', 'forward')} 
             className="px-8 h-12 rounded-full bg-[#4285F4] text-white font-semibold text-[16px]" 
             style={{ fontFamily: 'Inter' }}
           >

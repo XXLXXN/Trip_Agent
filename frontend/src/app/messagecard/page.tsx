@@ -8,6 +8,7 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useMemo } from "react"
 import { useTripPlan } from "../context/TripPlanContext"
+import { useNavigation } from "../context/NavigationContext"
 
 interface TravelParams {
   departure: string
@@ -25,6 +26,7 @@ interface TravelParams {
 
 export default function TravelInfoCard() {
   const searchParams = useSearchParams()
+  const navigation = useNavigation()
   const { getTripPlan } = useTripPlan()
   
   const travelParams = useMemo((): TravelParams => {
@@ -143,13 +145,13 @@ export default function TravelInfoCard() {
       {/* Header */}
       <div className="relative z-10">
         <div className="flex items-center px-4 py-6">
-          <Link href="/planning">
+          <button onClick={() => navigation.push("/planning", "backward")}>
             <img
               src="/BackButton2.svg"
               alt="后退图标"
               className="h-12 w-12"
             />
-          </Link>
+          </button>
           <h1 className="ml-2 text-lg font-medium text-[#000000]">信息卡片</h1>
         </div>
 

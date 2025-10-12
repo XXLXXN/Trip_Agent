@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { useNavigation } from '../context/NavigationContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -20,13 +21,14 @@ export default function LoginPage() {
   
   const { login, register, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const navigation = useNavigation();
 
   // 如果已登录，重定向到首页
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      router.push('/');
+      navigation.push('/', 'forward');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, navigation]);
 
   // 表单验证
   const validateForm = () => {
@@ -99,7 +101,7 @@ export default function LoginPage() {
       }
 
       if (success) {
-        router.push('/');
+        navigation.push('/', 'forward');
       }
     } catch (error) {
       console.error('登录错误:', error);

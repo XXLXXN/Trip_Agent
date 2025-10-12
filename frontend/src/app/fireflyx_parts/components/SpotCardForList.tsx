@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useNavigation } from "../../context/NavigationContext";
 import { Spot } from "@/mockData/travelcarddata";
 
 interface SpotCardForListProps {
@@ -18,6 +19,7 @@ export const SpotCardForList: React.FC<SpotCardForListProps> = ({
   onClick,
 }) => {
   const router = useRouter();
+  const navigation = useNavigation();
 
   // 处理整个卡片的点击，跳转到详情页面
   const handleCardClick = () => {
@@ -25,7 +27,7 @@ export const SpotCardForList: React.FC<SpotCardForListProps> = ({
       onClick(); // 调用自定义点击处理函数
     } else {
       // 默认跳转到schedule详情页面，使用活动ID
-      router.push(`/spotdetails/schedule/${spot.id}`);
+      navigation.push(`/spotdetails/schedule/${spot.id}`, "forward");
     }
   };
 

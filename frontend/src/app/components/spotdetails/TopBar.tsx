@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useNavigation } from "@/app/context/NavigationContext";
 
 interface TopBarProps {
   featuredImage: string;
@@ -10,10 +11,11 @@ interface TopBarProps {
 
 const TopBar = ({ featuredImage }: TopBarProps) => {
   const router = useRouter();
+  const navigation = useNavigation();
   const [isFavorited, setIsFavorited] = useState(false);
 
   const handleBackClick = () => {
-    router.push("/spotslist");
+    navigation.push("/spotslist", "backward");
   };
 
   const handleFavoriteClick = async () => {
