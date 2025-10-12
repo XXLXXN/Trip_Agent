@@ -96,11 +96,16 @@ export async function GET(request: NextRequest) {
         recordCount: records.length 
       });
     } catch (error) {
+      // --- 修改开始 ---
+      // 安全地处理错误，检查 error 是否为 Error 的实例
+      const errorMessage = error instanceof Error ? error.message : '获取服务器状态时发生未知错误';
+      
       return NextResponse.json({ 
         status: 'error', 
         timestamp: Date.now(),
-        error: error.message 
+        error: errorMessage 
       }, { status: 500 });
+      // --- 修改结束 ---
     }
   }
   
