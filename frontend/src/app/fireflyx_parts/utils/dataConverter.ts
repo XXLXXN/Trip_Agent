@@ -189,15 +189,10 @@ export const convertToSpotCardData = (
   activity: ActivityData,
   showNavigation: boolean = true
 ) => {
-  // 处理不同的 ID 格式
-  let id = 1;
-  if (activity.id.includes("activity_")) {
-    id = parseInt(activity.id.replace("activity_", "")) || 1;
-  } else if (activity.id.includes("transport_")) {
-    id = parseInt(activity.id.replace("transport_", "")) || 1;
-  } else {
-    id = parseInt(activity.id.replace(/\D/g, "")) || 1;
-  }
+  // 从 activity.id 中提取数字部分，因为 activity.id 是 "activity_1" 这样的格式
+  // 而 Spot 接口期望 number 类型
+  const idMatch = activity.id.match(/\d+/);
+  const id = idMatch ? parseInt(idMatch[0]) : 0;
 
   // 优先使用 poi_details 中的信息，如果没有则使用 activity 的基本信息
   const name = activity.poi_details?.name || activity.title || "景点";
@@ -210,7 +205,7 @@ export const convertToSpotCardData = (
     id: id,
     name: name,
     image: image,
-    path: `/spotdetails?spotId=${id}&spotName=${encodeURIComponent(name)}`, // 总是返回跳转路径
+    path: `/fireflyx_parts/spotdetail/${id}`, // 跳转到新的景点详情页面
     recommendationReason: description,
     isPlan: true,
   };

@@ -2,16 +2,22 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+// 配置为动态路由
+export const dynamic = 'force-dynamic';
+
 // 直接读取 SAMPLE_TRIP_DATA_2.json 文件
 export async function GET() {
   try {
-    // 使用相对于项目根目录的路径
+    // 使用绝对路径，从项目根目录开始
     const jsonFilePath = path.join(
       process.cwd(),
       "..",
       "backend/DataDefinition/SAMPLE_TRIP_DATA_3.json"
     );
+    
+    console.log("Current working directory:", process.cwd());
     console.log("Looking for file at:", jsonFilePath);
+    console.log("File exists:", fs.existsSync(jsonFilePath));
 
     // 检查文件是否存在
     if (!fs.existsSync(jsonFilePath)) {

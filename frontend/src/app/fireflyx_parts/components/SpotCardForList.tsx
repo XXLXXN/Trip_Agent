@@ -26,8 +26,8 @@ export const SpotCardForList: React.FC<SpotCardForListProps> = ({
     if (onClick) {
       onClick(); // 调用自定义点击处理函数
     } else {
-      // 默认跳转到schedule详情页面，使用活动ID
-      navigation.push(`/spotdetails/schedule/${spot.id}`, "forward");
+      // 跳转到新的景点详情页面，使用活动ID
+      navigation.push(`/fireflyx_parts/spotdetail/${spot.id}`, "forward");
     }
   };
 

@@ -50,7 +50,7 @@ const BookingPage: NextPage = () => {
   };
 
   return (
-    <div className="bg-slate-50 font-sans min-h-screen">
+    <div className="h-screen bg-white flex flex-col">
       {/* 蓝色背景层 */}
       <div
         className="absolute top-0 left-0 w-full"
@@ -69,9 +69,9 @@ const BookingPage: NextPage = () => {
         <h1 className="ml-2 text-lg font-medium text-[#FFFFFF]">飞机预订</h1>
       </div>
 
-      {/* 主内容区域 */}
-      <div className="relative z-10 bg-slate-50 rounded-t-3xl -mt-4 flex-1">
-        <main className="mx-auto w-full max-w-[375px] px-4 pt-6 pb-28">
+      {/* 主内容区域 - 可滚动 */}
+      <div className="relative z-10 bg-slate-50 rounded-t-3xl -mt-4 flex-1 overflow-y-auto pb-32">
+        <main className="mx-auto w-full max-w-[375px] px-4 pt-6">
           <FlightDetailsCard data={flightData} />
           <SectionHeader title="乘客信息" />
           <PassengerInfoCard data={passenger} onSave={handlePassengerUpdate} />
@@ -80,8 +80,10 @@ const BookingPage: NextPage = () => {
           <SectionHeader title="额外保险" />
           <InsuranceCard data={insuranceData} />
         </main>
-        <BookingFooter total={totalAmount} />
       </div>
+      
+      {/* 固定在底部的预订栏 */}
+      <BookingFooter total={totalAmount} />
     </div>
   );
 };
