@@ -3,14 +3,19 @@
 import json
 import motor.motor_asyncio
 import asyncio
+import sys
+import os
 from bson.json_util import dumps  # 导入 dumps 用于美化输出 MongoDB 文档
 from bson.objectid import ObjectId  # 导入 ObjectId 用于按 _id 查询
 from bson.errors import InvalidId  # 导入 InvalidId 用于处理无效的ID格式
 
+# 添加项目根目录到Python路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # --- 数据库配置 (Database Configuration) ---
 # **请确保这是您最新的、正确的连接配置**
 # 配合 Port Forwarding 时的配置：
-MONGO_URI = "mongodb://root:97dvhfbz@dbconn.sealosgzg.site:39960/?directConnection=true"
+MONGO_URI = "mongodb://root:xfkswrm6@dbconn.sealoshzh.site:33420/?directConnection=true"
 # 如果您使用的是外部IP，请自行替换上面的 MONGO_URI
 
 DATABASE_NAME = "itinerary_db"
@@ -190,7 +195,42 @@ async def delete_trip_by_id(trip_id: str) -> bool:
 
 
 # 确保 SAMPLE_TRIP_DATA_1 文件和路径是正确的
-from backend.DataDefinition.SAMPLE_TRIP_DATA_1 import SAMPLE_TRIP_DATA_1
+# 使用动态路径解析导入
+import importlib.util
+import os
+
+# 获取当前文件的绝对路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 构建 SAMPLE_TRIP_DATA_1 文件的路径
+sample_data_path = os.path.join(current_dir, '..', 'DataDefinition', 'SAMPLE_TRIP_DATA_1.py')
+
+# 动态导入模块
+spec = importlib.util.spec_from_file_location("SAMPLE_TRIP_DATA_1", sample_data_path)
+sample_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sample_module)
+# SAMPLE_TRIP_DATA_1 = sample_module.SAMPLE_TRIP_DATA_1
+SAMPLE_TRIP_DATA_1 = {
+  "user_id": "test_user_beijing_001",
+  "trip_id": "beijing_wenyi_trip_001",
+  "trip_name": "北京文艺两日游",
+  "days": [
+    {
+      "date": "2025-03-15",
+      "day_index": 1,
+      "activities": [
+        { "id": "transport_0", "type": "large_transportation", "start_time": "08:00", "end_time": "10:20", "traffic_details": { "fromAirportName": "上海浦东", "toAirportName": "北京首都" } },
+        { "id": "activity_1", "start_time": "10:30:00", "end_time": "11:00:00", "title": "到达北京首都机场", "type": "activity", "location": { "name": "北京首都国际机场" } },
+        { "id": "transportation_activity_1_activity_2_1", "start_time": "11:00:00", "end_time": "11:49:43", "type": "transportation", "mode": "bus", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
+        { "id": "transportation_activity_1_activity_2_2", "start_time": "11:00:00", "end_time": "14:31:29", "type": "transportation", "mode": "walk", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
+        { "id": "transportation_activity_1_activity_2_3", "start_time": "11:00:00", "end_time": "12:22:16", "type": "transportation", "mode": "cycling", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
+        { "id": "transportation_activity_1_activity_2_4", "start_time": "11:00:00", "end_time": "11:28:51", "type": "transportation", "mode": "driving", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
+        { "id": "activity_2", "start_time": "12:00:00", "end_time": "14:00:00", "title": "798艺术区游览", "type": "activity", "location": { "name": "798艺术区", "address": "酒仙桥路4号" }, "poi_details": { "name": "798艺术区", "POIId": "B000A81FY5" } },
+        { "id": "transportation_activity_2_activity_3_1", "start_time": "14:00:00", "end_time": "14:47:31", "type": "transportation", "mode": "bus", "origin": { "name": "798艺术区" }, "destination": { "name": "南锣鼓巷" } },
+        { "id": "transportation_activity_2_activity_3_2", "start_time": "14:00:00", "end_time": "16:27:38", "type": "transportation", "mode": "walk", "origin": { "name": "798艺术区" }, "destination": { "name": "南锣鼓巷" } }
+      ]
+    }
+  ]
+}
 
 
 async def main():
