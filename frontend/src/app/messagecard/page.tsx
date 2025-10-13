@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation"
 import { useMemo } from "react"
 import { useTripPlan } from "../context/TripPlanContext"
 import { useNavigation } from "../context/NavigationContext"
+import { FixedBottomBar } from "../fireflyx_parts/components/FixedBottomBar"
 
 interface TravelParams {
   departure: string
@@ -156,7 +157,7 @@ export default function TravelInfoCard() {
         </div>
 
         {/* Main Content */}
-        <div className="px-4 space-y-6">
+        <div className="px-4 space-y-6 pb-32">
           {/* Route Card */}
           <Card className="bg-[#ffffff] p-4 rounded-3xl border-0">
             <div className="space-y-0">
@@ -293,16 +294,21 @@ export default function TravelInfoCard() {
           {/* Itinerary Code */}
           
 
-          {/* CTA Button */}
-          <div className="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 bg-[#f6f8fb]">
-            <Link href="/fireflyx_parts/trip_payment/details">
-              <Button className="w-full bg-[#0768fd] hover:bg-[#074ee8] text-white py-4 rounded-2xl text-lg font-medium">
-                开始规划
-              </Button>
-            </Link>
-          </div>
+          
         </div>
       </div>
+
+      {/* Fixed Bottom Button */}
+      <FixedBottomBar>
+        <Link href="/fireflyx_parts/trip_payment/details" className="block">
+          <Button 
+            className="w-full bg-[#0768fd] hover:bg-[#074ee8] text-white h-12 rounded-2xl text-[16px] font-semibold"
+            style={{ fontFamily: 'Inter' }}
+          >
+            开始规划
+          </Button>
+        </Link>
+      </FixedBottomBar>
     </div>
   )
 }

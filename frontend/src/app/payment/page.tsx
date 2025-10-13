@@ -125,7 +125,7 @@ export default function PaymentPage() {
           </h2>
           <div className="space-y-2">
             {/* 银联 - 选中状态，带推荐标签 */}
-            <label className={`flex items-center justify-between p-4 bg-white rounded-[16px] border transition-all relative ${
+            <label className={`flex items-center justify-between p-4 rounded-[16px] border transition-all relative ${
               selectedPayment === "unionpay" ? "border-[#0768FD]" : "border-[rgba(1,34,118,0.05)]"
             }`}>
               <div className="flex items-center gap-3">
@@ -159,7 +159,7 @@ export default function PaymentPage() {
             </label>
 
             {/* 微信支付 */}
-            <label className={`flex items-center justify-between p-4 bg-white rounded-[16px] border transition-all ${
+            <label className={`flex items-center justify-between p-4 rounded-[16px] border transition-all ${
               selectedPayment === "wechat" ? "border-[#0768FD]" : "border-[rgba(1,34,118,0.05)]"
             }`}>
               <div className="flex items-center gap-3">
@@ -189,7 +189,7 @@ export default function PaymentPage() {
             </label>
 
             {/* 支付宝 */}
-            <label className={`flex items-center justify-between p-4 bg-white rounded-[16px] border transition-all ${
+            <label className={`flex items-center justify-between p-4 rounded-[16px] border transition-all ${
               selectedPayment === "alipay" ? "border-[#0768FD]" : "border-[rgba(1,34,118,0.05)]"
             }`}>
               <div className="flex items-center gap-3">
@@ -226,7 +226,7 @@ export default function PaymentPage() {
             银行卡
           </h2>
           <div className="space-y-2">
-            <label className={`flex items-center justify-between p-4 bg-white rounded-[16px] border transition-all ${
+            <label className={`flex items-center justify-between p-4 rounded-[16px] border transition-all ${
               selectedPayment === "icbc" ? "border-[#0768FD]" : "border-[rgba(1,34,118,0.05)]"
             }`}>
               <div className="flex items-center gap-3">
