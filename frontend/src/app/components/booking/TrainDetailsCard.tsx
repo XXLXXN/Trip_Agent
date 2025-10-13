@@ -24,17 +24,17 @@ const TrainDetailsCard = ({ data }: Props) => (
         </div>
       </div>
       <div className="flex items-center gap-3 text-xs text-gray-600">
-        <span className="flex items-center gap-1">
+        <span className="flex items-center gap-1 whitespace-nowrap">
           <Luggage size={14} className="text-orange-400" />{" "}
           {data.amenities.seatType}
         </span>
         {data.amenities.wifi && (
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 whitespace-nowrap">
             <Wifi size={14} className="text-orange-400" /> 无线网络
           </span>
         )}
         {data.amenities.food && (
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 whitespace-nowrap">
             <Utensils size={14} className="text-orange-400" /> 餐食
           </span>
         )}
