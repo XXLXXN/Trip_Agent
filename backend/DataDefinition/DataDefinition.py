@@ -20,8 +20,6 @@ class TransportationMode(str, Enum):
     DRIVING = "driving"
     WALK = "walk"
     CYCLING = "cycling"
-    FLIGHT = "flight"
-    TRAIN = "train"
 
 # 定义人数数据结构
 class TravellerCount(BaseModel):
@@ -69,10 +67,7 @@ class Shopping(BaseModel):
 RecommendedProduct = Union[Food, Shopping]
 
 
-class POIInfo(BaseModel):
-    name: str
-    id: str
-    address: str
+
 #输入结构
 #创建景点推荐输入的数据
 class CreateSpotsRequest(BaseModel):
@@ -162,6 +157,10 @@ class HotelDetailInfo(POIDetailInfo):
         mapped_data['poi_type'] = POIDetailType.HOTEL
         super().__init__(**mapped_data)
 
+class POIInfo(BaseModel):
+    name: str
+    id: str
+    address: str
 #创建酒店推荐输入的数据
 class CreateHotelRequest(BaseModel):
     hotel_budget:Optional[Budget] = None
@@ -547,3 +546,71 @@ class BillEntry(BaseBill):
                 },
             ]
         }
+
+
+class FlightRawData(BaseModel):
+    fromCityCode: str
+    toCityCode: str
+    fromDate: str
+    flightNos: List[str]
+
+class TrainRawData(BaseModel):
+    fromStation: str
+    toStation: str
+    fromDate: str
+    trainCodes: List[str]
+
+class TrafficRecRawData(BaseModel):
+    flight_raw_data: Optional[FlightRawData] = None
+    train_raw_data: Optional[List[TrainRawData]] = None
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "flight_raw_data": {
+                    "fromCityCode": "PEK",
+                    "toCityCode": "PVG",
+                    "fromDate": "2025-11-20",
+                    "flightNos": [
+                        "CA1501",
+                        "MU5105"
+                    ]
+                },
+                "train_raw_data": {
+                    "fromStation": "北京南",
+                    "toStation": "上海虹桥",
+                    "fromDate": "2025-11-21",
+                    "trainCodes": [
+                        "G1",
+                        "D311"
+                    ]
+                }
+            }
+        }
+class RawActivityData(BaseModel):
+    type: Literal["activity"] = "activity"
+    raw_poi_info: POIInfo
+
+class RawTransportationData(BaseModel):
+    type: Literal["transportation"] = "transportation"
+
+class RawLargeTransportationData(BaseModel):
+    type: Literal["large_transportation"] = "large_transportation"
+    raw_traffic_info: TrafficRecRawData
+
+RawDayActivityData = Union[RawActivityData, RawTransportationData, RawLargeTransportationData]
+
+
+class RawDayData(BaseModel):
+    date: str
+    day_of_week: str
+    day_index: int
+    total_cost: Optional[float] = None
+    activities: List[RawDayActivityData]=[] 
+
+class TripRawData(BaseModel):
+    trip_name: str
+    destination: str
+    start_date: str
+    end_date: str
+    days: List[RawDayData]

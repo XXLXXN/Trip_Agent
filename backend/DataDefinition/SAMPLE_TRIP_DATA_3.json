@@ -2,6 +2,7 @@
   "user_id": "test_user_beijing_001",
   "trip_id": "beijing_wenyi_trip_001",
   "trip_name": "北京文艺两日游",
+  "origin": "上海",
   "destination": "北京",
   "start_date": "2025-03-15",
   "end_date": "2025-03-16",
