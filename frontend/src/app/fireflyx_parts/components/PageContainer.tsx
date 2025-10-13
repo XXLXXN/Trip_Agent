@@ -28,7 +28,7 @@ export const ScrollableContent = React.forwardRef<HTMLDivElement, {
   const bottomPadding = hasBottomButton ? "pb-32" : "pb-6"; // 增加底部 padding 到 128px
   
   return (
-    <div ref={ref} className={`flex-1 overflow-y-auto px-5 ${bottomPadding} ${className}`}>
+    <div ref={ref} className={`flex-1 overflow-y-auto px-5 bg-slate-50 ${bottomPadding} ${className}`}>
       {children}
     </div>
   );
