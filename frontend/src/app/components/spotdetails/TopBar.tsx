@@ -15,7 +15,7 @@ const TopBar = ({ featuredImage }: TopBarProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
 
   const handleBackClick = () => {
-    navigation.push("/spotslist", "backward");
+    router.back();
   };
 
   const handleFavoriteClick = async () => {

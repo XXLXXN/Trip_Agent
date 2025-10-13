@@ -1,42 +1,42 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import Head from "next/head";
+import { useRef, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import {
-  PageContainer,
-  ScrollableContent,
-} from "../../components";
-import { useTripData } from "../../hooks/useTripData";
-import { ActivityData, POIDetails } from "../../types/tripData";
+import { useNavigation } from "../../../context/NavigationContext";
 
-// 景点详情组件
-import SpotDetailHeader from "../components/SpotDetailHeader";
-import SpotDetailInfo from "../components/SpotDetailInfo";
-import SpotDetailPhotos from "../components/SpotDetailPhotos";
-import SpotDetailDescription from "../components/SpotDetailDescription";
-import SpotDetailLocation from "../components/SpotDetailLocation";
+// 导入模拟数据和所有页面组件
+import { mockLocationData, LocationData } from "@/mockData/spotdetailsdata";
+import TopBar from "@/components/spotdetails/TopBar";
+import LocationDetails from "@/components/spotdetails/LocationDetails";
+import Introduction from "@/components/spotdetails/Introduction";
+import AmenityIcons from "@/components/spotdetails/AmenityIcons";
+import LocationSection from "@/components/spotdetails/LocationSection";
+import { useTripData } from "../../hooks/useTripData";
+import { ActivityData } from "../../types/tripData";
 
 export default function SpotDetailPage() {
   const router = useRouter();
+  const navigation = useNavigation();
   const params = useParams();
   const activityId = params.activityId as string;
-  
-  // 获取行程数据
-  const { tripData, loading, error } = useTripData();
-  
-  // 当前活动数据
-  const [currentActivity, setCurrentActivity] = useState<ActivityData | null>(null);
-  const [poiDetails, setPoiDetails] = useState<POIDetails | null>(null);
 
-  // 从行程数据中找到对应的活动
+  const { tripData, loading, error } = useTripData();
+  const [spotData, setSpotData] = useState<LocationData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
+
+  const locationRef = useRef<HTMLDivElement>(null);
+
+  // 从tripData中查找对应的活动数据
   useEffect(() => {
-    if (tripData && activityId) {
+    if (tripData && !loading) {
+      // 在所有天的活动中查找匹配的活动
       let foundActivity: ActivityData | null = null;
-      
+
       // 将 activityId 转换为数字进行比较，因为 convertToSpotCardData 中提取了数字部分
       const numericActivityId = parseInt(activityId);
-      
-      // 遍历所有天和活动，找到匹配的activity
+
       for (const day of tripData.days) {
         for (const activity of day.activities) {
           // 从 activity.id 中提取数字部分进行比较
@@ -50,31 +50,94 @@ export default function SpotDetailPage() {
         }
         if (foundActivity) break;
       }
-      
-      if (foundActivity) {
-        setCurrentActivity(foundActivity);
-        setPoiDetails(foundActivity.poi_details || null);
+
+      if (foundActivity && foundActivity.poi_details) {
+        const poi = foundActivity.poi_details;
+        const convertedData: LocationData = {
+          name: poi.name || foundActivity.title || "景点",
+          address: poi.address || "地址信息缺失",
+          rating: parseFloat(poi.rating || "4.5") || 4.5,
+          reviewCount: mockLocationData.reviewCount,
+          featuredImage: poi.photos?.[0]?.url || mockLocationData.featuredImage,
+          photos:
+            poi.photos?.map((photo) => photo.url) || mockLocationData.photos,
+          introduction:
+            poi.description ||
+            foundActivity.description ||
+            mockLocationData.introduction,
+          amenitiesStatus: mockLocationData.amenitiesStatus,
+          reviews: mockLocationData.reviews,
+          price: poi.cost || foundActivity.cost || mockLocationData.price,
+        };
+        setSpotData(convertedData);
+      } else {
+        // 如果没有找到对应的POI详情，使用模拟数据
+        setSpotData(mockLocationData);
       }
+      setIsLoading(false);
     }
-  }, [tripData, activityId]);
+  }, [tripData, loading, activityId]);
 
-  // 处理返回
-  const handleBack = () => {
-    router.back();
-  };
+  // 获取坐标
+  useEffect(() => {
+    if (spotData?.address) {
+      const fetchCoordinates = async () => {
+        try {
+          const response = await fetch("/api/geocode", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ address: spotData.address }),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.coordinates) {
+              setCoordinates(data.coordinates);
+            }
+          } else {
+            // 如果API失败，静默处理，不影响页面正常显示
+            console.warn("获取坐标失败，将使用地址搜索:", await response.text());
+          }
+        } catch (error) {
+          // 如果请求失败，静默处理，不影响页面正常显示
+          console.warn("请求坐标 API 时出错，将使用地址搜索:", error);
+        }
+      };
+      fetchCoordinates();
+    }
+  }, [spotData]);
 
-  // 处理打开地图
+  // 滚动函数
+  const scrollToLocation = () =>
+    locationRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  // 导航到地图页面
   const handleOpenMap = () => {
-    if (poiDetails?.address) {
-      // 这里可以添加地图功能
-      console.log("打开地图:", poiDetails.address);
+    if (coordinates && spotData) {
+      // 如果有精确坐标，使用高德地图
+      const [lng, lat] = coordinates;
+      window.open(
+        `https://uri.amap.com/marker?position=${lng},${lat}&name=${encodeURIComponent(
+          spotData.name
+        )}`,
+        "_blank"
+      );
+    } else if (spotData?.address) {
+      // 如果没有坐标但有地址，使用地址搜索
+      window.open(
+        `https://uri.amap.com/search?query=${encodeURIComponent(spotData.address)}&name=${encodeURIComponent(spotData.name)}`,
+        "_blank"
+      );
+    } else {
+      // 如果都没有，提示用户
+      alert("地址信息不完整，无法打开地图");
     }
   };
 
-  if (loading) {
+
+  if (isLoading) {
     return (
-      <PageContainer>
-        <div className="flex items-center justify-center py-8">
+      <div className="loading-container">
+        <div className="flex items-center justify-center h-screen">
           <div
             className="text-[#808080] text-[16px]"
             style={{ fontFamily: "Inter" }}
@@ -82,60 +145,69 @@ export default function SpotDetailPage() {
             加载中...
           </div>
         </div>
-      </PageContainer>
+      </div>
     );
   }
 
-  if (error || !currentActivity) {
+  if (error) {
     return (
-      <PageContainer>
-        <div className="flex items-center justify-center py-8">
+      <div className="error-container">
+        <div className="flex items-center justify-center h-screen">
           <div
             className="text-[#FF4444] text-[16px]"
             style={{ fontFamily: "Inter" }}
           >
-            {error || "未找到景点信息"}
+            {error}
           </div>
         </div>
-      </PageContainer>
+      </div>
     );
   }
 
+  const currentData = spotData || mockLocationData;
+
   return (
-    <PageContainer>
-      <ScrollableContent className="space-y-4" hasBottomButton={true}>
-        {/* 景点头部信息 */}
-        <SpotDetailHeader
-          activity={currentActivity}
-          poiDetails={poiDetails}
-          onBack={handleBack}
+    <div className="container">
+      <Head>
+        <title>{currentData.name} - 详情</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
+      </Head>
 
-        {/* 景点基本信息 */}
-        <SpotDetailInfo
-          activity={currentActivity}
-          poiDetails={poiDetails}
+      <TopBar featuredImage={currentData.featuredImage} />
+
+      <main className="content">
+        <LocationDetails
+          {...currentData}
+          onScrollToLocation={scrollToLocation}
         />
+        <Introduction text={currentData.introduction} />
+        <AmenityIcons amenitiesStatus={currentData.amenitiesStatus} />
 
-        {/* 景点照片 */}
-        {poiDetails?.photos && poiDetails.photos.length > 0 && (
-          <SpotDetailPhotos photos={poiDetails.photos} />
-        )}
-
-        {/* 景点描述 */}
-        <SpotDetailDescription
-          description={poiDetails?.description || currentActivity.description}
-        />
-
-        {/* 景点位置 */}
-        {poiDetails?.address && (
-          <SpotDetailLocation
-            address={poiDetails.address}
+        <div ref={locationRef}>
+          <LocationSection
+            address={currentData.address}
             onOpenMap={handleOpenMap}
+            coordinates={coordinates}
           />
-        )}
-      </ScrollableContent>
+        </div>
+      </main>
 
-    </PageContainer>
+      <style jsx global>{`
+        /* 全局样式 */
+      `}</style>
+      <style jsx>{`
+        .container {
+          min-height: 100vh;
+          position: relative;
+          background: white;
+        }
+        .content {
+          padding-bottom: 20px;
+        }
+      `}</style>
+    </div>
   );
 }

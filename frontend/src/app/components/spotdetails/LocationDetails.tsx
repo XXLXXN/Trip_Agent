@@ -64,26 +64,30 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
       <style jsx>{`
         .location-details-container {
           border: 1px solid rgba(1, 34, 118, 0.05);
-          padding: 16px;
+          padding: 16px 12px 16px 16px;
           margin: 8px;
-          height: 297px;
           background-color: white;
           border-radius: 16px;
           margin-top: -46px;
           position: relative;
+          width: calc(100% - 16px);
+          box-sizing: border-box;
+          min-height: 297px;
         }
         h2 {
           font-size: 24px;
-          height: 29px;
           font-family: 'Inter', semi-bold;
           color: black;
           font-weight: 500;
           margin-bottom: 16px;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          line-height: 1.2;
         }
         .address-box, .rating-box {
           display: flex;
-          align-items: center;
-          height: 51px;
+          align-items: flex-start;
+          min-height: 51px;
           padding: 8px;
           border-radius: 12px;
           border: 1px solid rgba(1, 34, 118, 0.05);
@@ -93,10 +97,11 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
         .address-icon, .rating-icon {
           display: flex;
           justify-content: center;
-          align-items: center;
+          align-items: flex-start;
           width: 24px;
           height: 24px;
           margin-right: 4px;
+          margin-top: 2px;
         }
         .address-content, .rating-content {
           flex-grow: 1;
@@ -104,7 +109,6 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           flex-direction: column;
         }
         .address-label, .rating-label {
-          width: 255px;
           font-family: 'Inter', sans-serif;
           font-size: 10px;
           font-weight: 500;
@@ -114,7 +118,8 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           color: #8C8C8C;
         }
         .address-text {
-          width: 255px;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
         }
         .address-text, .rating-score, .review-count {
           font-family: 'Inter', sans-serif;
@@ -125,9 +130,9 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           color: #1B1446;
         }
         .rating-info {
-          width: 255px;
           display: flex;
           align-items: baseline;
+          flex-wrap: wrap;
         }
         .address-arrow, .rating-arrow {
           width: 24px;
@@ -150,6 +155,8 @@ const LocationDetails = ({ name, address, rating, reviewCount, photos, onScrollT
           gap: 9px;
           overflow-x: auto;
           padding-bottom: 16px;
+          width: 100%;
+          box-sizing: border-box;
         }
         .photo-item {
           min-width: 100px;
