@@ -78,13 +78,9 @@ export default function SelectionHeader({
           font-family: "Inter", semi-bold;
           font-size: 14px;
           font-weight: 500;
-          line-height: 14px;
-          letter-spacing: 0em;
           color: #ffffff;
           background-color: #0768fd;
-          padding: 7.5px 14px 8px 14px;
           border-radius: 9999px;
-          font-weight: 500;
           border: none;
           cursor: pointer;
         }
