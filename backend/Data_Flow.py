@@ -1,9 +1,14 @@
 from typing import List
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import redis
 
-from backend.database.database_operations import save_trip_to_db
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Optional
+from fastapi.responses import JSONResponse
+
+from backend.database.database_operations import save_trip_to_db, fetch_trips_by_user_id, trip_collection
 from backend.services.prompt_builder import build_create_itinerary_prompt,build_create_spot_prompt,build_create_hotel_prompt,build_create_traffic_prompt
 from backend.tools.connect_location import connect_location
 from backend.tools.hotel_tools import process_hotel_recommendations
@@ -20,6 +25,25 @@ app = FastAPI(
     title="Data Flow",
     description="Data Flow 后端数据的处理流程",
     version="1.0.0",
+)
+
+# 定义一个专门用于历史记录列表的、简单的数据模型
+class TripHistoryItem(BaseModel):
+    user_id: str
+    trip_id: str
+    trip_name: str
+    destination: Optional[str] = None
+    start_date: str
+    end_date: str
+    days_count: int  # 我们只返回天数，而不是整个 days 数组
+
+# 配置 CORS 中间件
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # 允许你的前端地址访问
+    allow_credentials=True,
+    allow_methods=["*"],  # 允许所有方法 (GET, POST 等)
+    allow_headers=["*"],  # 允许所有请求头
 )
 
 redis_client = redis.Redis(host='localhost', port=6379, db=0)
@@ -97,11 +121,65 @@ async def oneclick_itinerary(request):
     然后直接返回支付链接
     """
 
-@app.post("/update/itinerary")
-async def update_itinerary(request:UpdateItineraryRequest):
-    prompts = update_itinerary_prompt(request)
-    trip_no_trans = await send_trip_plan_prompt(prompts)
-    trip_data=connect_location(trip_no_trans)
+# @app.post("/update/itinerary")
+# async def update_itinerary(request:UpdateItineraryRequest):
+#     prompts = update_itinerary_prompt(request)
+#     trip_no_trans = await send_trip_plan_prompt(prompts)
+#     trip_data=connect_location(trip_no_trans)
+    
+# 用这个新函数替换掉你原来的 get_itineraries_by_user_id 函数
+@app.get("/get/itineraries/by_user/{user_id}", response_model=List[TripHistoryItem])
+async def get_itineraries_by_user_id(user_id: str):
+    """
+    根据用户ID，从数据库获取该用户的所有行程历史记录。
+    这个版本会进行数据清洗，只返回列表页需要的基础信息。
+    """
+    # 1. 从数据库获取原始、完整的行程数据
+    raw_trips = await fetch_trips_by_user_id(user_id)
+    
+    if not raw_trips:
+        return []
+
+    # 2. "数据清洗" 过程：遍历原始数据，提取关键字段
+    history_list = []
+    for trip_data in raw_trips:
+        # 计算天数
+        days_count = len(trip_data.get("days", []))
+        
+        # 创建一个符合 TripHistoryItem 模型的字典
+        cleaned_item = {
+            "user_id": trip_data.get("user_id"),
+            "trip_id": trip_data.get("trip_id"),
+            "trip_name": trip_data.get("trip_name"),
+            "destination": trip_data.get("destination"),
+            "start_date": trip_data.get("start_date"),
+            "end_date": trip_data.get("end_date"),
+            "days_count": days_count
+        }
+        history_list.append(cleaned_item)
+
+    # 3. 返回清洗后的、干净的列表
+    return history_list
+
+@app.get("/get/itinerary/{trip_id}")
+async def get_itinerary_by_id(trip_id: str):
+    """
+    根据行程的 trip_id，从数据库获取单个行程的完整详细数据。
+    """
+    # 从数据库获取原始的、完整的行程数据
+    # 注意这里我们用的是 trip_id，而不是数据库的 _id
+    trip_data = await trip_collection.find_one({"trip_id": trip_id})
+    
+    if not trip_data:
+        return JSONResponse(status_code=404, content={"message": "Trip not found"})
+
+    # Pydantic 无法验证 ObjectId，所以在返回前手动转换
+    if "_id" in trip_data:
+        trip_data["_id"] = str(trip_data["_id"])
+    
+    # 直接返回字典，绕过严格的 Pydantic Trip 模型验证，确保前端能收到完整数据
+    return trip_data    
+    
 @app.get("get/itinerary")
 async def get_itinerary_by_id(itinerary_id: str):
     """<UNK>"""

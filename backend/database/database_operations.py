@@ -15,7 +15,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # --- 数据库配置 (Database Configuration) ---
 # **请确保这是您最新的、正确的连接配置**
 # 配合 Port Forwarding 时的配置：
-MONGO_URI = "mongodb://root:xfkswrm6@dbconn.sealoshzh.site:33420/?directConnection=true"
+MONGO_URI = "mongodb://root:cb9hrkbr@usw.sealos.io:45167/?directConnection=true"
 # 如果您使用的是外部IP，请自行替换上面的 MONGO_URI
 
 DATABASE_NAME = "itinerary_db"
@@ -92,6 +92,33 @@ async def fetch_all_trips():
 
     except Exception as e:
         print(f"从 MongoDB 查询数据时发生错误: {e}")
+        return []
+
+
+# 新增：查 (Read - By User ID)
+async def fetch_trips_by_user_id(user_id: str) -> list:
+    """
+    根据 user_id 从集合中检索所有匹配的旅行行程文档。
+    """
+    if trip_collection is None:
+        print("数据库集合不可用。无法获取行程数据。")
+        return []
+
+    print(f"\n--- 正在从数据库中获取用户 '{user_id}' 的所有行程数据 ---")
+    try:
+        # 使用 find() 并传入查询条件 {"user_id": user_id}
+        cursor = trip_collection.find({"user_id": user_id})
+        trips = await cursor.to_list(length=None)  # length=None 表示获取所有结果
+
+        if not trips:
+            print(f"未找到用户 '{user_id}' 的任何行程数据。")
+            return []
+
+        print(f"✅ 成功为用户 '{user_id}' 找到 {len(trips)} 个行程文档。")
+        return trips
+
+    except Exception as e:
+        print(f"根据 user_id '{user_id}' 查询数据时发生错误: {e}")
         return []
 
 
