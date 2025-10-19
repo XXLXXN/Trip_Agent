@@ -6,6 +6,8 @@
   "destination": "北京",
   "start_date": "2025-03-15",
   "end_date": "2025-03-16",
+  "total_cost": null,
+  "rating": null,
   "days": [
     {
       "date": "2025-03-15",

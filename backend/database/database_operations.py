@@ -208,29 +208,7 @@ sample_data_path = os.path.join(current_dir, '..', 'DataDefinition', 'SAMPLE_TRI
 spec = importlib.util.spec_from_file_location("SAMPLE_TRIP_DATA_1", sample_data_path)
 sample_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sample_module)
-# SAMPLE_TRIP_DATA_1 = sample_module.SAMPLE_TRIP_DATA_1
-SAMPLE_TRIP_DATA_1 = {
-  "user_id": "test_user_beijing_001",
-  "trip_id": "beijing_wenyi_trip_001",
-  "trip_name": "北京文艺两日游",
-  "days": [
-    {
-      "date": "2025-03-15",
-      "day_index": 1,
-      "activities": [
-        { "id": "transport_0", "type": "large_transportation", "start_time": "08:00", "end_time": "10:20", "traffic_details": { "fromAirportName": "上海浦东", "toAirportName": "北京首都" } },
-        { "id": "activity_1", "start_time": "10:30:00", "end_time": "11:00:00", "title": "到达北京首都机场", "type": "activity", "location": { "name": "北京首都国际机场" } },
-        { "id": "transportation_activity_1_activity_2_1", "start_time": "11:00:00", "end_time": "11:49:43", "type": "transportation", "mode": "bus", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
-        { "id": "transportation_activity_1_activity_2_2", "start_time": "11:00:00", "end_time": "14:31:29", "type": "transportation", "mode": "walk", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
-        { "id": "transportation_activity_1_activity_2_3", "start_time": "11:00:00", "end_time": "12:22:16", "type": "transportation", "mode": "cycling", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
-        { "id": "transportation_activity_1_activity_2_4", "start_time": "11:00:00", "end_time": "11:28:51", "type": "transportation", "mode": "driving", "origin": { "name": "北京首都国际机场" }, "destination": { "name": "798艺术区" } },
-        { "id": "activity_2", "start_time": "12:00:00", "end_time": "14:00:00", "title": "798艺术区游览", "type": "activity", "location": { "name": "798艺术区", "address": "酒仙桥路4号" }, "poi_details": { "name": "798艺术区", "POIId": "B000A81FY5" } },
-        { "id": "transportation_activity_2_activity_3_1", "start_time": "14:00:00", "end_time": "14:47:31", "type": "transportation", "mode": "bus", "origin": { "name": "798艺术区" }, "destination": { "name": "南锣鼓巷" } },
-        { "id": "transportation_activity_2_activity_3_2", "start_time": "14:00:00", "end_time": "16:27:38", "type": "transportation", "mode": "walk", "origin": { "name": "798艺术区" }, "destination": { "name": "南锣鼓巷" } }
-      ]
-    }
-  ]
-}
+SAMPLE_TRIP_DATA_1 = sample_module.SAMPLE_TRIP_DATA_1
 
 
 async def main():
