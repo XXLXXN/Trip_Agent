@@ -1,22 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react"; // <--- 修正了拼写错误
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// 确保这个组件路径是正确的，根据你的项目结构，它可能是 "../../components"
 import { PageHeader, PageContainer } from "../../components"; 
 
-// 临时的占位组件，用于展示，你可以之后换成真正的组件
-const SchedulePagePlaceholder = ({ trip }: { trip: any }) => (
-  <div className="p-4">
-    <h2 className="font-bold text-lg mb-2">行程表详情</h2>
-    {/* 使用 pre 标签可以很好地格式化显示 JSON 数据，方便调试 */}
-    <pre className="text-xs whitespace-pre-wrap bg-gray-100 p-2 rounded-md">
-      {JSON.stringify(trip?.days, null, 2)}
-    </pre>
-  </div>
-);
-const AccountPagePlaceholder = () => <div className="p-4 font-bold text-lg">账本 (待开发)</div>;
-const SuggestionsPagePlaceholder = () => <div className="p-4 font-bold text-lg">建议 (待开发)</div>;
+import SchedulePage from "../schedule/page"; 
+import AccountPage from "../account/page";
+import SuggestionsPage from "../suggestions/page";
 
 type TabType = "schedule" | "account" | "suggestions";
 
@@ -28,12 +18,10 @@ export default function DynamicTripPage({ params }: { params: { tripID: string }
   const { tripID } = params; 
 
   useEffect(() => {
-    // 如果 URL 中没有 tripID，则不执行任何操作
     if (!tripID) {
       setLoading(false);
       return;
     }
-
     const fetchTripDetails = async () => {
       setLoading(true);
       try {
@@ -46,13 +34,11 @@ export default function DynamicTripPage({ params }: { params: { tripID: string }
       } catch (error) {
         console.error("在获取行程详情时捕获到错误:", error);
       } finally {
-        // 无论成功还是失败，最后都必须停止加载状态
         setLoading(false);
       }
     };
-
     fetchTripDetails();
-  }, [tripID]); // 依赖数组确保仅在 tripID 变化时才重新运行
+  }, [tripID]); 
 
   const tabs = [
     { id: "schedule" as const, label: "行程表" },
@@ -68,15 +54,21 @@ export default function DynamicTripPage({ params }: { params: { tripID: string }
       return <div className="p-4 text-center text-red-500">未能加载行程数据。</div>;
     }
 
+    // --- 关键改动 2: 在 switch 语句中使用所有真实的组件 ---
+    // 我们把获取到的 tripData 传递给每一个组件
     switch (activeTab) {
       case "schedule":
-        return <SchedulePagePlaceholder trip={tripData} />;
+        // @ts-ignore
+        return <SchedulePage data={tripData} />;
       case "account":
-        return <AccountPagePlaceholder />;
+        // @ts-ignore
+        return <AccountPage data={tripData} />;
       case "suggestions":
-        return <SuggestionsPagePlaceholder />;
+        // @ts-ignore
+        return <SuggestionsPage data={tripData} />;
       default:
-        return <SchedulePagePlaceholder trip={tripData} />;
+         // @ts-ignore
+        return <SchedulePage data={tripData} />;
     }
   };
 
@@ -84,7 +76,6 @@ export default function DynamicTripPage({ params }: { params: { tripID: string }
     <PageContainer>
       <PageHeader title={loading ? "加载中..." : tripData?.trip_name || "行程详情"} />
       
-      {/* Tab Navigation */}
       <div className="px-5 pb-4 pt-2">
         <div className="flex gap-2">
           {tabs.map((tab) => (
@@ -105,7 +96,6 @@ export default function DynamicTripPage({ params }: { params: { tripID: string }
         </div>
       </div>
       
-      {/* Content Area */}
       <div className="flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
