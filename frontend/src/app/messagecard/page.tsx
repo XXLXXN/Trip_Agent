@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { useMemo } from "react"
+import { useMemo, Suspense } from "react"
 import { useTripPlan } from "../context/TripPlanContext"
 import { useNavigation } from "../context/NavigationContext"
 import { FixedBottomBar } from "../fireflyx_parts/components/FixedBottomBar"
@@ -25,7 +25,7 @@ interface TravelParams {
   priceRange: [number, number]
 }
 
-export default function TravelInfoCard() {
+function TravelInfoCardContent() {
   const searchParams = useSearchParams()
   const navigation = useNavigation()
   const { getTripPlan } = useTripPlan()
@@ -133,7 +133,7 @@ export default function TravelInfoCard() {
     }
   }
   return (
-    <div className="min-h-screen bg-[#f6f8fb] max-w-sm mx-auto relative">
+    <div className="min-h-screen bg-[#f6f8fb] mx-auto relative">
       {/* 顶部白色背景 */}
       <div
         className="absolute top-0 left-0 w-full"
@@ -310,5 +310,19 @@ export default function TravelInfoCard() {
         </Link>
       </FixedBottomBar>
     </div>
+  )
+}
+
+export default function TravelInfoCard() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#f6f8fb] max-w-sm mx-auto flex items-center justify-center">
+        <div className="text-[#808080] text-[16px]" style={{ fontFamily: "Inter" }}>
+          加载中...
+        </div>
+      </div>
+    }>
+      <TravelInfoCardContent />
+    </Suspense>
   )
 }

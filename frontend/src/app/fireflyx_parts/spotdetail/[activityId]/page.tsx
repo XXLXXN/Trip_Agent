@@ -110,6 +110,12 @@ export default function SpotDetailPage() {
   const scrollToLocation = () =>
     locationRef.current?.scrollIntoView({ behavior: "smooth" });
 
+  const scrollToReviews = () => {
+    // 这里可以添加滚动到评论区域的逻辑
+    // 暂时使用一个简单的实现
+    console.log("滚动到评论区域");
+  };
+
   // 导航到地图页面
   const handleOpenMap = () => {
     if (coordinates && spotData) {
@@ -182,6 +188,7 @@ export default function SpotDetailPage() {
         <LocationDetails
           {...currentData}
           onScrollToLocation={scrollToLocation}
+          onScrollToReviews={scrollToReviews}
         />
         <Introduction text={currentData.introduction} />
         <AmenityIcons amenitiesStatus={currentData.amenitiesStatus} />
