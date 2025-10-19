@@ -3,14 +3,19 @@
 import json
 import motor.motor_asyncio
 import asyncio
+import sys
+import os
 from bson.json_util import dumps  # 导入 dumps 用于美化输出 MongoDB 文档
 from bson.objectid import ObjectId  # 导入 ObjectId 用于按 _id 查询
 from bson.errors import InvalidId  # 导入 InvalidId 用于处理无效的ID格式
 
+# 添加项目根目录到Python路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # --- 数据库配置 (Database Configuration) ---
 # **请确保这是您最新的、正确的连接配置**
 # 配合 Port Forwarding 时的配置：
-MONGO_URI = "mongodb://root:97dvhfbz@dbconn.sealosgzg.site:39960/?directConnection=true"
+MONGO_URI = "mongodb://root:cb9hrkbr@usw.sealos.io:45167/?directConnection=true"
 # 如果您使用的是外部IP，请自行替换上面的 MONGO_URI
 
 DATABASE_NAME = "itinerary_db"
@@ -87,6 +92,33 @@ async def fetch_all_trips():
 
     except Exception as e:
         print(f"从 MongoDB 查询数据时发生错误: {e}")
+        return []
+
+
+# 新增：查 (Read - By User ID)
+async def fetch_trips_by_user_id(user_id: str) -> list:
+    """
+    根据 user_id 从集合中检索所有匹配的旅行行程文档。
+    """
+    if trip_collection is None:
+        print("数据库集合不可用。无法获取行程数据。")
+        return []
+
+    print(f"\n--- 正在从数据库中获取用户 '{user_id}' 的所有行程数据 ---")
+    try:
+        # 使用 find() 并传入查询条件 {"user_id": user_id}
+        cursor = trip_collection.find({"user_id": user_id})
+        trips = await cursor.to_list(length=None)  # length=None 表示获取所有结果
+
+        if not trips:
+            print(f"未找到用户 '{user_id}' 的任何行程数据。")
+            return []
+
+        print(f"✅ 成功为用户 '{user_id}' 找到 {len(trips)} 个行程文档。")
+        return trips
+
+    except Exception as e:
+        print(f"根据 user_id '{user_id}' 查询数据时发生错误: {e}")
         return []
 
 
@@ -190,7 +222,20 @@ async def delete_trip_by_id(trip_id: str) -> bool:
 
 
 # 确保 SAMPLE_TRIP_DATA_1 文件和路径是正确的
-from backend.DataDefinition.SAMPLE_TRIP_DATA_1 import SAMPLE_TRIP_DATA_1
+# 使用动态路径解析导入
+import importlib.util
+import os
+
+# 获取当前文件的绝对路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 构建 SAMPLE_TRIP_DATA_1 文件的路径
+sample_data_path = os.path.join(current_dir, '..', 'DataDefinition', 'SAMPLE_TRIP_DATA_1.py')
+
+# 动态导入模块
+spec = importlib.util.spec_from_file_location("SAMPLE_TRIP_DATA_1", sample_data_path)
+sample_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sample_module)
+SAMPLE_TRIP_DATA_1 = sample_module.SAMPLE_TRIP_DATA_1
 
 
 async def main():

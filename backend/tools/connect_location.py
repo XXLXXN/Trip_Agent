@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+connect_location.py - 自动为Trip对象添加Transportation项目（POI版本）
+"""
 
 import os
 import sys
 import time
+import concurrent.futures
 from typing import List, Optional, Union
 from dataclasses import dataclass
 
@@ -400,7 +404,7 @@ def get_transport_info_from_api_by_poi(
     dest_poi_id: str,
     destination_city: str = "上海"
 ) -> Optional[dict]:
-    """通过高德地图API获取四种交通方案：公交、步行、骑行、驾车（与poi_transport.py保持一致）"""
+    """通过高德地图API并发获取四种交通方案：公交、步行、骑行、驾车"""
     
     city_code_map = {
         "上海": "021", "北京": "010", "广州": "020", "深圳": "0755",
@@ -409,113 +413,145 @@ def get_transport_info_from_api_by_poi(
     }
     
     city_code = city_code_map.get(destination_city, "021")
-    transport_options = []
     
-    # 添加延迟避免API请求过于频繁
-    time.sleep(0.5)
+    def get_transit():
+        """获取公交方案"""
+        try:
+            transit_data = amap_api.get_transit_route_by_poi(origin_poi_id, dest_poi_id, city_code)
+            if transit_data and transit_data.get('status') == '1':
+                route_info = transit_data.get('route', {})
+                if 'transits' in route_info and route_info['transits']:
+                    transit = route_info['transits'][0]
+                    cost = parse_transit_cost_v5(transit)
+                    duration = parse_transit_duration_v5(transit)
+                    detailed_description = parse_detailed_transit_description_v5(transit)
+                    distance = int(transit.get('distance', 0))
+                    
+                    return {
+                        'mode': 'bus',
+                        'cost': cost,
+                        'duration': duration,
+                        'distance': distance,
+                        'description': detailed_description,
+                        'notes': '🚇 公共交通方案'
+                    }
+        except Exception as e:
+            print(f"获取公交方案失败: {e}")
+        return None
     
-    # 1. 获取公交方案（与poi_transport.py顺序一致）
-    try:
-        transit_data = amap_api.get_transit_route_by_poi(origin_poi_id, dest_poi_id, city_code)
-        if transit_data and transit_data.get('status') == '1':
-            # 解析公交方案（简化版，不进行复杂过滤）
-            route_info = transit_data.get('route', {})
-            if 'transits' in route_info and route_info['transits']:
-                transit = route_info['transits'][0]  # 选择第一个方案
-                cost = parse_transit_cost_v5(transit)
-                duration = parse_transit_duration_v5(transit)
-                detailed_description = parse_detailed_transit_description_v5(transit)
-                distance = int(transit.get('distance', 0))
+    def get_walking():
+        """获取步行方案"""
+        try:
+            walking_data = amap_api.get_walking_route_by_poi(origin_poi_id, dest_poi_id)
+            if walking_data and walking_data.get('status') == '1':
+                path = walking_data['route']['paths'][0]
+                cost_info = path.get('cost', {})
+                duration = int(cost_info.get('duration', 0))
+                distance = int(path.get('distance', 0))
                 
-                transport_options.append({
-                    'mode': 'bus',
-                    'cost': cost,
-                    'duration': duration,
-                    'distance': distance,
-                    'description': detailed_description,
-                    'notes': '🚇 公共交通方案'
-                })
-    except Exception as e:
-        print(f"获取公交方案失败: {e}")
+                if duration > 0 and distance > 0:
+                    distance_km = round(distance / 1000, 1)
+                    return {
+                        'mode': 'walk',
+                        'cost': 0.0,
+                        'duration': duration,
+                        'distance': distance,
+                        'description': f"步行约{duration//60}分钟（距离{distance_km}公里）",
+                        'notes': '步行时间较长，建议考虑其他交通方式' if duration > 1800 else '建议穿舒适的鞋子，注意天气情况'
+                    }
+        except Exception as e:
+            print(f"获取步行方案失败: {e}")
+        return None
     
-    # 2. 获取步行方案
-    try:
-        time.sleep(0.3)
-        walking_data = amap_api.get_walking_route_by_poi(origin_poi_id, dest_poi_id)
-        if walking_data and walking_data.get('status') == '1':
-            path = walking_data['route']['paths'][0]
-            cost_info = path.get('cost', {})
-            duration = int(cost_info.get('duration', 0))
-            distance = int(path.get('distance', 0))
-            
-            if duration > 0 and distance > 0:
-                distance_km = round(distance / 1000, 1)
-                transport_options.append({
-                    'mode': 'walk',
-                    'cost': 0.0,
-                    'duration': duration,
-                    'distance': distance,
-                    'description': f"步行约{duration//60}分钟（距离{distance_km}公里）",
-                    'notes': '步行时间较长，建议考虑其他交通方式' if duration > 1800 else '建议穿舒适的鞋子，注意天气情况'
-                })
-                print(f"✓ 步行方案添加成功")
-    except Exception as e:
-        print(f"获取步行方案失败: {e}")
-    
-    # 3. 获取骑行方案
-    try:
-        time.sleep(0.3)
-        cycling_data = amap_api.get_cycling_route_by_poi(origin_poi_id, dest_poi_id)
-        if cycling_data and cycling_data.get('status') == '1':
-            path = cycling_data['route']['paths'][0]
-            duration = int(path.get('duration', 0))
-            distance = int(path.get('distance', 0))
-            
-            if duration > 0 and distance > 0:
-                # 共享单车费用计算
-                cycling_cost = 1.5
-                if duration > 900:
-                    extra_15min_blocks = (duration - 900 + 899) // 900
-                    cycling_cost += extra_15min_blocks * 1.0
-                cycling_cost = round(cycling_cost, 1)
+    def get_cycling():
+        """获取骑行方案"""
+        try:
+            cycling_data = amap_api.get_cycling_route_by_poi(origin_poi_id, dest_poi_id)
+            if cycling_data and cycling_data.get('status') == '1':
+                path = cycling_data['route']['paths'][0]
+                duration = int(path.get('duration', 0))
+                distance = int(path.get('distance', 0))
                 
-                distance_km = round(distance / 1000, 1)
-                transport_options.append({
-                    'mode': 'cycling',
-                    'cost': cycling_cost,
-                    'duration': duration,
-                    'distance': distance,
-                    'description': f"骑行约{duration//60}分钟（距离{distance_km}公里）",
-                    'notes': f'共享单车费用约{cycling_cost}元，请遵守交通规则'
-                })
-                print(f"✓ 骑行方案添加成功")
-    except Exception as e:
-        print(f"获取骑行方案失败: {e}")
+                if duration > 0 and distance > 0:
+                    # 共享单车费用计算
+                    cycling_cost = 1.5
+                    if duration > 900:
+                        extra_15min_blocks = (duration - 900 + 899) // 900
+                        cycling_cost += extra_15min_blocks * 1.0
+                    cycling_cost = round(cycling_cost, 1)
+                    
+                    distance_km = round(distance / 1000, 1)
+                    return {
+                        'mode': 'cycling',
+                        'cost': cycling_cost,
+                        'duration': duration,
+                        'distance': distance,
+                        'description': f"骑行约{duration//60}分钟（距离{distance_km}公里）",
+                        'notes': f'共享单车费用约{cycling_cost}元，请遵守交通规则'
+                    }
+        except Exception as e:
+            print(f"获取骑行方案失败: {e}")
+        return None
     
-    # 4. 获取驾车方案
-    try:
-        time.sleep(0.3)
-        driving_data = amap_api.get_driving_route_by_poi(origin_poi_id, dest_poi_id)
-        if driving_data and driving_data.get('status') == '1':
-            path = driving_data['route']['paths'][0]
-            cost_info = path.get('cost', {})
-            duration = int(cost_info.get('duration', 0))
-            distance = int(path.get('distance', 0))
-            
-            if duration > 0 and distance > 0:
-                taxi_fee = float(cost_info.get('taxi_fee', 0))
-                distance_km = round(distance / 1000, 1)
-                transport_options.append({
-                    'mode': 'driving',
-                    'cost': taxi_fee,
-                    'duration': duration,
-                    'distance': distance,
-                    'description': f"驾车约{duration//60}分钟（距离{distance_km}公里）",
-                    'notes': f'出租车费用约{taxi_fee}元' if taxi_fee > 0 else '自驾出行'
-                })
-                print(f"✓ 驾车方案添加成功")
-    except Exception as e:
-        print(f"获取驾车方案失败: {e}")
+    def get_driving():
+        """获取驾车方案"""
+        try:
+            driving_data = amap_api.get_driving_route_by_poi(origin_poi_id, dest_poi_id)
+            if driving_data and driving_data.get('status') == '1':
+                path = driving_data['route']['paths'][0]
+                cost_info = path.get('cost', {})
+                duration = int(cost_info.get('duration', 0))
+                distance = int(path.get('distance', 0))
+                
+                if duration > 0 and distance > 0:
+                    taxi_fee = float(cost_info.get('taxi_fee', 0))
+                    distance_km = round(distance / 1000, 1)
+                    return {
+                        'mode': 'driving',
+                        'cost': taxi_fee,
+                        'duration': duration,
+                        'distance': distance,
+                        'description': f"驾车约{duration//60}分钟（距离{distance_km}公里）",
+                        'notes': f'出租车费用约{taxi_fee}元' if taxi_fee > 0 else '自驾出行'
+                    }
+        except Exception as e:
+            print(f"获取驾车方案失败: {e}")
+        return None
+    
+    # 使用线程池并发执行所有API调用
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        # 提交所有任务
+        transit_future = executor.submit(get_transit)
+        walking_future = executor.submit(get_walking)
+        cycling_future = executor.submit(get_cycling)
+        driving_future = executor.submit(get_driving)
+        
+        # 收集结果
+        transport_options = []
+        
+        # 获取公交方案
+        transit_result = transit_future.result()
+        if transit_result:
+            transport_options.append(transit_result)
+            print("✓ 公交方案添加成功")
+        
+        # 获取步行方案
+        walking_result = walking_future.result()
+        if walking_result:
+            transport_options.append(walking_result)
+            print("✓ 步行方案添加成功")
+        
+        # 获取骑行方案
+        cycling_result = cycling_future.result()
+        if cycling_result:
+            transport_options.append(cycling_result)
+            print("✓ 骑行方案添加成功")
+        
+        # 获取驾车方案
+        driving_result = driving_future.result()
+        if driving_result:
+            transport_options.append(driving_result)
+            print("✓ 驾车方案添加成功")
     
     # 如果没有获取到任何方案，返回默认步行方案
     if not transport_options:

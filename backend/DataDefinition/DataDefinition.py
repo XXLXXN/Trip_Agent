@@ -314,6 +314,41 @@ class TrafficRecInfo(BaseModel):
     traffic_details: TrafficDetails = Field(..., description="具体的交通方式推荐详情")
 
 
+
+# 飞机行程信息模型
+class VoyageInfo(BaseModel):
+    """
+    飞机行程信息的具体结构，匹配SAMPLE_FLIGHT_RECOMMENDATIONS中的voyage字段。
+    """
+    fromCityCode: str = Field(..., description="出发城市代码")
+    toCityCode: str = Field(..., description="到达城市代码")
+    fromCityName: str = Field(..., description="出发城市名称")
+    toCityName: str = Field(..., description="到达城市名称")
+    fromDate: str = Field(..., description="出发日期")
+    flights: List[FlightDetails] = Field(..., description="航班信息列表")
+
+# 交通推荐数据模型，约束voyage和trainLines的结构
+class TrafficRecommendationData(BaseModel):
+    """
+    交通推荐数据的具体结构，确保包含voyage和trainLines字段。
+    匹配SAMPLE_TRAFFIC_RECOMMENDATIONS数据结构。
+    
+    示例数据格式:
+    {
+        "voyage": {  # 对于飞机
+            "fromCityCode": "KRL",
+            "toCityCode": "CTU", 
+            "fromCityName": "库尔勒",
+            "toCityName": "成都",
+            "fromDate": "2020-06-10",
+            "flights": [...]
+        },
+        "trainLines": [...]  # 对于火车
+    }
+    """
+    voyage: Optional[VoyageInfo] = Field(None, description="飞机行程信息")
+    trainLines: Optional[List[TrainDetails]] = Field(None, description="火车线路列表")
+
 # 交通推荐响应包装类，匹配示例数据结构
 class TrafficRecommendationResponse(BaseModel):
     """
@@ -333,7 +368,7 @@ class TrafficRecommendationResponse(BaseModel):
         "msg": "请求成功"
     }
     """
-    data: Dict[str, Any] = Field(..., description="交通数据，包含voyage或trainLines")
+    data: TrafficRecommendationData = Field(..., description="交通数据，包含voyage和trainLines")
     success: bool = Field(..., description="请求是否成功")
     msg: str = Field(..., description="消息")
 
@@ -429,6 +464,8 @@ class Trip(BaseModel):
     destination: str
     start_date: date
     end_date: date
+    total_cost: Optional[float] = None
+    rating: Optional[float] = None
     days: List[Day] = []
 
 

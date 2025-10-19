@@ -12,6 +12,7 @@ import LocationDetails from "@/components/spotdetails/LocationDetails";
 import Introduction from "@/components/spotdetails/Introduction";
 import AmenityIcons from "@/components/spotdetails/AmenityIcons";
 import LocationSection from "@/components/spotdetails/LocationSection";
+import ReviewSection from "../../../components/spotdetails/ReviewSection";
 import { useTripData } from "../../hooks/useTripData";
 import { ActivityData } from "../../types/tripData";
 
@@ -27,6 +28,7 @@ export default function SpotDetailPage() {
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
 
   const locationRef = useRef<HTMLDivElement>(null);
+  const reviewsRef = useRef<HTMLDivElement>(null);
 
   // 从tripData中查找对应的活动数据
   useEffect(() => {
@@ -110,11 +112,9 @@ export default function SpotDetailPage() {
   const scrollToLocation = () =>
     locationRef.current?.scrollIntoView({ behavior: "smooth" });
 
-  const scrollToReviews = () => {
-    // 这里可以添加滚动到评论区域的逻辑
-    // 暂时使用一个简单的实现
-    console.log("滚动到评论区域");
-  };
+  // 滚动到评价区域
+  const scrollToReviews = () =>
+    reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
 
   // 导航到地图页面
   const handleOpenMap = () => {
@@ -138,6 +138,9 @@ export default function SpotDetailPage() {
       alert("地址信息不完整，无法打开地图");
     }
   };
+
+  // 导航到所有评价页面
+  const handleViewAllReviews = () => router.push('/reviews');
 
 
   if (isLoading) {
@@ -198,6 +201,13 @@ export default function SpotDetailPage() {
             address={currentData.address}
             onOpenMap={handleOpenMap}
             coordinates={coordinates}
+          />
+        </div>
+
+        <div ref={reviewsRef}>
+          <ReviewSection
+            reviews={currentData.reviews}
+            onViewAllReviews={handleViewAllReviews}
           />
         </div>
       </main>

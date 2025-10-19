@@ -6,4 +6,5 @@ sqlalchemy
 psycopg2-binary
 python-dotenv
 motor
+pymongo
 requests

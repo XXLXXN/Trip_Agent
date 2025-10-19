@@ -1,5 +1,8 @@
 from datetime import date, time
 
+# 定义 null 为 None，以兼容 JSON 格式
+null = None
+
 SAMPLE_TRIP_DATA_1 = {
   "user_id": "test_user_beijing_001",
   "trip_id": "beijing_wenyi_trip_001",
