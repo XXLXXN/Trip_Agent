@@ -147,7 +147,7 @@ function TravelInfoCardContent() {
       {/* Header */}
       <div className="relative z-10">
         <div className="flex items-center gap-4 px-5 pb-6" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}>
-          <PillIconButton width={"3.78rem"} height={"2.5rem"} onClick={() => navigation.push("/planning", "backward")}>
+          <PillIconButton width={"3.78rem"} height={"2.5rem"} onClick={() => navigation.push("/trafficlist", "backward")}>
             <ArrowLeft size={16} color="#0768FD" />
           </PillIconButton>
           <h1 className="text-[#000000] font-semibold text-[20px] leading-[24px]" style={{ fontFamily: 'Inter' }}>信息卡片</h1>
