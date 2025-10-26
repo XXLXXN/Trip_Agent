@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 # 添加项目根目录到Python路径
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(os.path.dirname(current_file_dir))  # 获取项目根目录
@@ -752,6 +753,57 @@ async def get_flight_recommendations():
     """
     return SAMPLE_FLIGHT_RECOMMENDATIONS
 
+# 一键规划接口
+@app.post("/api/oneclick-planning")
+async def oneclick_planning(request: Dict):
+    """
+    一键规划接口，返回SAMPLE_TRIP_DATA_3.json的数据
+    """
+    print("Received oneclick planning request")
+    print(f"Request data: {request}")
+    
+    # 读取SAMPLE_TRIP_DATA_3.json文件
+    sample_data_path = os.path.join(project_root, "backend", "DataDefinition", "SAMPLE_TRIP_DATA_2.json")
+    
+    try:
+        with open(sample_data_path, 'r', encoding='utf-8') as f:
+            sample_trip_data = json.load(f)
+        
+        print("Successfully loaded SAMPLE_TRIP_DATA_3.json")
+        return {
+            "success": True,
+            "message": "一键规划成功",
+            "data": sample_trip_data
+        }
+    except FileNotFoundError:
+        print(f"File not found: {sample_data_path}")
+        return {
+            "success": False,
+            "message": "示例数据文件未找到",
+            "data": None
+        }
+    except json.JSONDecodeError as e:
+        print(f"JSON decode error: {e}")
+        return {
+            "success": False,
+            "message": "示例数据文件格式错误",
+            "data": None
+        }
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {
+            "success": False,
+            "message": f"服务器错误: {str(e)}",
+            "data": None
+        }
+
+@app.get("/api/oneclick-planning")
+async def get_oneclick_planning():
+    """
+    GET方式获取一键规划数据
+    """
+    return await oneclick_planning({})
+
 if __name__ == "__main__":
     print("Starting Trip Agent Unified API server...")
     print("Unified endpoint: http://127.0.0.1:8002/api/trip-recommendations")
@@ -760,5 +812,6 @@ if __name__ == "__main__":
     print("Traffic endpoint: http://127.0.0.1:8002/api/traffic-recommendation")
     print("Train endpoint: http://127.0.0.1:8002/api/traffic-recommendation/train")
     print("Flight endpoint: http://127.0.0.1:8002/api/traffic-recommendation/flight")
+    print("OneClick Planning endpoint: http://127.0.0.1:8002/api/oneclick-planning")
     print("Health check: http://127.0.0.1:8002/health")
     uvicorn.run(app, host="127.0.0.1", port=8002)

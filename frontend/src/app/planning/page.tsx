@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowLeft,
+  ArrowLeft as LucideArrowLeft,
   MapPin,
   Calendar,
   Users,
@@ -25,6 +25,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTripPlan, TripPlanData } from "../context/TripPlanContext";
 import { useNavigation } from "../context/NavigationContext";
+import { PillIconButton, ArrowLeft } from "../fireflyx_parts/components";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { AnimatePresence, motion } from "framer-motion";
@@ -348,11 +349,11 @@ export default function TravelPlanningPage() {
       />
 
       {/* Header - 固定在顶部 */}
-      <div className="relative z-10 flex items-center px-5 pb-4 flex-shrink-0" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}>
-        <button onClick={() => navigation.push("/", "backward")}>
-          <img src="/BackButton.svg" alt="后退图标" className="h-12 w-12" />
-        </button>
-        <h1 className="ml-2 text-lg font-medium text-[#FFFFFF]">旅游规划</h1>
+      <div className="relative z-10 flex items-center gap-4 px-5 pb-6 flex-shrink-0" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}>
+        <PillIconButton width={"3.78rem"} height={"2.5rem"} onClick={() => navigation.push("/", "backward")}>
+          <ArrowLeft size={16} color="#0768FD" />
+        </PillIconButton>
+        <h1 className="text-[#FFFFFF] font-semibold text-[20px] leading-[24px]" style={{ fontFamily: 'Inter' }}>旅游规划</h1>
       </div>
 
       {/* 可滚动的主内容区域 */}

@@ -19,7 +19,12 @@ export default function TravelSelectionPage() {
   const [selectedSpotIds, setSelectedSpotIds] = useState<number[]>([]);
   const router = useRouter();
   const navigation = useNavigation();
-  const { getSpotRecommendations, saveSelectedSpots } = useTripPlan();
+  const { 
+    getSpotRecommendations, 
+    saveSelectedSpots,
+    getTripPlan,
+    getSelectedSpots 
+  } = useTripPlan();
 
   // 获取后端返回的景点数据
   const backendSpots = getSpotRecommendations();
@@ -71,7 +76,56 @@ export default function TravelSelectionPage() {
   );
 
   const handleBackClick = () => navigation.push("/planning", "backward");
-  const handleSkipClick = () => navigation.push("/traffic", "forward");
+  
+  // 一键规划处理函数
+  const handleOneClickPlanning = async () => {
+    try {
+      console.log("开始一键规划...");
+      
+      // 获取当前所有数据
+      const tripPlan = getTripPlan();
+      const selectedSpots = getSelectedSpots();
+      
+      // 构建请求数据（先留空，后续可以发送给大agent）
+      const requestData = {
+        tripPlan,
+        selectedSpots,
+        // TODO: 后续可以添加更多数据发送给大agent
+      };
+      
+      console.log("发送一键规划请求:", requestData);
+      
+      // 调用一键规划API
+      const response = await fetch("/api/oneclick-planning", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`一键规划API请求失败: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.message || "一键规划API返回错误");
+      }
+      
+      console.log("一键规划成功，跳转到详情页面");
+      
+      // 跳转到详情页面
+      navigation.push("/fireflyx_parts/trip_payment/details", "forward");
+      
+    } catch (error) {
+      console.error("一键规划失败:", error);
+      alert(`一键规划失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    }
+  };
+  
+  const handleSkipClick = handleOneClickPlanning;
 
   // 计算BottomNav的实际高度，用于给滚动区域增加底部内边距
   const bottomNavHeight = "88px";
