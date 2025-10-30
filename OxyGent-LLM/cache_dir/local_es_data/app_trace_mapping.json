@@ -1,0 +1,44 @@
+{
+  "mappings": {
+    "properties": {
+      "request_id": {
+        "type": "keyword"
+      },
+      "group_id": {
+        "type": "keyword"
+      },
+      "group_data": {
+        "type": "text"
+      },
+      "trace_id": {
+        "type": "keyword"
+      },
+      "shared_data": {
+        "type": "text"
+      },
+      "from_trace_id": {
+        "type": "keyword"
+      },
+      "root_trace_ids": {
+        "type": "keyword"
+      },
+      "input": {
+        "type": "text"
+      },
+      "callee": {
+        "type": "keyword"
+      },
+      "output": {
+        "type": "text"
+      },
+      "create_time": {
+        "format": "yyyy-MM-dd HH:mm:ss.SSSSSSSSS",
+        "type": "date"
+      }
+    }
+  },
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  }
+}

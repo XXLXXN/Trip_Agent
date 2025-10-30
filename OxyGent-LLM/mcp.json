@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "amap-maps": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@amap/amap-maps-mcp-server"
+      ],
+      "env": {
+        "AMAP_MAPS_API_KEY": "3ae4268976cc160936748d65b5222284"
+      }
+    },
+    "xhs-mcp": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "D:\\xhsapi\\xhs-mcp",
+        "run",
+        "main.py"
+      ],
+      "env": {
+        "XHS_COOKIE": "gid=yj8Y8fq2yYC2yj8Y8fq28viKS4DD6Ff1j001AShUiWdSxS28JAKUY4888WjjWWW8SyJ284jW; abRequestId=37249420-1e45-54e6-99e3-8195911ab332; a1=1987e0fe4f8wk4i87my1uf8h3cvtm2rpda3kzfpj550000254993; webId=8bd5081c93ea4b81a045a668763e73ea; xsecappid=xhs-pc-web; webBuild=4.75.3; acw_tc=0ad6fbc817546259344598542e1cea2d3435c6d83eeaac7dac63e3d2f8a490; web_session=040069b5c6c6bf110219dc30a03a4b9499adfc; unread={%22ub%22:%2268943bba0000000025020c17%22%2C%22ue%22:%22689549c100000000250290fb%22%2C%22uc%22:30}; websectiga=634d3ad75ffb42a2ade2c5e1705a73c845837578aeb31ba0e442d75c648da36a; sec_poison_id=cf138641-99d7-4197-8525-30fd0e2502db; loadts=1754626246052"
+      }
+    },
+    "variflight": {
+      "url": "https://ai.variflight.com/servers/aviation/mcp/?api_key=sk-dzxPcNg47y58soHRZXQTrd9M7KnvawfdTPreTJckXFk"
+    },
+    "12306-mcp": {
+      "type": "sse",
+      "url": "https://mcp.api-inference.modelscope.net/5c1bec627e1c4c/sse"
+    }
+  }
+}
