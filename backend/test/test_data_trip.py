@@ -6,10 +6,10 @@
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from services.connect_location import connect_location
-from DataDefinition.DataDefinition import Trip, Day, Activity, Location
+from tools.connect_location import connect_location
+from DataDefinition.DataDefinition import Trip, Day, Activity, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo, POIDetailInfo
 from datetime import date, time
 import json
 
@@ -24,6 +24,7 @@ def create_beijing_wenyi_trip():
         user_id="test_user_beijing_001",
         trip_id="beijing_wenyi_trip_001",
         trip_name="北京文艺两日游",
+        origin="上海",
         destination="北京",
         start_date=date(2025, 3, 15),
         end_date=date(2025, 3, 16),
@@ -41,221 +42,110 @@ def create_beijing_wenyi_trip():
                 id="activity_1",
                 start_time=time(10, 30, 0),
                 end_time=time(11, 0, 0),
-                description="到达北京首都机场，办理入境手续",
-                notes="请提前准备好身份证件",
-                cost=0.0,
-                type="activity",
-                title="到达北京首都机场",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="北京首都国际机场",
+                    rec_reason="到达北京的第一站，办理入境手续",
+                    POIId="airport_pek_001",
+                    description="到达北京首都机场，办理入境手续",
                     address="北京市顺义区首都机场路",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "北京首都国际机场",
-                    "rec_reason": "到达北京的第一站，办理入境手续",
-                    "POIId": "airport_pek_001",
-                    "description": "北京首都国际机场是北京的主要机场之一",
-                    "address": "北京市顺义区首都机场路",
-                    "poi_type": "spot"
-                }
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_2",
                 start_time=time(12, 0, 0),
                 end_time=time(14, 0, 0),
-                description="游览798艺术区，感受文艺氛围",
-                notes="可以参观画廊、艺术工作室和创意店铺",
-                cost=0.0,
-                type="activity",
-                title="798艺术区游览",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="798艺术区",
+                    rec_reason="798艺术区是北京著名的文艺街区，汇集了众多画廊、艺术工作室和创意店铺，非常适合文艺爱好者。",
+                    POIId="B000A81FY5",
+                    description="游览798艺术区，感受文艺氛围",
                     address="酒仙桥路4号",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "798艺术区",
-                    "rec_reason": "798艺术区是北京著名的文艺街区，汇集了众多画廊、艺术工作室和创意店铺，非常适合文艺爱好者。",
-                    "POIId": "B000A81FY5",
-                    "description": "798艺术区位于北京市朝阳区酒仙桥路2号，是一个由旧工厂改造而成的艺术区，汇集了众多画廊、艺术工作室和创意店铺，是文艺爱好者的天堂。",
-                    "address": "酒仙桥路4号",
-                    "photos": [
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/42a5f4dfacfbf2d38d20905cdc15f5ff",
-                            "title": ""
-                        },
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/ee391e3f551fdd027e641c5c040e30bc",
-                            "title": ""
-                        },
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/8a076e086d57c7e50f5d46477083b649",
-                            "title": ""
-                        }
+                    photos=[
+                        {"url": "http://store.is.autonavi.com/showpic/42a5f4dfacfbf2d38d20905cdc15f5ff", "title": ""},
+                        {"url": "http://store.is.autonavi.com/showpic/ee391e3f551fdd027e641c5c040e30bc", "title": ""},
+                        {"url": "http://store.is.autonavi.com/showpic/8a076e086d57c7e50f5d46477083b649", "title": ""}
                     ],
-                    "rating": "4.8",
-                    "poi_type": "spot"
-                }
+                    rating="4.8",
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_3",
                 start_time=time(14, 30, 0),
                 end_time=time(16, 30, 0),
-                description="漫步南锣鼓巷，体验胡同文化",
-                notes="可以品尝地道小吃，逛特色小店",
-                cost=100.0,
-                type="activity",
-                title="南锣鼓巷漫步",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="南锣鼓巷",
+                    rec_reason="南锣鼓巷是北京最具文艺气息的胡同之一，街道两旁有许多特色小店和美食，适合漫步和品尝地道小吃。",
+                    POIId="B0FFFAH7I9",
+                    description="漫步南锣鼓巷，体验胡同文化",
                     address="交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "南锣鼓巷",
-                    "rec_reason": "南锣鼓巷是北京最具文艺气息的胡同之一，街道两旁有许多特色小店和美食，适合漫步和品尝地道小吃。",
-                    "POIId": "B0FFFAH7I9",
-                    "description": "南锣鼓巷位于北京市东城区，是北京最具文艺气息的胡同之一，街道两旁有许多特色小店和美食，适合漫步和品尝地道小吃。",
-                    "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
-                    "photos": [
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/6aa94c24640267a56c22af0b9629030a",
-                            "title": ""
-                        },
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/f2325d7c11c9453d8d7eccc96db7e77c",
-                            "title": ""
-                        },
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/173b3acc0bb5c70d3710a43a137c17a7",
-                            "title": ""
-                        }
+                    photos=[
+                        {"url": "http://store.is.autonavi.com/showpic/6aa94c24640267a56c22af0b9629030a", "title": ""},
+                        {"url": "http://store.is.autonavi.com/showpic/f2325d7c11c9453d8d7eccc96db7e77c", "title": ""},
+                        {"url": "http://store.is.autonavi.com/showpic/173b3acc0bb5c70d3710a43a137c17a7", "title": ""}
                     ],
-                    "rating": "4.8",
-                    "poi_type": "spot"
-                }
+                    rating="4.8",
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_4",
                 start_time=time(17, 0, 0),
                 end_time=time(19, 0, 0),
-                description="游览什刹海，欣赏夜景",
-                notes="可以品尝周边美食，感受文艺氛围",
-                cost=150.0,
-                type="activity",
-                title="什刹海游览",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="什刹海",
+                    rec_reason="什刹海是北京的著名风景区，周边有许多文艺酒吧和特色餐厅，适合夜晚漫步和享受美食。",
+                    POIId="B000A7O5PK",
+                    description="游览什刹海，欣赏夜景",
                     address="地安门西大街49号",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "什刹海",
-                    "rec_reason": "什刹海是北京的著名风景区，周边有许多文艺酒吧和特色餐厅，适合夜晚漫步和享受美食。",
-                    "POIId": "B000A7O5PK",
-                    "description": "什刹海位于北京市西城区，是北京的著名风景区，周边有许多文艺酒吧和特色餐厅，适合夜晚漫步和享受美食。",
-                    "address": "地安门西大街49号",
-                    "photos": [
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/dd97c0390e296f47a20b72063ec86990",
-                            "title": ""
-                        },
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/a996834a98e84fd852162b2551c374f0",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B000A7O5PK/comment/content_media_external_file_5734_1759220682721_18610854.jpg",
-                            "title": ""
-                        }
+                    photos=[
+                        {"url": "http://store.is.autonavi.com/showpic/dd97c0390e296f47a20b72063ec86990", "title": ""},
+                        {"url": "http://store.is.autonavi.com/showpic/a996834a98e84fd852162b2551c374f0", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B000A7O5PK/comment/content_media_external_file_5734_1759220682721_18610854.jpg", "title": ""}
                     ],
-                    "rating": "4.9",
-                    "poi_type": "spot"
-                }
+                    rating="4.9",
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_5",
                 start_time=time(19, 30, 0),
                 end_time=time(20, 30, 0),
-                description="在止观小馆享用晚餐",
-                notes="体验融合传统与现代的文艺风格餐厅",
-                cost=200.0,
-                type="activity",
-                title="止观小馆晚餐",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="止观小馆",
+                    rec_reason="这家餐厅融合了传统与现代的文艺风格，菜品精致且环境优雅，适合文艺爱好者。",
+                    POIId="B0FFGWGO81",
+                    description="在止观小馆享用晚餐",
                     address="金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "止观小馆",
-                    "rec_reason": "这家餐厅融合了传统与现代的文艺风格，菜品精致且环境优雅，适合文艺爱好者。",
-                    "POIId": "B0FFGWGO81",
-                    "description": "止观小馆位于北京市金鱼胡同12号，是一家融合传统与现代文艺风格的餐厅，菜品精致且环境优雅，适合文艺爱好者。",
-                    "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
-                    "photos": [
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFGWGO81/comment/87182bec6a346bdbdece8ec78cacbba1_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFGWGO81/comment/content_media_external_file_2832_1752932450345_57025635.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFGWGO81/comment/content_media_external_file_125970_ss__1753419699316_00687879.jpg",
-                            "title": ""
-                        }
+                    photos=[
+                        {"url": "https://aos-comment.amap.com/B0FFGWGO81/comment/87182bec6a346bdbdece8ec78cacbba1_2048_2048_80.jpg", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B0FFGWGO81/comment/content_media_external_file_2832_1752932450345_57025635.jpg", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B0FFGWGO81/comment/content_media_external_file_125970_ss__1753419699316_00687879.jpg", "title": ""}
                     ],
-                    "rating": "4.6",
-                    "poi_type": "spot"
-                }
+                    rating="4.6",
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_6",
                 start_time=time(21, 0, 0),
                 end_time=time(22, 0, 0),
-                description="入住锦江之星酒店",
-                notes="办理入住手续，休息调整",
-                cost=300.0,
-                type="activity",
-                title="入住锦江之星酒店",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="锦江之星(北京回民街钟楼地铁站店)",
+                    rec_reason="地理位置优越，交通便利，舒适住宿环境",
+                    POIId="B0FFFVBUVM",
+                    description="入住锦江之星酒店",
                     address="东大街骡马市商业步行街26号(兴正元广场正对面)",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "锦江之星(北京回民街钟楼地铁站店)",
-                    "rec_reason": "地理位置优越，交通便利，舒适住宿环境",
-                    "POIId": "B0FFFVBUVM",
-                    "description": "经济型酒店，提供家庭房，适合家庭入住。",
-                    "address": "东大街骡马市商业步行街26号(兴正元广场正对面)",
-                    "photos": [
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/b2beb67677f0b8e6915d39e7498418a2",
-                            "title": "酒店外观"
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFFVBUVM/comment/557c3972457a6eb101dffdc32b2a731c_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/65468e765c306dcfcb632682f56fbc2e",
-                            "title": "风雅商务房"
-                        }
+                    photos=[
+                        {"url": "http://store.is.autonavi.com/showpic/b2beb67677f0b8e6915d39e7498418a2", "title": "酒店外观"},
+                        {"url": "https://aos-comment.amap.com/B0FFFVBUVM/comment/557c3972457a6eb101dffdc32b2a731c_2048_2048_80.jpg", "title": ""},
+                        {"url": "http://store.is.autonavi.com/showpic/65468e765c306dcfcb632682f56fbc2e", "title": "风雅商务房"}
                     ],
-                    "rating": "4.7",
-                    "cost": 300.0,
-                    "poi_type": "hotel"
-                }
+                    rating="4.7",
+                    cost=300.0,
+                    poi_type="hotel"
+                )
             )
         ]
     )
@@ -271,142 +161,71 @@ def create_beijing_wenyi_trip():
                 id="activity_7",
                 start_time=time(9, 0, 0),
                 end_time=time(11, 0, 0),
-                description="游览簋街，品尝美食",
-                notes="可以尝试麻辣小龙虾和火锅等特色美食",
-                cost=120.0,
-                type="activity",
-                title="簋街美食游览",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="簋街",
+                    rec_reason="簋街是北京著名的美食街，汇集了各种地道的中式美食，尤其是麻辣小龙虾和火锅，非常适合美食爱好者。",
+                    POIId="B0FFHF130I",
+                    description="游览簋街，品尝美食",
                     address="东直门大街5-11号",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "簋街",
-                    "rec_reason": "簋街是北京著名的美食街，汇集了各种地道的中式美食，尤其是麻辣小龙虾和火锅，非常适合美食爱好者。",
-                    "POIId": "B0FFHF130I",
-                    "description": "簋街位于北京市东城区东直门内大街，是北京著名的美食街，汇集了各种地道的中式美食，尤其是麻辣小龙虾和火锅，非常适合美食爱好者。",
-                    "address": "东直门大街5-11号",
-                    "photos": [
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFHF130I/comment/bc8f5cc556907b887a8470ca7181a9ce_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFHF130I/comment/6c95100d15a81296c8e661ef33990d06_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFHF130I/comment/d5685f1564da211696b715f38f985ebe_2048_2048_80.jpg",
-                            "title": ""
-                        }
+                    photos=[
+                        {"url": "https://aos-comment.amap.com/B0FFHF130I/comment/bc8f5cc556907b887a8470ca7181a9ce_2048_2048_80.jpg", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B0FFHF130I/comment/6c95100d15a81296c8e661ef33990d06_2048_2048_80.jpg", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B0FFHF130I/comment/d5685f1564da211696b715f38f985ebe_2048_2048_80.jpg", "title": ""}
                     ],
-                    "rating": "4.8",
-                    "poi_type": "spot"
-                }
+                    rating="4.8",
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_8",
                 start_time=time(12, 0, 0),
                 end_time=time(13, 30, 0),
-                description="在相遇时光·文艺餐厅享用午餐",
-                notes="体验文艺风格的用餐环境",
-                cost=180.0,
-                type="activity",
-                title="相遇时光·文艺餐厅午餐",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="相遇时光·文艺餐厅",
+                    rec_reason="这家餐厅位于宋庄艺术区，环境文艺且菜品精致，适合文艺风格的用餐体验。",
+                    POIId="B0FFLMYPFF",
+                    description="在相遇时光·文艺餐厅享用午餐",
                     address="宋庄镇大巢艺术区北门135号",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "相遇时光·文艺餐厅",
-                    "rec_reason": "这家餐厅位于宋庄艺术区，环境文艺且菜品精致，适合文艺风格的用餐体验。",
-                    "POIId": "B0FFLMYPFF",
-                    "description": "相遇时光·文艺餐厅位于北京市通州区宋庄镇大巢艺术区北门135号，是一家环境文艺、菜品精致的餐厅，适合文艺风格的用餐体验。",
-                    "address": "宋庄镇大巢艺术区北门135号",
-                    "photos": [
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/31465374dfe52e301990410a54cb38e8_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/d08a6c5e9ad0eb8ae42208cff8761f89_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/145e2bb25df2bd6c3107c11674a404dc_2048_2048_80.jpg",
-                            "title": ""
-                        }
+                    photos=[
+                        {"url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/31465374dfe52e301990410a54cb38e8_2048_2048_80.jpg", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/d08a6c5e9ad0eb8ae42208cff8761f89_2048_2048_80.jpg", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/145e2bb25df2bd6c3107c11674a404dc_2048_2048_80.jpg", "title": ""}
                     ],
-                    "rating": "4.3",
-                    "poi_type": "spot"
-                }
+                    rating="4.3",
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_9",
                 start_time=time(14, 0, 0),
                 end_time=time(15, 30, 0),
-                description="前往很文艺食堂体验",
-                notes="感受独特的文艺氛围",
-                cost=100.0,
-                type="activity",
-                title="很文艺食堂体验",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="很文艺食堂",
+                    rec_reason="这家餐厅以其独特的文艺氛围和精致菜品著称，适合文艺风格的用餐体验。",
+                    POIId="B0I1R6UJ9L",
+                    description="前往很文艺食堂体验",
                     address="7克拉北门东110米",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "很文艺食堂",
-                    "rec_reason": "这家餐厅以其独特的文艺氛围和精致菜品著称，适合文艺风格的用餐体验。",
-                    "POIId": "B0I1R6UJ9L",
-                    "description": "很文艺食堂位于北京市7克拉北门东110米，是一家以文艺氛围和精致菜品著称的餐厅，适合文艺风格的用餐体验。",
-                    "address": "7克拉北门东110米",
-                    "photos": [
-                        {
-                            "url": "https://aos-comment.amap.com/B0I1R6UJ9L/comment/f61e84e2c07bba62953c55e00ca9fc30_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "https://aos-comment.amap.com/B0I1R6UJ9L/comment/78ef96dc7e61178efa433b6d5f938f8d_2048_2048_80.jpg",
-                            "title": ""
-                        },
-                        {
-                            "url": "http://store.is.autonavi.com/showpic/996d90f31d5b3954ff82c8d6ba7aedef",
-                            "title": ""
-                        }
+                    photos=[
+                        {"url": "https://aos-comment.amap.com/B0I1R6UJ9L/comment/f61e84e2c07bba62953c55e00ca9fc30_2048_2048_80.jpg", "title": ""},
+                        {"url": "https://aos-comment.amap.com/B0I1R6UJ9L/comment/78ef96dc7e61178efa433b6d5f938f8d_2048_2048_80.jpg", "title": ""},
+                        {"url": "http://store.is.autonavi.com/showpic/996d90f31d5b3954ff82c8d6ba7aedef", "title": ""}
                     ],
-                    "rating": "4.1",
-                    "poi_type": "spot"
-                }
+                    rating="4.1",
+                    poi_type="spot"
+                )
             ),
             Activity(
                 id="activity_10",
                 start_time=time(17, 0, 0),
                 end_time=time(17, 30, 0),
-                description="办理登机手续，准备返程",
-                notes="请提前2小时到达机场",
-                cost=0.0,
-                type="activity",
-                title="前往北京首都国际机场",
-                location=Location(
+                poi_details=POIDetailInfo(
                     name="北京首都国际机场",
+                    rec_reason="返程出发地，办理登机手续",
+                    POIId="airport_pek_002",
+                    description="办理登机手续，准备返程",
                     address="北京市顺义区首都机场路",
-                    coordinates=None
-                ),
-                recommended_products=[],
-                poi_details={
-                    "name": "北京首都国际机场",
-                    "rec_reason": "返程出发地，办理登机手续",
-                    "POIId": "airport_pek_002",
-                    "description": "北京首都国际机场是北京的主要机场之一",
-                    "address": "北京市顺义区首都机场路",
-                    "poi_type": "spot"
-                }
+                    poi_type="spot"
+                )
             )
         ]
     )
@@ -423,9 +242,11 @@ def create_beijing_wenyi_trip():
     for i, day in enumerate(trip.days, 1):
         print(f"\n第{i}天 ({day.date}):")
         for j, activity in enumerate(day.activities, 1):
-            print(f"  {j}. {activity.title} ({activity.start_time}-{activity.end_time})")
-            print(f"     地点: {activity.location.name}")
-            print(f"     地址: {activity.location.address}")
+            # 确保 activity 是 Activity 类型
+            if isinstance(activity, Activity):
+                print(f"  {j}. {activity.poi_details.description} ({activity.start_time}-{activity.end_time})")
+                print(f"     地点: {activity.poi_details.name}")
+                print(f"     地址: {activity.poi_details.address}")
     
     return trip
 

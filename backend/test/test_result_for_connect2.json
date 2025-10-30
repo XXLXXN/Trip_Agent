@@ -1,0 +1,968 @@
+{
+  "user_id": "test_user_beijing_001",
+  "trip_id": "beijing_wenyi_trip_001",
+  "trip_name": "北京文艺两日游",
+  "destination": "北京",
+  "start_date": "2025-03-15",
+  "end_date": "2025-03-16",
+  "days": [
+    {
+      "date": "2025-03-15",
+      "day_of_week": "星期六",
+      "day_index": 1,
+      "total_cost": 0.0,
+      "activities": [
+        {
+          "id": "transport_0",
+          "type": "large_transportation",
+          "start_time": "08:00",
+          "end_time": "10:20",
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "MU5101",
+            "airlineCompany": "东方航空",
+            "fromAirportName": "上海浦东",
+            "toAirportName": "北京首都",
+            "fromDateTime": "2025-03-15 08:00:00",
+            "toDateTime": "2025-03-15 10:20:00",
+            "flyDuration": "02:20",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1250
+                }
+              },
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1500
+                }
+              },
+              {
+                "cabinName": "公务舱",
+                "cabinPrice": {
+                  "adultSalePrice": 3500
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "activity_1",
+          "start_time": "10:30:00",
+          "end_time": "11:00:00",
+          "description": "到达北京首都机场，办理入境手续",
+          "notes": "请提前准备好身份证件",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "到达北京首都机场",
+          "location": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "北京首都国际机场",
+            "rec_reason": "到达北京的第一站，办理入境手续",
+            "POIId": "airport_pek_001",
+            "description": "北京首都国际机场是北京的主要机场之一",
+            "address": "北京市顺义区首都机场路",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_1_activity_2_1",
+          "start_time": "11:00:00",
+          "end_time": "11:48:28",
+          "description": "在2号航站楼站乘坐首都机场线(3号航站楼--北新桥)到三元桥站 → 在三元桥站乘坐地铁12号线(四季青桥--东坝北)到高家园站 → 步行574米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 28.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_1_activity_2_2",
+          "start_time": "11:00:00",
+          "end_time": "14:31:27",
+          "description": "步行约211分钟（距离15.9公里）",
+          "notes": "🚶 步行时间较长",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_1_activity_2_3",
+          "start_time": "11:00:00",
+          "end_time": "12:22:18",
+          "description": "骑行约82分钟（距离17.2公里）",
+          "notes": "🚴 共享单车费用约6.5元",
+          "cost": 6.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_1_activity_2_4",
+          "start_time": "11:00:00",
+          "end_time": "11:35:25",
+          "description": "驾车约35分钟（距离17.3公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_2",
+          "start_time": "12:00:00",
+          "end_time": "14:00:00",
+          "description": "游览798艺术区，感受文艺氛围",
+          "notes": "可以参观画廊、艺术工作室和创意店铺",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "798艺术区游览",
+          "location": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "798艺术区",
+            "rec_reason": "798艺术区是北京著名的文艺街区，汇集了众多画廊、艺术工作室和创意店铺，非常适合文艺爱好者。",
+            "POIId": "B000A81FY5",
+            "description": "798艺术区位于北京市朝阳区酒仙桥路2号，是一个由旧工厂改造而成的艺术区，汇集了众多画廊、艺术工作室和创意店铺，是文艺爱好者的天堂。",
+            "address": "酒仙桥路4号",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_2_activity_3_1",
+          "start_time": "14:00:00",
+          "end_time": "14:45:47",
+          "description": "在高家园站乘坐地铁12号线(东坝北--四季青桥)到安华桥站 → 在安华桥站乘坐地铁8号线(朱辛庄--瀛海)到南锣鼓巷站 → 步行118米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 5.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_2_activity_3_2",
+          "start_time": "14:00:00",
+          "end_time": "16:27:38",
+          "description": "步行约147分钟（距离11.1公里）",
+          "notes": "🚶 步行时间较长",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_2_activity_3_3",
+          "start_time": "14:00:00",
+          "end_time": "15:03:21",
+          "description": "骑行约63分钟（距离11.2公里）",
+          "notes": "🚴 共享单车费用约5.5元",
+          "cost": 5.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_2_activity_3_4",
+          "start_time": "14:00:00",
+          "end_time": "14:43:31",
+          "description": "驾车约43分钟（距离12.2公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_3",
+          "start_time": "14:30:00",
+          "end_time": "16:30:00",
+          "description": "漫步南锣鼓巷，体验胡同文化",
+          "notes": "可以品尝地道小吃，逛特色小店",
+          "cost": 100.0,
+          "type": "activity",
+          "title": "南锣鼓巷漫步",
+          "location": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "南锣鼓巷",
+            "rec_reason": "南锣鼓巷是北京最具文艺气息的胡同之一，街道两旁有许多特色小店和美食，适合漫步和品尝地道小吃。",
+            "POIId": "B0FFFAH7I9",
+            "description": "南锣鼓巷位于北京市东城区，是北京最具文艺气息的胡同之一，街道两旁有许多特色小店和美食，适合漫步和品尝地道小吃。",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_3_activity_4_1",
+          "start_time": "16:30:00",
+          "end_time": "16:39:50",
+          "description": "在南锣鼓巷站乘坐地铁8号线(瀛海--朱辛庄)到什刹海站 → 步行257米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 3.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_3_activity_4_2",
+          "start_time": "16:30:00",
+          "end_time": "16:53:49",
+          "description": "步行约23分钟（距离1.8公里）",
+          "notes": "🚶 舒适鞋子",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_3_activity_4_3",
+          "start_time": "16:30:00",
+          "end_time": "16:49:50",
+          "description": "骑行约19分钟（距离3.3公里）",
+          "notes": "🚴 共享单车费用约2.5元",
+          "cost": 2.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_3_activity_4_4",
+          "start_time": "16:30:00",
+          "end_time": "17:11:13",
+          "description": "驾车约41分钟（距离5.7公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_4",
+          "start_time": "17:00:00",
+          "end_time": "19:00:00",
+          "description": "游览什刹海，欣赏夜景",
+          "notes": "可以品尝周边美食，感受文艺氛围",
+          "cost": 150.0,
+          "type": "activity",
+          "title": "什刹海游览",
+          "location": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "什刹海",
+            "rec_reason": "什刹海是北京的著名风景区，周边有许多文艺酒吧和特色餐厅，适合夜晚漫步和享受美食。",
+            "POIId": "B_INVALID_ID",
+            "description": "什刹海位于北京市西城区，是北京的著名风景区，周边有许多文艺酒吧和特色餐厅，适合夜晚漫步和享受美食。",
+            "address": "地安门西大街49号",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_4_activity_5_1",
+          "start_time": "19:00:00",
+          "end_time": "19:19:20",
+          "description": "在什刹海站乘坐地铁8号线(朱辛庄--瀛海)到金鱼胡同站 → 步行432米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 3.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_4_activity_5_2",
+          "start_time": "19:00:00",
+          "end_time": "20:07:10",
+          "description": "步行约67分钟（距离5.0公里）",
+          "notes": "🚶 步行时间较长",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_4_activity_5_3",
+          "start_time": "19:00:00",
+          "end_time": "19:32:57",
+          "description": "骑行约32分钟（距离5.4公里）",
+          "notes": "🚴 共享单车费用约3.5元",
+          "cost": 3.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_4_activity_5_4",
+          "start_time": "19:00:00",
+          "end_time": "19:48:08",
+          "description": "驾车约48分钟（距离6.5公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_5",
+          "start_time": "19:30:00",
+          "end_time": "20:30:00",
+          "description": "在止观小馆享用晚餐",
+          "notes": "体验融合传统与现代的文艺风格餐厅",
+          "cost": 200.0,
+          "type": "activity",
+          "title": "止观小馆晚餐",
+          "location": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "止观小馆",
+            "rec_reason": "这家餐厅融合了传统与现代的文艺风格，菜品精致且环境优雅，适合文艺爱好者。",
+            "POIId": "B0FFGWGO81",
+            "description": "止观小馆位于北京市金鱼胡同12号，是一家融合传统与现代文艺风格的餐厅，菜品精致且环境优雅，适合文艺爱好者。",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_5_activity_6_1",
+          "start_time": "20:30:00",
+          "end_time": "02:23:00",
+          "description": "在金鱼胡同站乘坐地铁8号线(朱辛庄--瀛海)到珠市口站 → 在珠市口站乘坐地铁7号线(环球度假区--北京西站)到北京西站站 → 步行70米 → 在西安北站站乘坐地铁2号线(草滩--常宁宫)到钟楼站 → 步行591米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 555.5,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "锦江之星(西安回民街钟楼地铁站店)",
+            "address": "西安市莲湖区东大街骡马市商业步行街26号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_5_activity_6_2",
+          "start_time": "20:30:00",
+          "end_time": "08:11:12",
+          "description": "驾车约701分钟（距离1078.6公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "锦江之星(西安回民街钟楼地铁站店)",
+            "address": "西安市莲湖区东大街骡马市商业步行街26号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_6",
+          "start_time": "21:00:00",
+          "end_time": "22:00:00",
+          "description": "入住锦江之星酒店",
+          "notes": "办理入住手续，休息调整",
+          "cost": 300.0,
+          "type": "activity",
+          "title": "入住锦江之星酒店",
+          "location": {
+            "name": "锦江之星(西安回民街钟楼地铁站店)",
+            "address": "西安市莲湖区东大街骡马市商业步行街26号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "锦江之星(西安回民街钟楼地铁站店)",
+            "rec_reason": "地理位置优越，交通便利，舒适住宿环境",
+            "POIId": "B0FFFVBUVM",
+            "description": "经济型酒店，提供家庭房，适合家庭入住。",
+            "address": "西安市莲湖区东大街骡马市商业步行街26号",
+            "poi_type": "hotel"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2025-03-16",
+      "day_of_week": "星期日",
+      "day_index": 2,
+      "total_cost": 0.0,
+      "activities": [
+        {
+          "id": "activity_7",
+          "start_time": "09:00:00",
+          "end_time": "11:00:00",
+          "description": "游览簋街，品尝美食",
+          "notes": "可以尝试麻辣小龙虾和火锅等特色美食",
+          "cost": 120.0,
+          "type": "activity",
+          "title": "簋街美食游览",
+          "location": {
+            "name": "簋街",
+            "address": "东直门大街5-11号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "簋街",
+            "rec_reason": "簋街是北京著名的美食街，汇集了各种地道的中式美食，尤其是麻辣小龙虾和火锅，非常适合美食爱好者。",
+            "POIId": "B0FFHF130I",
+            "description": "簋街位于北京市东城区东直门内大街，是北京著名的美食街，汇集了各种地道的中式美食，尤其是麻辣小龙虾和火锅，非常适合美食爱好者。",
+            "address": "东直门大街5-11号",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_7_activity_8_1",
+          "start_time": "11:00:00",
+          "end_time": "12:39:39",
+          "description": "在北新桥站乘坐地铁5号线(天通苑北--宋家庄)到东四站 → 在东四站乘坐地铁6号线(金安桥--潞城)到物资学院路站 → 在北京物资学院站乘坐824路(地铁草房站东--佰富苑)到佰富苑站 → 步行128米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 8.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "簋街",
+            "address": "东直门大街5-11号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_7_activity_8_2",
+          "start_time": "11:00:00",
+          "end_time": "17:28:33",
+          "description": "步行约388分钟（距离29.1公里）",
+          "notes": "🚶 步行时间较长",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "簋街",
+            "address": "东直门大街5-11号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_7_activity_8_3",
+          "start_time": "11:00:00",
+          "end_time": "13:37:36",
+          "description": "骑行约157分钟（距离30.5公里）",
+          "notes": "🚴 共享单车费用约11.5元",
+          "cost": 11.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "簋街",
+            "address": "东直门大街5-11号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_7_activity_8_4",
+          "start_time": "11:00:00",
+          "end_time": "11:57:22",
+          "description": "驾车约57分钟（距离40.5公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "簋街",
+            "address": "东直门大街5-11号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_8",
+          "start_time": "12:00:00",
+          "end_time": "13:30:00",
+          "description": "在相遇时光·文艺餐厅享用午餐",
+          "notes": "体验文艺风格的用餐环境",
+          "cost": 180.0,
+          "type": "activity",
+          "title": "相遇时光·文艺餐厅午餐",
+          "location": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "相遇时光·文艺餐厅",
+            "rec_reason": "这家餐厅位于宋庄艺术区，环境文艺且菜品精致，适合文艺风格的用餐体验。",
+            "POIId": "B0FFLMYPFF",
+            "description": "相遇时光·文艺餐厅位于北京市通州区宋庄镇大巢艺术区北门135号，是一家环境文艺、菜品精致的餐厅，适合文艺风格的用餐体验。",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_8_activity_9_1",
+          "start_time": "13:30:00",
+          "end_time": "15:39:32",
+          "description": "在佰富苑站乘坐824路(佰富苑--地铁草房站)到北京物资学院站 → 在物资学院路站乘坐地铁6号线(潞城--金安桥)到呼家楼站 → 在呼家楼站乘坐地铁10号线内环(巴沟--巴沟)到角门东站 → 步行808米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 9.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_8_activity_9_2",
+          "start_time": "13:30:00",
+          "end_time": "21:47:38",
+          "description": "步行约497分钟（距离37.3公里）",
+          "notes": "🚶 步行时间较长",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_8_activity_9_3",
+          "start_time": "13:30:00",
+          "end_time": "16:47:46",
+          "description": "骑行约197分钟（距离38.6公里）",
+          "notes": "🚴 共享单车费用约14.5元",
+          "cost": 14.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_8_activity_9_4",
+          "start_time": "13:30:00",
+          "end_time": "14:44:07",
+          "description": "驾车约74分钟（距离45.4公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_9",
+          "start_time": "14:00:00",
+          "end_time": "15:30:00",
+          "description": "前往很文艺食堂体验",
+          "notes": "感受独特的文艺氛围",
+          "cost": 100.0,
+          "type": "activity",
+          "title": "很文艺食堂体验",
+          "location": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "很文艺食堂",
+            "rec_reason": "这家餐厅以其独特的文艺氛围和精致菜品著称，适合文艺风格的用餐体验。",
+            "POIId": "B0I1R6UJ9L",
+            "description": "很文艺食堂位于北京市7克拉北门东110米，是一家以文艺氛围和精致菜品著称的餐厅，适合文艺风格的用餐体验。",
+            "address": "7克拉北门东110米",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transportation_activity_9_activity_10_1",
+          "start_time": "15:30:00",
+          "end_time": "16:54:23",
+          "description": "在角门东站乘坐地铁10号线外环(车道沟--车道沟)到三元桥站 → 在三元桥站乘坐首都机场线(北新桥--2号航站楼)到2号航站楼站 → 步行149米",
+          "notes": "🚌 🚇 公共交通方案",
+          "cost": 30.0,
+          "type": "transportation",
+          "mode": "bus",
+          "origin": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_9_activity_10_2",
+          "start_time": "15:30:00",
+          "end_time": "23:51:14",
+          "description": "步行约501分钟（距离37.6公里）",
+          "notes": "🚶 步行时间较长",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "walk",
+          "origin": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_9_activity_10_3",
+          "start_time": "15:30:00",
+          "end_time": "18:48:33",
+          "description": "骑行约198分钟（距离39.4公里）",
+          "notes": "🚴 共享单车费用约14.5元",
+          "cost": 14.5,
+          "type": "transportation",
+          "mode": "cycling",
+          "origin": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "transportation_activity_9_activity_10_4",
+          "start_time": "15:30:00",
+          "end_time": "16:42:49",
+          "description": "驾车约72分钟（距离42.6公里）",
+          "notes": "🚗 自驾",
+          "cost": 0.0,
+          "type": "transportation",
+          "mode": "driving",
+          "origin": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "destination": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "ticket_info": null
+        },
+        {
+          "id": "activity_10",
+          "start_time": "17:00:00",
+          "end_time": "17:30:00",
+          "description": "办理登机手续，准备返程",
+          "notes": "请提前2小时到达机场",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "前往北京首都国际机场",
+          "location": {
+            "name": "北京首都国际机场",
+            "address": "北京市顺义区首都机场路",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "北京首都国际机场",
+            "rec_reason": "返程出发地，办理登机手续",
+            "POIId": "airport_pek_002",
+            "description": "北京首都国际机场是北京的主要机场之一",
+            "address": "北京市顺义区首都机场路",
+            "poi_type": "spot"
+          }
+        },
+        {
+          "id": "transport_10",
+          "type": "large_transportation",
+          "start_time": "18:00",
+          "end_time": "20:25",
+          "traffic_details": {
+            "traffic_type": "flight",
+            "flightNo": "CA1502",
+            "airlineCompany": "中国国航",
+            "fromAirportName": "北京首都",
+            "toAirportName": "上海虹桥",
+            "fromDateTime": "2025-03-16 18:00:00",
+            "toDateTime": "2025-03-16 20:25:00",
+            "flyDuration": "02:25",
+            "cabins": [
+              {
+                "cabinName": "经济舱",
+                "cabinPrice": {
+                  "adultSalePrice": 1380
+                }
+              },
+              {
+                "cabinName": "公务舱",
+                "cabinPrice": {
+                  "adultSalePrice": 3800
+                }
+              },
+              {
+                "cabinName": "头等舱",
+                "cabinPrice": {
+                  "adultSalePrice": 5000
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

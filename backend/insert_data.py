@@ -1,65 +1,101 @@
-import asyncio
 import json
-import sys
+from pymongo import MongoClient
 import os
+import certifi
+import socks
+import socket
 
-# --- 关键设置：确保脚本能找到 database_operations ---
-# 将项目根目录添加到 Python 路径中
-# 这使得我们可以从 backend 目录内部，正确地导入 backend/database/database_operations
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# -----------------------------------------------------
+# --- 代理配置 ---
+socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 7890)
+socket.socket = socks.socksocket
 
-from backend.database.database_operations import trip_collection, save_trip_to_db
+# --- Configuration ---
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://fireflyx:UrfV1fqFHyLwuWQ0@firefly.thygnti.mongodb.net/?appName=firefly")
+DB_NAME = "trip_agent"
+COLLECTION_NAME = "trips"
 
-async def main():
-    """
-    这个脚本用于将本地的 JSON 示例数据插入到 MongoDB 数据库中。
-    它只会执行插入操作，不会删除数据。
-    """
-    print("--- 正在连接到数据库并准备插入数据 ---")
-    
-    if trip_collection is None:
-        print("❌ 数据库连接失败，请检查 backend/database/database_operations.py 中的 MONGO_URI 配置。")
-        return
+# --- File Paths ---
+# Get the absolute path of the directory where the script is located
+backend_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # 1. 动态定位并加载你的 JSON 文件
+RAW_TRIP_FILE = os.path.join(backend_dir, 'DataDefinition', 'origin_data.json')
+DETAILED_TRIP_FILE = os.path.join(backend_dir, 'DataDefinition', 'SAMPLE_TRIP_DATA_3.json')
+
+def load_json_data(file_path):
+    """Loads JSON data from a file with robust error handling."""
+    if not os.path.exists(file_path):
+        print(f"❌ Error: File not found at {file_path}")
+        return None
     try:
-        # 构建从当前文件到目标文件的相对路径
-        json_file_path = r'C:\Users\ICE\Desktop\show\trip0929\Trip_Agent\backend\DataDefinition\SAMPLE_TRIP_DATA_3.json'
-        with open(json_file_path, 'r', encoding='utf-8') as f:
-            sample_trip_data = json.load(f)
-        print("✅ 成功加载 SAMPLE_TRIP_DATA_3.json 文件。")
-    except FileNotFoundError:
-        print(f"❌ 错误：在路径 '{json_file_path}' 找不到文件。请检查文件是否存在。")
-        return
-    except json.JSONDecodeError:
-        print("❌ 错误：JSON 文件格式不正确。")
-        return
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"❌ Error decoding JSON from {file_path}: {e}")
+        return None
+    except Exception as e:
+        print(f"❌ An unexpected error occurred while reading {file_path}: {e}")
+        return None
+
+def insert_data():
+    """
+    Connects to MongoDB and inserts/updates a trip document with both raw and detailed trip data.
+    """
+    client = None
+    try:
+        # --- Database Connection ---
+        print("Connecting to MongoDB...")
+        ca = certifi.where()
+        client = MongoClient(MONGO_URI, tlsCAFile=ca)
+        db = client[DB_NAME]
+        collection = db[COLLECTION_NAME]
+        # Test connection
+        client.admin.command('ping')
+        print("✅ Connection successful.")
+
+        # --- Load Data ---
+        print(f"Loading raw trip data from: {RAW_TRIP_FILE}")
+        raw_trip_data = load_json_data(RAW_TRIP_FILE)
         
-    # 2. 检查数据是否已存在，防止重复插入
-    # 我们使用 trip_id 作为唯一标识来检查
-    trip_id_to_check = sample_trip_data.get("trip_id")
-    
-    if not trip_id_to_check:
-        print("❌ 错误：JSON 文件中缺少 'trip_id' 字段，无法检查重复。")
-        return
+        print(f"Loading detailed trip data from: {DETAILED_TRIP_FILE}")
+        detailed_trip_data = load_json_data(DETAILED_TRIP_FILE)
+
+        if raw_trip_data is None or detailed_trip_data is None:
+            print("Aborting insertion due to data loading failure.")
+            return
+
+        # --- Data Preparation ---
+        trip_id_to_update = "beijing_wenyi_trip_001" # The trip_id we are working with
         
-    existing_trip = await trip_collection.find_one({
-        "trip_id": trip_id_to_check
-    })
-    
-    if existing_trip:
-        print(f"🟡 数据已存在 (trip_id: {trip_id_to_check})，跳过插入。")
-    else:
-        # 3. 如果数据不存在，则插入数据
-        print(f"正在尝试插入行程: '{sample_trip_data.get('trip_name')}'...")
-        # 我们直接使用 save_trip_to_db 函数
-        inserted_id = await save_trip_to_db(sample_trip_data)
-        if inserted_id:
-            print(f"✅ 数据插入成功！MongoDB 文档 _id: {inserted_id}")
+        trip_document = {
+            "trip_id": trip_id_to_update,
+            "user_id": "test_user_beijing_001",
+            "raw_trip": raw_trip_data,
+            "detailed_trip": detailed_trip_data
+        }
+
+        # --- Database Operation ---
+        print(f"Updating document with trip_id: {trip_id_to_update}...")
+        result = collection.update_one(
+            {"trip_id": trip_id_to_update},
+            {"$set": trip_document},
+            upsert=True
+        )
+
+        if result.upserted_id is not None:
+            print(f"✅ Successfully inserted a new document with id: {result.upserted_id}")
+        elif result.modified_count > 0:
+            print(f"✅ Successfully updated the document for trip_id: {trip_id_to_update}")
         else:
-            print("❌ 数据插入失败。")
+            print(f"🟡 Document for trip_id: {trip_id_to_update} already exists and is up-to-date.")
+
+    except Exception as e:
+        print(f"❌ An error occurred: {e}")
+    finally:
+        if client:
+            client.close()
+            print("MongoDB connection closed.")
 
 if __name__ == "__main__":
-    # 运行异步的 main 函数
-    asyncio.run(main())
+    insert_data()
+
+

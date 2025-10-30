@@ -29,6 +29,9 @@ export default function SchedulePage() {
   // 获取动态行程数据
   const { tripData, loading, error } = useTripData();
 
+  // 修改状态
+  const [isModifying, setIsModifying] = useState(false);
+
   // 交通方式选择状态
   const [selectedTransports, setSelectedTransports] = useState<
     Record<string, string>
@@ -105,6 +108,63 @@ export default function SchedulePage() {
   const stopRecording = () => {
     if (recognition && isRecording) {
       recognition.stop();
+    }
+  };
+
+  // 处理修改活动的函数
+  const handleModify = async () => {
+    if (!tripData) {
+      alert("暂无行程数据");
+      return;
+    }
+
+    if (!inputValue.trim()) {
+      alert("请输入修改内容");
+      return;
+    }
+
+    const allActivities = tripData.days.flatMap((day) => day.activities || []);
+    const targetActivity = allActivities.find((activity) => activity.id === "activity_6");
+
+    if (!targetActivity) {
+      alert("未找到 activity_6");
+      return;
+    }
+
+    const updatedActivity = {
+      ...targetActivity,
+      description: inputValue.trim(),
+      notes: inputValue.trim(),
+    };
+
+    setIsModifying(true);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/modify_activity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trip_id: tripData.trip_id,
+          new_activity: updatedActivity,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || "修改失败");
+      }
+
+      await response.json();
+      alert("修改成功，正在刷新数据...");
+      window.location.reload();
+    } catch (err: any) {
+      console.error("修改行程时出错:", err);
+      alert(`修改失败: ${err.message}`);
+    } finally {
+      setIsModifying(false);
+      setInputValue("");
     }
   };
 
@@ -373,11 +433,16 @@ export default function SchedulePage() {
           {/* Button - 25% */}
           <div className="w-[25%]">
             <button
-              onClick={() => console.log("修改")}
-              className="w-full h-12 rounded-2xl bg-[#0768FD] text-white font-semibold text-[16px] whitespace-nowrap transition-colors hover:bg-[#0656D1]"
+              onClick={handleModify}
+              disabled={isModifying || !inputValue.trim()}
+              className={`w-full h-12 rounded-2xl font-semibold text-[16px] whitespace-nowrap transition-colors ${
+                isModifying || !inputValue.trim()
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#0768FD] text-white hover:bg-[#0656D1]"
+              }`}
               style={{ fontFamily: "Inter" }}
             >
-              修改
+              {isModifying ? "修改中..." : "修改"}
             </button>
           </div>
         </div>

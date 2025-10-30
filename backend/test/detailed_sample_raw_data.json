@@ -1,0 +1,474 @@
+{
+  "trip_name": "北京文艺两日游",
+  "destination": "北京",
+  "start_date": "2025-03-15",
+  "end_date": "2025-03-16",
+  "days": [
+    {
+      "date": "2025-03-15",
+      "day_of_week": "星期六",
+      "day_index": 1,
+      "total_cost": null,
+      "activities": [
+        {
+          "type": "large_transportation",
+          "raw_traffic_info": {
+            "flight_raw_data": {
+              "fromCityCode": "PVG",
+              "toCityCode": "PEK",
+              "fromDate": "2025-03-15",
+              "flightNos": [
+                "MU5101"
+              ]
+            },
+            "train_raw_data": null
+          },
+          "id": "transport_0"
+        },
+        {
+          "id": "activity_1",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 北京首都国际机场",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "北京首都国际机场",
+          "location": {
+            "name": "北京首都国际机场",
+            "address": "首都机场路",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "北京首都国际机场",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B000A28DAE",
+            "description": "",
+            "address": "首都机场路",
+            "photos": [
+              {
+                "url": "http://store.is.autonavi.com/showpic/301ee06fedaff2aeba63dfa5ce060e97",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B000A28DAE/comment/content_media_external_file_100000541_1761281217903_55618719.jpg",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/ad2b19c508c73b4f95382d4a214114c8",
+                "title": ""
+              }
+            ],
+            "rating": "",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "北京首都国际机场",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_2",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 798艺术区",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "798艺术区",
+          "location": {
+            "name": "798艺术区",
+            "address": "酒仙桥路4号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "798艺术区",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B000A81FY5",
+            "description": "",
+            "address": "酒仙桥路4号",
+            "photos": [
+              {
+                "url": "http://store.is.autonavi.com/showpic/42a5f4dfacfbf2d38d20905cdc15f5ff",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/ee391e3f551fdd027e641c5c040e30bc",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/8a076e086d57c7e50f5d46477083b649",
+                "title": ""
+              }
+            ],
+            "rating": "4.8",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "798艺术区",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_3",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 南锣鼓巷",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "南锣鼓巷",
+          "location": {
+            "name": "南锣鼓巷",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "南锣鼓巷",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B0FFFAH7I9",
+            "description": "",
+            "address": "交道口街道南大街(南锣鼓巷地铁站E西北口旁)",
+            "photos": [
+              {
+                "url": "http://store.is.autonavi.com/showpic/6aa94c24640267a56c22af0b9629030a",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/f2325d7c11c9453d8d7eccc96db7e77c",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/173b3acc0bb5c70d3710a43a137c17a7",
+                "title": ""
+              }
+            ],
+            "rating": "4.7",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "南锣鼓巷",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_4",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 什刹海",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "什刹海",
+          "location": {
+            "name": "什刹海",
+            "address": "地安门西大街49号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "什刹海",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B000A7O5PK",
+            "description": "",
+            "address": "地安门西大街49号",
+            "photos": [
+              {
+                "url": "http://store.is.autonavi.com/showpic/dd97c0390e296f47a20b72063ec86990",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/a996834a98e84fd852162b2551c374f0",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B000A7O5PK/comment/content_media_external_file_100006014_1760885921454_10551899.jpg",
+                "title": ""
+              }
+            ],
+            "rating": "4.9",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "什刹海",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_5",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 止观小馆",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "止观小馆",
+          "location": {
+            "name": "止观小馆",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "止观小馆",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B0FFGWGO81",
+            "description": "",
+            "address": "金鱼胡同12号(金鱼胡同地铁站B东口步行280米)",
+            "photos": [
+              {
+                "url": "https://aos-comment.amap.com/B0FFGWGO81/comment/87182bec6a346bdbdece8ec78cacbba1_2048_2048_80.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFGWGO81/comment/content_media_external_file_2832_1752932450345_57025635.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFGWGO81/comment/content_media_external_file_125970_ss__1753419699316_00687879.jpg",
+                "title": ""
+              }
+            ],
+            "rating": "4.5",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "止观小馆",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_6",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 锦江之星(北京回民街钟楼地铁站店)",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "锦江之星(北京回民街钟楼地铁站店)",
+          "location": {
+            "name": "锦江之星(北京回民街钟楼地铁站店)",
+            "address": "永定门东街9号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "锦江之星(北京回民街钟楼地铁站店)",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B0FFGH5DP9",
+            "description": "",
+            "address": "永定门东街9号",
+            "photos": [
+              {
+                "url": "http://store.is.autonavi.com/showpic/f1c4bc91772bfd02683903e9d0e20049",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFGH5DP9/comment/content_media_external_images_media_100002931_1742875559996_76820866.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFGH5DP9/comment/content_media_external_images_media_100002931_1742875559997_87595028.jpg",
+                "title": ""
+              }
+            ],
+            "rating": "",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "锦江之星(北京回民街钟楼地铁站店)",
+            "RecReason": "Generated from raw data for testing."
+          }
+        }
+      ]
+    },
+    {
+      "date": "2025-03-16",
+      "day_of_week": "星期日",
+      "day_index": 2,
+      "total_cost": null,
+      "activities": [
+        {
+          "id": "activity_7",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 簋街",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "簋街",
+          "location": {
+            "name": "簋街",
+            "address": "东直门大街5-11号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "簋街",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B0FFHF130I",
+            "description": "",
+            "address": "东直门大街5-11号",
+            "photos": [
+              {
+                "url": "https://aos-comment.amap.com/B0FFHF130I/comment/bc8f5cc556907b887a8470ca7181a9ce_2048_2048_80.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFHF130I/comment/06208545b765999c42b331fef76ac0b7_2048_2048_80.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFHF130I/comment/d5685f1564da211696b715f38f985ebe_2048_2048_80.jpg",
+                "title": ""
+              }
+            ],
+            "rating": "4.7",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "簋街",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_8",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 相遇时光·文艺餐厅",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "相遇时光·文艺餐厅",
+          "location": {
+            "name": "相遇时光·文艺餐厅",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "相遇时光·文艺餐厅",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B0FFLMYPFF",
+            "description": "",
+            "address": "宋庄镇大巢艺术区北门135号",
+            "photos": [
+              {
+                "url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/31465374dfe52e301990410a54cb38e8_2048_2048_80.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/d08a6c5e9ad0eb8ae42208cff8761f89_2048_2048_80.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0FFLMYPFF/headerImg/145e2bb25df2bd6c3107c11674a404dc_2048_2048_80.jpg",
+                "title": ""
+              }
+            ],
+            "rating": "4.3",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "相遇时光·文艺餐厅",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_9",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 很文艺食堂",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "很文艺食堂",
+          "location": {
+            "name": "很文艺食堂",
+            "address": "7克拉北门东110米",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "很文艺食堂",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B0I1R6UJ9L",
+            "description": "",
+            "address": "7克拉北门东110米",
+            "photos": [
+              {
+                "url": "https://aos-comment.amap.com/B0I1R6UJ9L/comment/f61e84e2c07bba62953c55e00ca9fc30_2048_2048_80.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B0I1R6UJ9L/comment/78ef96dc7e61178efa433b6d5f938f8d_2048_2048_80.jpg",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/996d90f31d5b3954ff82c8d6ba7aedef",
+                "title": ""
+              }
+            ],
+            "rating": "4.1",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "很文艺食堂",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "id": "activity_10",
+          "start_time": "00:00:00",
+          "end_time": "00:00:00",
+          "description": "游览 北京首都国际机场",
+          "notes": "",
+          "cost": 0.0,
+          "type": "activity",
+          "title": "北京首都国际机场",
+          "location": {
+            "name": "北京首都国际机场",
+            "address": "首都机场路",
+            "coordinates": null
+          },
+          "recommended_products": [],
+          "poi_details": {
+            "name": "北京首都国际机场",
+            "rec_reason": "Generated from raw data for testing.",
+            "POIId": "B000A28DAE",
+            "description": "",
+            "address": "首都机场路",
+            "photos": [
+              {
+                "url": "http://store.is.autonavi.com/showpic/301ee06fedaff2aeba63dfa5ce060e97",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/B000A28DAE/comment/content_media_external_file_100000541_1761281217903_55618719.jpg",
+                "title": ""
+              },
+              {
+                "url": "http://store.is.autonavi.com/showpic/ad2b19c508c73b4f95382d4a214114c8",
+                "title": ""
+              }
+            ],
+            "rating": "",
+            "cost": null,
+            "poi_type": "spot",
+            "SpotName": "北京首都国际机场",
+            "RecReason": "Generated from raw data for testing."
+          }
+        },
+        {
+          "type": "large_transportation",
+          "raw_traffic_info": {
+            "flight_raw_data": {
+              "fromCityCode": "PEK",
+              "toCityCode": "SHA",
+              "fromDate": "2025-03-16",
+              "flightNos": [
+                "CA1502"
+              ]
+            },
+            "train_raw_data": null
+          },
+          "id": "transport_11"
+        }
+      ]
+    }
+  ]
+}

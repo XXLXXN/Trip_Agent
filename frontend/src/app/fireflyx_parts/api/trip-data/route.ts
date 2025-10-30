@@ -1,47 +1,27 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
 // 配置为动态路由
 export const dynamic = 'force-dynamic';
 
-// 直接读取 SAMPLE_TRIP_DATA_2.json 文件
 export async function GET() {
   try {
-    // 使用绝对路径，从项目根目录开始
-    const jsonFilePath = path.join(
-      process.cwd(),
-      "..",
-      "backend/DataDefinition/SAMPLE_TRIP_DATA_3.json"
-    );
-    
-    console.log("Current working directory:", process.cwd());
-    console.log("Looking for file at:", jsonFilePath);
-    console.log("File exists:", fs.existsSync(jsonFilePath));
+    // 从后端API获取数据
+    // 注意：这里的 trip_id 是硬编码的，将来可以根据请求参数动态获取
+    const backendUrl = "http://127.0.0.1:8000/get_trip_by_id?trip_id=beijing_wenyi_trip_001";
+    const response = await fetch(backendUrl);
 
-    // 检查文件是否存在
-    if (!fs.existsSync(jsonFilePath)) {
-      console.error("File does not exist at:", jsonFilePath);
-      return NextResponse.json(
-        { error: `File not found at ${jsonFilePath}` },
-        { status: 404 }
-      );
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Backend API error:", errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
 
-    // 读取 JSON 文件内容
-    const jsonContent = fs.readFileSync(jsonFilePath, "utf-8");
-
-    // 处理 Python 风格的 None 值
-    const processedContent = jsonContent.replace(/None/g, "null");
-
-    // 直接解析 JSON
-    const tripData = JSON.parse(processedContent);
-
-    return NextResponse.json(tripData);
+    const data = await response.json();
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Error reading SAMPLE_TRIP_DATA_2.json:", error);
+    console.error("Failed to fetch trip data:", error);
     return NextResponse.json(
-      { error: "Failed to read SAMPLE_TRIP_DATA_2.json file" },
+      { message: "Failed to fetch trip data", error: error.message },
       { status: 500 }
     );
   }
