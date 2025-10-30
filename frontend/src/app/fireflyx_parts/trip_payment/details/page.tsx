@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useNavigation } from "../../../context/NavigationContext";
 import { PageHeader, PageContainer, ScrollableContent, ItineraryCard, FixedBottomBar, SpotCardForList } from "../../components";
-import { useTripData } from "../../hooks/useTripData";
+import { useOneClickPlanning } from "../../hooks/useOneClickPlanning";
 import { convertToItineraryData, getTransportOptions, formatTime, getFirstActivityTime, convertToSpotCardData } from "../../utils/dataConverter";
 
 // 扩展 Window 接口以支持语音识别
@@ -19,8 +19,8 @@ export default function PaymentDetails() {
   const router = useRouter();
   const navigation = useNavigation();
   
-  // 获取动态行程数据
-  const { tripData, loading, error } = useTripData();
+  // 获取一键规划行程数据
+  const { tripData, loading, error } = useOneClickPlanning();
   
   // 交通方式选择状态
   const [selectedTransports, setSelectedTransports] = useState<Record<string, string>>({});

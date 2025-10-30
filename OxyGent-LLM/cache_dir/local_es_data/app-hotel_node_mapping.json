@@ -1,0 +1,69 @@
+{
+  "mappings": {
+    "properties": {
+      "node_id": {
+        "type": "keyword"
+      },
+      "node_type": {
+        "type": "keyword"
+      },
+      "group_id": {
+        "type": "keyword"
+      },
+      "trace_id": {
+        "type": "keyword"
+      },
+      "caller": {
+        "type": "keyword"
+      },
+      "callee": {
+        "type": "keyword"
+      },
+      "parallel_id": {
+        "type": "keyword"
+      },
+      "father_node_id": {
+        "type": "keyword"
+      },
+      "input": {
+        "type": "text"
+      },
+      "input_md5": {
+        "type": "keyword"
+      },
+      "output": {
+        "type": "text"
+      },
+      "state": {
+        "type": "keyword"
+      },
+      "extra": {
+        "type": "text"
+      },
+      "call_stack": {
+        "type": "text"
+      },
+      "node_id_stack": {
+        "type": "text"
+      },
+      "pre_node_ids": {
+        "type": "text"
+      },
+      "shared_data": {
+        "type": "text"
+      },
+      "create_time": {
+        "format": "yyyy-MM-dd HH:mm:ss.SSSSSSSSS",
+        "type": "date"
+      },
+      "update_time": {
+        "format": "yyyy-MM-dd HH:mm:ss.SSSSSSSSS",
+        "type": "date"
+      }
+    }
+  },
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  }
+}

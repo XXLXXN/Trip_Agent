@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import { useNavigation } from "../context/NavigationContext";
 import { Button } from "@/components/ui/button";
+import { PillIconButton, ArrowLeft } from "../fireflyx_parts/components";
 
 const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -23,35 +24,15 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white pb-20 font-inter">
-      {/* 顶部状态栏和导航栏 */}
-      <div className="bg-white pb-4 border-b border-gray-100 h-[113px] mb-4">
-        {/* 状态栏占位 */}
-        <div className="h-11"></div>
+      {/* 顶部导航栏 */}
+      <div className="flex items-center gap-4 px-5 pb-6" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}>
+        {/* 返回按钮 */}
+        <PillIconButton width={"3.78rem"} height={"2.5rem"} onClick={() => navigation.push("/", "backward")}>
+          <ArrowLeft size={16} color="#0768FD" />
+        </PillIconButton>
 
-        {/* 导航栏 */}
-        <div className="flex py-4 px-4 items-center gap-4 h-[69px]">
-          {/* 返回按钮 */}
-          <button 
-            className="w-14 h-[37px] px-4 py-[6.5px] flex items-center justify-center rounded-full border border-gray-200"
-            onClick={() => navigation.push("/", "backward")}
-          >
-            <svg
-              width="24"
-              height="25"
-              viewBox="0 0 24 25"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M18.7912 11.9552H7.62124L12.5012 7.07517C12.8912 6.68517 12.8912 6.04517 12.5012 5.65517C12.1112 5.26517 11.4812 5.26517 11.0912 5.65517L4.50124 12.2452C4.11124 12.6352 4.11124 13.2652 4.50124 13.6552L11.0912 20.2452C11.4812 20.6352 12.1112 20.6352 12.5012 20.2452C12.8912 19.8552 12.8912 19.2252 12.5012 18.8352L7.62124 13.9552H18.7912C19.3412 13.9552 19.7912 13.5052 19.7912 12.9552C19.7912 12.4052 19.3412 11.9552 18.7912 11.9552Z"
-                fill="#0768FD"
-              />
-            </svg>
-          </button>
-
-          {/* 页面标题 */}
-          <h1 className="text-xl font-semibold text-[#1B1446]">我的</h1>
-        </div>
+        {/* 页面标题 */}
+        <h1 className="text-[#1B1446] font-semibold text-[20px] leading-[24px]" style={{ fontFamily: 'Inter' }}>我的</h1>
       </div>
 
       {/* 用户信息区域 */}

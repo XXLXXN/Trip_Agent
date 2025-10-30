@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Copy, Users } from "lucide-react"
+import { ArrowLeft as LucideArrowLeft, Copy, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -10,6 +10,7 @@ import { useMemo, Suspense } from "react"
 import { useTripPlan } from "../context/TripPlanContext"
 import { useNavigation } from "../context/NavigationContext"
 import { FixedBottomBar } from "../fireflyx_parts/components/FixedBottomBar"
+import { PillIconButton, ArrowLeft } from "../fireflyx_parts/components"
 
 interface TravelParams {
   departure: string
@@ -145,15 +146,11 @@ function TravelInfoCardContent() {
       />
       {/* Header */}
       <div className="relative z-10">
-        <div className="flex items-center px-4 py-6">
-          <button onClick={() => navigation.push("/planning", "backward")}>
-            <img
-              src="/BackButton2.svg"
-              alt="后退图标"
-              className="h-12 w-12"
-            />
-          </button>
-          <h1 className="ml-2 text-lg font-medium text-[#000000]">信息卡片</h1>
+        <div className="flex items-center gap-4 px-5 pb-6" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}>
+          <PillIconButton width={"3.78rem"} height={"2.5rem"} onClick={() => navigation.push("/trafficlist", "backward")}>
+            <ArrowLeft size={16} color="#0768FD" />
+          </PillIconButton>
+          <h1 className="text-[#000000] font-semibold text-[20px] leading-[24px]" style={{ fontFamily: 'Inter' }}>信息卡片</h1>
         </div>
 
         {/* Main Content */}

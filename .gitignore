@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE settings folders (e.g., for VS Code, PyCharm)
+.vscode/
+.idea/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Other logs and temp files
+*.log
+*.tmp
