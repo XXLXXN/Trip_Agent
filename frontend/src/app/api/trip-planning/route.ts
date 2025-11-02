@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
           成人: tripData.adults || 0,
           老人: tripData.elderly || 0,
           儿童: tripData.children || 0,
-          学生: 0, // 前端没有学生字段，设为0
+          学生: tripData.students || 0,
         },
       },
       budget: tripData.priceRange

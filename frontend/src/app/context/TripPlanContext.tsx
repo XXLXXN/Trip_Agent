@@ -100,6 +100,7 @@ export interface TripPlanData {
   adults: number;
   elderly: number;
   children: number;
+  students: number;
   priceRange: number[];
   selectedTransport: string;
   selectedAccommodation: string;

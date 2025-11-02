@@ -100,7 +100,7 @@ export default function HotelSelectionPage() {
               成人: tripPlan.adults,
               老人: tripPlan.elderly,
               儿童: tripPlan.children,
-              学生: 0,
+              学生: tripPlan.students,
             },
           },
           spot_info: selectedSpots.map((spot) => ({

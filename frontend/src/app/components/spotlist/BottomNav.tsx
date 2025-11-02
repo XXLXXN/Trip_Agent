@@ -57,7 +57,7 @@ export default function BottomNav() {
             成人: tripPlan.adults || 0,
             老人: tripPlan.elderly || 0,
             儿童: tripPlan.children || 0,
-            学生: 0, // 前端没有学生字段，设为0
+            学生: tripPlan.students || 0,
           },
         },
         spot_info: selectedSpots,
