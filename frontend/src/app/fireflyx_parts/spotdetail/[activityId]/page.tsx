@@ -36,16 +36,10 @@ export default function SpotDetailPage() {
       // 在所有天的活动中查找匹配的活动
       let foundActivity: ActivityData | null = null;
 
-      // 将 activityId 转换为数字进行比较，因为 convertToSpotCardData 中提取了数字部分
-      const numericActivityId = parseInt(activityId);
-
+      // 使用完整的 activityId 字符串与活动的 activity.id 完全匹配，避免数字提取导致的歧义
       for (const day of tripData.days) {
         for (const activity of day.activities) {
-          // 从 activity.id 中提取数字部分进行比较
-          const idMatch = activity.id.match(/\d+/);
-          const activityNumericId = idMatch ? parseInt(idMatch[0]) : 0;
-          
-          if (activityNumericId === numericActivityId && activity.type === "activity") {
+          if (activity.id === activityId && activity.type === "activity") {
             foundActivity = activity;
             break;
           }

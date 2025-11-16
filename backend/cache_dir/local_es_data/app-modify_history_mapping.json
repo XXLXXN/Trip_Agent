@@ -1,0 +1,26 @@
+{
+  "mappings": {
+    "properties": {
+      "history_id": {
+        "type": "keyword"
+      },
+      "session_name": {
+        "type": "keyword"
+      },
+      "trace_id": {
+        "type": "keyword"
+      },
+      "memory": {
+        "type": "text"
+      },
+      "create_time": {
+        "format": "yyyy-MM-dd HH:mm:ss.SSSSSSSSS",
+        "type": "date"
+      }
+    }
+  },
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  }
+}

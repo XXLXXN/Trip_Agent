@@ -6,9 +6,10 @@ import { useNavigation } from "../../context/NavigationContext";
 import { Spot } from "@/mockData/travelcarddata";
 
 interface SpotCardForListProps {
+  // spot.id 可能是字符串（例如 activity_9），保持灵活性
   spot: Spot;
   isSelected: boolean;
-  onButtonClick: (spotId: number) => void;
+  onButtonClick: (spotId: string | number) => void;
   onClick?: () => void; // 自定义点击处理函数
 }
 

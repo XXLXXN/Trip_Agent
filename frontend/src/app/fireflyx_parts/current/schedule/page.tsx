@@ -123,20 +123,6 @@ export default function SchedulePage() {
       return;
     }
 
-    const allActivities = tripData.days.flatMap((day) => day.activities || []);
-    const targetActivity = allActivities.find((activity) => activity.id === "activity_6");
-
-    if (!targetActivity) {
-      alert("未找到 activity_6");
-      return;
-    }
-
-    const updatedActivity = {
-      ...targetActivity,
-      description: inputValue.trim(),
-      notes: inputValue.trim(),
-    };
-
     setIsModifying(true);
 
     try {
@@ -147,7 +133,9 @@ export default function SchedulePage() {
         },
         body: JSON.stringify({
           trip_id: tripData.trip_id,
-          new_activity: updatedActivity,
+          new_activity: {
+            user_request: inputValue.trim(),
+          },
         }),
       });
 

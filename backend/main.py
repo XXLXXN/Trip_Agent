@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 import os
 
-from services.trip_modifier import modify_and_regenerate_trip
+from services.trip_modifier_clean import modify_and_regenerate_trip
 
 import socks
 import socket
@@ -87,6 +87,42 @@ async def modify_activity(payload: dict = Body(...)):
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"服务器内部错误: {exc}")
+
+
+
+
+
+# --- Admin / debug endpoints (for local dev) ---
+@app.get("/admin/trip_debug")
+def admin_trip_debug(trip_id: str):
+    """返回存储在 trip 文档下的 debug 字段，方便查看 modify_agent 原始响应与解析结果（仅本地/开发使用）。"""
+    try:
+        trip_document = collection.find_one({"trip_id": trip_id})
+        if not trip_document:
+            raise HTTPException(status_code=404, detail="trip not found")
+
+        debug = trip_document.get("debug", {})
+        return {"trip_id": trip_id, "debug": debug}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/admin/modify_agent_log")
+def admin_modify_agent_log(lines: int = 200, path: str = "/tmp/modify_agent.log"):
+    """返回 modify_agent 的日志尾部（默认最近 200 行）。path 可选，用于不同日志位置。"""
+    try:
+        if not os.path.exists(path):
+            raise HTTPException(status_code=404, detail=f"log file not found: {path}")
+
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            content = f.read().splitlines()
+
+        tail_lines = content[-lines:]
+        return {"path": path, "lines_returned": len(tail_lines), "tail": "\n".join(tail_lines)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # --- 运行服务器的指令 ---

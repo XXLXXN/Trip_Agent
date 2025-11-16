@@ -26,27 +26,28 @@ oxy_space = [
         base_url=os.getenv("DEEPSEEK_BASE_URL"),  # 确保这个 URL 使用的是 https://
         model_name=os.getenv("DEEPSEEK_MODEL_NAME"),
     ),
-    oxy.StdioMCPClient(
-        name="xhs_tools",
-        params={
-            "command": "uv",
-            "args": [
-                "--directory",
-                "mcp_servers\\xhs-mcp",
-                "run",
-                "main.py"
-            ],
-            "env": {
-                "XHS_COOKIE": os.getenv("XHS_COOKIE")}
-        },
-    ),
+    # 暂时移除 xhs_tools 和 baidu_search_tools，因为它们的依赖可能有问题
+    # oxy.StdioMCPClient(
+    #     name="xhs_tools",
+    #     params={
+    #         "command": "uv",
+    #         "args": [
+    #             "--directory",
+    #             "mcp_servers\\xhs-mcp",
+    #             "run",
+    #             "main.py"
+    #         ],
+    #         "env": {
+    #             "XHS_COOKIE": os.getenv("XHS_COOKIE")}
+    #     },
+    # ),
     preset_tools.time_tools,
     preset_tools.math_tools,
-    preset_tools.baidu_search_tools,
+    # preset_tools.baidu_search_tools,  # 暂时移除，因为缺少 baidusearch 包
     oxy.ReActAgent(
         is_master=True,
         name="modify_agent",
-        tools=["time_tools", "math_tools", "baidu_search_tools", "xhs_tools"],
+        tools=["time_tools", "math_tools"],  # 只使用可用的工具
         prompt=MODIFY_AGENT_PROMPT,
         func_parse_llm_response=json_parser.json_parser,
     ),
