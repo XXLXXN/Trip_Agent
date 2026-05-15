@@ -412,9 +412,11 @@ def connect_location2(json_file_path: str) -> dict:
                 if i < len(activities) - 1:
                     next_activity_dict = activities[i + 1]
                     
-                    # 检查当前或下一个活动是否为 large_transportation
-                    if current_activity_dict.get('type') == 'large_transportation' or next_activity_dict.get('type') == 'large_transportation':
-                        print(f"ℹ️ 跳过城际交通和活动之间的交通规划: {current_activity_dict.get('title', current_activity_dict.get('id'))} -> {next_activity_dict.get('title', next_activity_dict.get('id'))}")
+                    # 跳过交通类 activity（large_transportation / transportation），避免在已有
+                    # 交通数据的行程上重复添加交通条目
+                    if current_activity_dict.get('type') in ('large_transportation', 'transportation') or \
+                       next_activity_dict.get('type') in ('large_transportation', 'transportation'):
+                        print(f"ℹ️ 跳过交通节点之间的交通规划: {current_activity_dict.get('title', current_activity_dict.get('id'))} -> {next_activity_dict.get('title', next_activity_dict.get('id'))}")
                         continue
                     
                     transportations = create_transportation_with_api(

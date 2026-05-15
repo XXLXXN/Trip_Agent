@@ -11,12 +11,12 @@ import socket
 
 # --- 代理配置 ---
 # 在所有网络请求之前，全局设置 socket 模块以使用 SOCKS5 代理
-socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 7890)
+socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 7897)
 socket.socket = socks.socksocket
 # -----------------
 
 # --- 配置 ---
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://fireflyx:UrfV1fqFHyLwuWQ0@firefly.thygnti.mongodb.net/?appName=firefly")
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://fireflyx:Fyxxxxx0501@firefly.thygnti.mongodb.net/?appName=firefly")
 DB_NAME = "trip_agent"
 COLLECTION_NAME = "trips"
 

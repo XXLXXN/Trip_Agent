@@ -9,6 +9,7 @@ import {
   ScrollableContent,
 } from "../../components";
 import { useTripData } from "../../hooks/useTripData";
+import { TripData } from "../../types/tripData";
 import {
   convertToItineraryData,
   getTransportOptions,
@@ -25,9 +26,12 @@ declare global {
   }
 }
 
-export default function SchedulePage() {
-  // 获取动态行程数据
-  const { tripData, loading, error } = useTripData();
+export default function SchedulePage({ data }: { data?: TripData }) {
+  // 获取动态行程数据（如果外部传入了 data 则优先使用，否则走 hook）
+  const hookResult = useTripData();
+  const tripData = data || hookResult.tripData;
+  const loading = data ? false : hookResult.loading;
+  const error = data ? null : hookResult.error;
 
   // 修改状态
   const [isModifying, setIsModifying] = useState(false);
@@ -126,7 +130,7 @@ export default function SchedulePage() {
     setIsModifying(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/modify_activity", {
+      const response = await fetch("http://127.0.0.1:8001/modify_activity", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

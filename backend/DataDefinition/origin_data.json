@@ -67,10 +67,25 @@
           "poi_details": {
             "name": "北京首都国际机场",
             "rec_reason": "到达北京的第一站，办理入境手续",
-            "POIId": "airport_pek_001",
+            "POIId": "B000A28DAE",
             "description": "北京首都国际机场是北京的主要机场之一",
             "address": "北京市顺义区首都机场路",
-            "poi_type": "spot"
+            "poi_type": "spot",
+            "photos": [
+              {
+                "url": "https://aos-comment.amap.com/B000A28DAE/comment/EEDEBBDF_D819_4ACD_8B9F_71145035294F_L0_001_2000_150_1772486736482_07674988.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/comment/20260314-b421cd8c3e38fcdb7137d7ae-3d2MkouebTI8euvBPkqZXZ.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://store.is.autonavi.com/showpic/ad2b19c508c73b4f95382d4a214114c8",
+                "title": ""
+              }
+            ],
+            "rating": "4.5"
           }
         },
         {
@@ -412,10 +427,25 @@
           "poi_details": {
             "name": "北京首都国际机场",
             "rec_reason": "返程出发地，办理登机手续",
-            "POIId": "airport_pek_002",
+            "POIId": "B000A28DAE",
             "description": "北京首都国际机场是北京的主要机场之一",
             "address": "北京市顺义区首都机场路",
-            "poi_type": "spot"
+            "poi_type": "spot",
+            "photos": [
+              {
+                "url": "https://aos-comment.amap.com/B000A28DAE/comment/EEDEBBDF_D819_4ACD_8B9F_71145035294F_L0_001_2000_150_1772486736482_07674988.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://aos-comment.amap.com/comment/20260314-b421cd8c3e38fcdb7137d7ae-3d2MkouebTI8euvBPkqZXZ.jpg",
+                "title": ""
+              },
+              {
+                "url": "https://store.is.autonavi.com/showpic/ad2b19c508c73b4f95382d4a214114c8",
+                "title": ""
+              }
+            ],
+            "rating": "4.5"
           }
         },
         {

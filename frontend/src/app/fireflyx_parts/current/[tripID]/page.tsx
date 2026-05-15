@@ -25,7 +25,7 @@ export default function DynamicTripPage({ params }: { params: { tripID: string }
     const fetchTripDetails = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8000/get/itinerary/${tripID}`);
+        const response = await fetch(`http://127.0.0.1:8001/get_trip_by_id?trip_id=${tripID}`);
         if (!response.ok) {
           throw new Error(`网络请求失败，状态码: ${response.status}`);
         }
